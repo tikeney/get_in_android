@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_notificacoes"
+        android:icon="@drawable/outline_notifications_24"
+        android:title="Notificações"/>
+    <item
+        android:id="@+id/nav_checkIn"
+        android:icon="@drawable/outline_add_24"
+        android:title="Check-in"/>
+    <item
+        android:id="@+id/nav_visitantes"
+        android:icon="@drawable/outline_group_24"
+        android:title="Visitantes"/>
+    <item
+        android:id="@+id/nav_historico"
+        android:icon="@drawable/outline_list_alt_24"
+        android:title="Histórico"/>
+    <item
+        android:id="@+id/nav_autorizacao"
+        android:icon="@drawable/outline_checklist_rtl_24"
+        android:title="Autorização"/>
+</menu>
