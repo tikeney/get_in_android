@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="secundary">#003061</color>
+    <color name="blue">#002449</color>
     <color name="accent">#b6c7d8</color>
     <color name="InputLoginHint">#888888</color>
     <color name="InputLoginBackground">#F7F9FA</color>

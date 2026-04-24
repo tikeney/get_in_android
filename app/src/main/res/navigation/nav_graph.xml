@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/nav_notificacoes"
-        android:name="com.senai.get_in.NotificacoesFragment"
+        android:name="com.senai.get_in.fragments.notifications.NotificacoesFragment"
         android:label="Notificações" />
 
     <fragment

@@ -13,7 +13,6 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/secundary"
         app:title=""
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:titleTextColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
