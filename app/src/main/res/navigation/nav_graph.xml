@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_notificacoes">
+
+    <fragment
+        android:id="@+id/nav_notificacoes"
+        android:name="com.senai.get_in.NotificacoesFragment"
+        android:label="Notificações" />
+
+    <fragment
+        android:id="@+id/nav_checkIn"
+        android:name="com.senai.get_in.CheckInFragment"
+        android:label="Check-in" />
+
+    <fragment
+        android:id="@+id/nav_visitantes"
+        android:name="com.senai.get_in.VisitantesFragment"
+        android:label="Visitantes" />
+
+    <fragment
+        android:id="@+id/nav_historico"
+        android:name="com.senai.get_in.HistoricoFragment"
+        android:label="Histórico" />
+
+    <fragment
+        android:id="@+id/nav_autorizacao"
+        android:name="com.senai.get_in.AutorizacaoFragment"
+        android:label="Autorização" />
+
+</navigation>
