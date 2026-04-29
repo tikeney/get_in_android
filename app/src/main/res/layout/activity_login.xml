@@ -74,11 +74,11 @@
             android:id="@+id/txtUsuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Usuário"
+            android:text="E-mail"
             android:textColor="@color/black"
             android:textSize="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" /><!-- text: Usuário-->
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputUsuario"
@@ -99,10 +99,10 @@
                 android:id="@+id/etUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:hint="Digite seu usuário"
+                android:hint="Digite seu e-mail"
                 android:textColor="@color/secundary"
                 android:textColorHint="@color/InputLoginHint"
-                android:inputType="text"/>
+                android:inputType="textEmailAddress"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#F0F0F0"
+    app:strokeWidth="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Icone com fundo arredondado suave -->
+        <View
+            android:id="@+id/viewIconBg"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/fundo_cracha"
+            android:backgroundTint="@color/icon_bg_light"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imgIcone"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/outline_person_24"
+            app:layout_constraintBottom_toBottomOf="@id/viewIconBg"
+            app:layout_constraintEnd_toEndOf="@id/viewIconBg"
+            app:layout_constraintStart_toStartOf="@id/viewIconBg"
+            app:layout_constraintTop_toTopOf="@id/viewIconBg"
+            app:tint="@color/gray_text" />
+
+        <!-- Nome e Detalhes -->
+        <TextView
+            android:id="@+id/txtNome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="João Carlos Silva"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/txtHorario"
+            app:layout_constraintStart_toEndOf="@id/viewIconBg"
+            app:layout_constraintTop_toTopOf="@id/viewIconBg" />
+
+        <TextView
+            android:id="@+id/txtDocumento"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="45.231.065-1"
+            android:textColor="@color/gray_text"
+            android:textSize="13sp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toStartOf="@id/txtLocal"
+            app:layout_constraintStart_toStartOf="@id/txtNome"
+            app:layout_constraintTop_toBottomOf="@id/txtNome" />
+
+        <!-- Horário e Local à direita -->
+        <TextView
+            android:id="@+id/txtHorario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="08:14"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txtNome" />
+
+        <TextView
+            android:id="@+id/txtLocal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Área de server"
+            android:textColor="@color/gray_text"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtHorario" />
+
+        <!-- Pill de Empresa -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardEmpresa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardBackgroundColor="@color/pill_bg_yellow"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewIconBg">
+            <TextView
+                android:id="@+id/txtEmpresa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="2dp"
+                android:text="Empresa"
+                android:textColor="@color/pill_text_yellow"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.card.MaterialCardView>
+        <!-- Pill de Motivo -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardMotivo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardBackgroundColor="@color/pill_bg_yellow"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            android:layout_marginStart="12dp"
+            app:layout_constraintStart_toEndOf="@id/cardEmpresa"
+            app:layout_constraintTop_toBottomOf="@id/viewIconBg">
+            <TextView
+                android:id="@+id/txtMotivo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="2dp"
+                android:text="Motivo"
+                android:textColor="@color/pill_text_yellow"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.card.MaterialCardView>
+        <!-- Pill de SetorParaAcesso -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardSetorParaAcesso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardBackgroundColor="@color/pill_bg_yellow"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            android:layout_marginStart="12dp"
+            app:layout_constraintStart_toEndOf="@id/cardMotivo"
+            app:layout_constraintTop_toBottomOf="@id/viewIconBg">
+            <TextView
+                android:id="@+id/txtSetorParaAcesso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="2dp"
+                android:text="SetorParaAcesso"
+                android:textColor="@color/pill_text_yellow"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Area de Descrição Scrollável -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollDescricao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:circularflow_radiusInDP="12dp"
+            android:background="#F9F9F9"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardSetorParaAcesso">
+
+            <TextView
+                android:id="@+id/txtDescricao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="A descrição da requisição aparecerá aqui. Este campo é scrollável caso o texto seja muito grande."
+                android:textColor="@color/gray_text"
+                android:textSize="12sp" />
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Divisor e Botões (Funcionalidades mantidas) -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/divider_color"
+            app:layout_constraintTop_toBottomOf="@id/scrollDescricao" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/divider">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNegar"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="Negar"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                app:strokeColor="@color/divider_color" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAceitar"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Aprovar"
+                android:textAllCaps="false"
+                android:textColor="@color/blue"
+                android:textStyle="bold"
+                app:strokeColor="@color/divider_color" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
