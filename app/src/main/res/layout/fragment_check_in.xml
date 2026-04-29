@@ -1,12 +1,340 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Check-in" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="40dp"
+        android:paddingVertical="20dp">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/identificacaoTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Identificação"
+            android:textSize="25dp"
+            android:textColor="@color/secundary"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btnAdicionarFoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/fundo_tracejado_foto"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/identificacaoTitulo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_icone_perfil"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/outline_person_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_titulo_foto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Adicionar foto do visitante"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_subtitulo_foto"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_icone_perfil"
+                app:layout_constraintTop_toTopOf="@+id/iv_icone_perfil" />
+
+            <TextView
+                android:id="@+id/tv_subtitulo_foto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Toque para abrir a câmera"
+                android:textColor="#777777"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_icone_perfil"
+                app:layout_constraintEnd_toEndOf="@+id/tv_titulo_foto"
+                app:layout_constraintStart_toStartOf="@+id/tv_titulo_foto"
+                app:layout_constraintTop_toBottomOf="@+id/tv_titulo_foto" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--    Nome    -->
+        <TextView
+            android:id="@+id/txtNome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nome Completo"
+            android:textSize="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/btnAdicionarFoto"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputNome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:boxBackgroundColor="@color/InputLoginBackground"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxStrokeColor="@color/secundary"
+            app:hintEnabled="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtNome">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNome"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint=""
+                android:textColor="@color/secundary"
+                android:textColorHint="@color/InputLoginHint"
+                android:inputType="text"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--    CPF    -->
+        <TextView
+            android:id="@+id/txtCPF"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="CPF"
+            android:textSize="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/inputNome"
+            app:layout_constraintEnd_toStartOf="@+id/txtTelefone"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputCPF"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            app:boxBackgroundColor="@color/InputLoginBackground"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxStrokeColor="@color/secundary"
+            app:hintEnabled="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/inputTelefone"
+            app:layout_constraintTop_toBottomOf="@+id/txtCPF">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCPF"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint=""
+                android:textColor="@color/secundary"
+                android:textColorHint="@color/InputLoginHint"
+                android:inputType="text"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--    Telefone    -->
+        <TextView
+            android:id="@+id/txtTelefone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Telefone"
+            android:textSize="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/inputNome"
+            app:layout_constraintStart_toEndOf="@+id/txtCPF"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputTelefone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="8dp"
+            app:boxBackgroundColor="@color/InputLoginBackground"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxStrokeColor="@color/secundary"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/inputCPF"
+            app:layout_constraintTop_toBottomOf="@+id/txtCPF">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTelefone"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint=""
+                android:textColor="@color/secundary"
+                android:textColorHint="@color/InputLoginHint"
+                android:inputType="text"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--    Empresa    -->
+        <TextView
+            android:id="@+id/txtEmpresa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Empresa"
+            android:textSize="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/inputCPF"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputEmpresa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:boxBackgroundColor="@color/InputLoginBackground"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxStrokeColor="@color/secundary"
+            app:hintEnabled="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtEmpresa">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEmpresa"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint=""
+                android:textColor="@color/secundary"
+                android:textColorHint="@color/InputLoginHint"
+                android:inputType="text"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--    Motivo da visita    -->
+        <TextView
+            android:id="@+id/txtMotivo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Motivo da visita"
+            android:textSize="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/inputEmpresa"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputMotivo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:boxBackgroundColor="@color/InputLoginBackground"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxStrokeColor="@color/secundary"
+            app:hintEnabled="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtMotivo">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etMotivo"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint=""
+                android:textColor="@color/secundary"
+                android:textColorHint="@color/InputLoginHint"
+                android:inputType="text"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="10dp"
+            android:background="@color/accent"
+            app:layout_constraintTop_toBottomOf="@+id/inputMotivo" />
+
+        <TextView
+            android:id="@+id/crachaTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Crachá"
+            android:textSize="25dp"
+            android:textColor="@color/secundary"
+            android:textStyle="bold"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btnAdicionarCracha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/fundo_cracha"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/crachaTitulo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_icone_cracha"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/outline_badge_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_titulo_cracha"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Vincular crachá"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_subtitulo_cracha"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_icone_cracha"
+                app:layout_constraintTop_toTopOf="@+id/iv_icone_cracha" />
+
+            <TextView
+                android:id="@+id/tv_subtitulo_cracha"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Toque e aproxime o cracha"
+                android:textColor="@color/accent"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_icone_cracha"
+                app:layout_constraintEnd_toEndOf="@+id/tv_titulo_cracha"
+                app:layout_constraintStart_toStartOf="@+id/tv_titulo_cracha"
+                app:layout_constraintTop_toBottomOf="@+id/tv_titulo_cracha" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
