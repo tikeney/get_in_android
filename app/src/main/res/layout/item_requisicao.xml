@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Icone com fundo arredondado suave -->
         <View
             android:id="@+id/viewIconBg"
             android:layout_width="48dp"
@@ -37,13 +36,15 @@
             app:layout_constraintTop_toTopOf="@id/viewIconBg"
             app:tint="@color/gray_text" />
 
-        <!-- Nome e Detalhes -->
         <TextView
             android:id="@+id/txtNome"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="João Carlos Silva"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Nome do Usuário"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -55,20 +56,19 @@
             android:id="@+id/txtDocumento"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="45.231.065-1"
+            android:layout_marginTop="4dp"
+            android:text="000.000.000-00"
             android:textColor="@color/gray_text"
             android:textSize="13sp"
-            android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toStartOf="@id/txtLocal"
+            app:layout_constraintEnd_toEndOf="@id/txtNome"
             app:layout_constraintStart_toStartOf="@id/txtNome"
             app:layout_constraintTop_toBottomOf="@id/txtNome" />
 
-        <!-- Horário e Local à direita -->
         <TextView
             android:id="@+id/txtHorario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="08:14"
+            android:text="00:00"
             android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -79,114 +79,94 @@
             android:id="@+id/txtLocal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Área de server"
+            android:text="Local"
             android:textColor="@color/gray_text"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txtHorario" />
 
-        <!-- Pill de Empresa -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardEmpresa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="@color/pill_bg_yellow"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/viewIconBg">
-            <TextView
-                android:id="@+id/txtEmpresa"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="2dp"
-                android:text="Empresa"
-                android:textColor="@color/pill_text_yellow"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-        </com.google.android.material.card.MaterialCardView>
-        <!-- Pill de Motivo -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardMotivo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="@color/pill_bg_yellow"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            android:layout_marginStart="12dp"
-            app:layout_constraintStart_toEndOf="@id/cardEmpresa"
-            app:layout_constraintTop_toBottomOf="@id/viewIconBg">
-            <TextView
-                android:id="@+id/txtMotivo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="2dp"
-                android:text="Motivo"
-                android:textColor="@color/pill_text_yellow"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-        </com.google.android.material.card.MaterialCardView>
-        <!-- Pill de SetorParaAcesso -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardSetorParaAcesso"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="@color/pill_bg_yellow"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            android:layout_marginStart="12dp"
-            app:layout_constraintStart_toEndOf="@id/cardMotivo"
-            app:layout_constraintTop_toBottomOf="@id/viewIconBg">
-            <TextView
-                android:id="@+id/txtSetorParaAcesso"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="2dp"
-                android:text="SetorParaAcesso"
-                android:textColor="@color/pill_text_yellow"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Area de Descrição Scrollável -->
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollDescricao"
+        <!-- ChipGroup para os rótulos (Pills) - Altamente responsivo -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:circularflow_radiusInDP="12dp"
-            android:background="#F9F9F9"
-            android:padding="8dp"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardSetorParaAcesso">
+            app:layout_constraintTop_toBottomOf="@id/viewIconBg">
 
-            <TextView
-                android:id="@+id/txtDescricao"
-                android:layout_width="match_parent"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipEmpresa"
+                style="@style/Widget.Material3.Chip.Assist"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="A descrição da requisição aparecerá aqui. Este campo é scrollável caso o texto seja muito grande."
-                android:textColor="@color/gray_text"
-                android:textSize="12sp" />
-        </androidx.core.widget.NestedScrollView>
+                android:text="Empresa"
+                app:chipBackgroundColor="@color/pill_bg_blue"
+                app:chipCornerRadius="12dp"
+                app:chipStrokeWidth="0dp"
+                android:textColor="@color/secundary"
+                android:textSize="11sp" />
 
-        <!-- Divisor e Botões (Funcionalidades mantidas) -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMotivo"
+                style="@style/Widget.Material3.Chip.Assist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo"
+                app:chipBackgroundColor="@color/pill_bg_blue"
+                app:chipCornerRadius="12dp"
+                app:chipStrokeWidth="0dp"
+                android:textColor="@color/secundary"
+                android:textSize="11sp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSetor"
+                style="@style/Widget.Material3.Chip.Assist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Setor"
+                app:chipBackgroundColor="@color/pill_bg_blue"
+                app:chipCornerRadius="12dp"
+                app:chipStrokeWidth="0dp"
+                android:textColor="@color/secundary"
+                android:textSize="11sp" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <View
+            android:id="@+id/bgDescricao"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="12dp"
+            android:background="#F9F9F9"
+            app:layout_constraintBottom_toBottomOf="@id/txtDescricao"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chipGroup"
+            android:layout_marginVertical="-8dp"/>
+
+        <TextView
+            android:id="@+id/txtDescricao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingHorizontal="8dp"
+            android:text="Descrição detalhada aqui..."
+            android:textColor="@color/gray_text"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chipGroup" />
+
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:background="@color/divider_color"
-            app:layout_constraintTop_toBottomOf="@id/scrollDescricao" />
+            app:layout_constraintTop_toBottomOf="@id/txtDescricao" />
 
         <LinearLayout
             android:layout_width="match_parent"

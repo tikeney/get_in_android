@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
 import com.senai.get_in.R;
 import com.senai.get_in.model.Requisicao;
 
@@ -38,14 +39,33 @@ public class RequisicaoAdapter extends RecyclerView.Adapter<RequisicaoAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Requisicao req = requisicoes.get(position);
+        
+        // Informações básicas do usuário
         holder.txtNome.setText(req.getNomeUsuario() != null ? req.getNomeUsuario() : "Desconhecido");
         holder.txtDocumento.setText(req.getCpfUsuario() != null ? req.getCpfUsuario() : "Sem CPF");
         holder.txtHorario.setText(req.getDataRequisicao() != null ? req.getDataRequisicao() : "--:--");
         holder.txtLocal.setText(req.getNomeDepartamento() != null ? req.getNomeDepartamento() : "N/A");
-        holder.txtEmpresa.setText(req.getEmpresa() != null ? req.getEmpresa() : "Não informada");
-        holder.txtMotivo.setText(req.getMotivo() != null ? req.getMotivo() : "Não informado");
-        holder.txtSetorParaAcesso.setText(req.getNomeDepartamento() != null ? req.getNomeDepartamento() : "N/A");
-        holder.txtDescricao.setText(req.getDescricao() != null ? req.getDescricao() : "Sem descrição.");
+        
+        // Chips Responsivos (Pills)
+        holder.chipMotivo.setText(req.getTipoRequisicao() != null ? req.getTipoRequisicao() : "Requisição");
+
+        // Empresa (Visível apenas se houver empresa_visitante)
+        if (req.getEmpresaVisitante() != null && !req.getEmpresaVisitante().isEmpty()) {
+            holder.chipEmpresa.setText(req.getEmpresaVisitante());
+            holder.chipEmpresa.setVisibility(View.VISIBLE);
+        } else {
+            holder.chipEmpresa.setVisibility(View.GONE);
+        }
+
+        // Setor
+        holder.chipSetor.setText(req.getNomeDepartamento() != null ? req.getNomeDepartamento() : "Geral");
+
+        // Descrição ou Validade (Texto Responsivo)
+        if (req.getValidadeVisita() != null && !req.getValidadeVisita().isEmpty()) {
+            holder.txtDescricao.setText("Válido até: " + req.getValidadeVisita());
+        } else {
+            holder.txtDescricao.setText(req.getDescricao() != null ? req.getDescricao() : "Sem descrição adicional.");
+        }
 
         holder.btnAceitar.setOnClickListener(v -> listener.onAprovarClick(req));
         holder.btnNegar.setOnClickListener(v -> listener.onNegarClick(req));
@@ -62,7 +82,8 @@ public class RequisicaoAdapter extends RecyclerView.Adapter<RequisicaoAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtNome, txtDocumento, txtHorario, txtLocal, txtEmpresa, txtMotivo, txtSetorParaAcesso, txtDescricao;
+        TextView txtNome, txtDocumento, txtHorario, txtLocal, txtDescricao;
+        Chip chipEmpresa, chipMotivo, chipSetor;
         View btnAceitar, btnNegar;
 
         public ViewHolder(@NonNull View itemView) {
@@ -71,10 +92,12 @@ public class RequisicaoAdapter extends RecyclerView.Adapter<RequisicaoAdapter.Vi
             txtDocumento = itemView.findViewById(R.id.txtDocumento);
             txtHorario = itemView.findViewById(R.id.txtHorario);
             txtLocal = itemView.findViewById(R.id.txtLocal);
-            txtEmpresa = itemView.findViewById(R.id.txtEmpresa);
-            txtMotivo = itemView.findViewById(R.id.txtMotivo);
-            txtSetorParaAcesso = itemView.findViewById(R.id.txtSetorParaAcesso);
             txtDescricao = itemView.findViewById(R.id.txtDescricao);
+            
+            chipEmpresa = itemView.findViewById(R.id.chipEmpresa);
+            chipMotivo = itemView.findViewById(R.id.chipMotivo);
+            chipSetor = itemView.findViewById(R.id.chipSetor);
+            
             btnAceitar = itemView.findViewById(R.id.btnAceitar);
             btnNegar = itemView.findViewById(R.id.btnNegar);
         }

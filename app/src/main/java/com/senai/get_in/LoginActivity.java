@@ -30,6 +30,15 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        tokenManager = new TokenManager(this);
+        
+        // Verifica se o usuário já está logado
+        if (tokenManager.getToken() != null) {
+            irParaMain();
+            return;
+        }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -37,8 +46,6 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        tokenManager = new TokenManager(this);
 
         etUsuario = findViewById(R.id.etUsuario);
         etSenha = findViewById(R.id.etSenha);
@@ -78,13 +85,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    String token = response.body().getToken();
-                    tokenManager.saveToken(token);
+                    LoginResponse body = response.body();
+                    tokenManager.saveToken(body.getToken());
+                    
+                    if (body.getData() != null) {
+                        tokenManager.saveUserData(body.getData());
+                    }
 
                     Toast.makeText(LoginActivity.this, "Login realizado!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    irParaMain();
                 } else {
                     Toast.makeText(LoginActivity.this, "Usuário ou senha incorretos.", Toast.LENGTH_LONG).show();
                 }
@@ -95,5 +104,11 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Erro de conexão: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void irParaMain() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

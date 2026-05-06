@@ -1,6 +1,7 @@
 package com.senai.get_in.fragments.notifications;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.senai.get_in.R;
 import com.senai.get_in.adapter.RequisicaoAdapter;
 import com.senai.get_in.api.RetrofitClient;
 import com.senai.get_in.model.Requisicao;
+import com.senai.get_in.model.RequisicaoResponse;
 import com.senai.get_in.utils.TokenManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +31,11 @@ import retrofit2.Response;
 
 public class NotificacoesAprovacoesFragment extends Fragment {
 
+    private static final String TAG = "NotificacoesAprovacoes";
     private RecyclerView rvRequisicoes;
     private RequisicaoAdapter adapter;
     private ProgressBar progressBar;
-    private List<Requisicao> listaRequisicoes = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefresh;
     private TokenManager tokenManager;
 
     @Nullable
@@ -40,16 +45,18 @@ public class NotificacoesAprovacoesFragment extends Fragment {
 
         rvRequisicoes = view.findViewById(R.id.rvRequisicoes);
         progressBar = view.findViewById(R.id.progressBar);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
         tokenManager = new TokenManager(requireContext());
 
         setupRecyclerView();
+        setupSwipeRefresh();
         carregarRequisicoes();
 
         return view;
     }
 
     private void setupRecyclerView() {
-        adapter = new RequisicaoAdapter(listaRequisicoes, new RequisicaoAdapter.OnItemClickListener() {
+        adapter = new RequisicaoAdapter(new ArrayList<>(), new RequisicaoAdapter.OnItemClickListener() {
             @Override
             public void onAprovarClick(Requisicao requisicao) {
                 atualizarStatusRequisicao(requisicao, "aprovado");
@@ -57,39 +64,66 @@ public class NotificacoesAprovacoesFragment extends Fragment {
 
             @Override
             public void onNegarClick(Requisicao requisicao) {
-                atualizarStatusRequisicao(requisicao, "negado");
+                atualizarStatusRequisicao(requisicao, "recusado");
             }
         });
         rvRequisicoes.setAdapter(adapter);
     }
 
+    private void setupSwipeRefresh() {
+        if (swipeRefresh != null) {
+            swipeRefresh.setOnRefreshListener(this::carregarRequisicoes);
+            swipeRefresh.setColorSchemeResources(R.color.blue); // Ajuste para sua cor primária
+        }
+    }
+
     private void carregarRequisicoes() {
         String token = tokenManager.getToken();
-        if (token == null) return;
+        if (token == null) {
+            Log.e(TAG, "Token não encontrado!");
+            if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
+            return;
+        }
 
-        progressBar.setVisibility(View.VISIBLE);
-        RetrofitClient.getApiService().getRequisicoes("Bearer " + token).enqueue(new Callback<List<Requisicao>>() {
+        if (progressBar != null && (swipeRefresh == null || !swipeRefresh.isRefreshing())) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        RetrofitClient.getApiService().getRequisicoes("Bearer " + token).enqueue(new Callback<RequisicaoResponse>() {
             @Override
-            public void onResponse(Call<List<Requisicao>> call, Response<List<Requisicao>> response) {
-                progressBar.setVisibility(View.GONE);
+            public void onResponse(@NonNull Call<RequisicaoResponse> call, @NonNull Response<RequisicaoResponse> response) {
+                if (!isAdded()) return;
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
+
                 if (response.isSuccessful() && response.body() != null) {
-                    listaRequisicoes = response.body();
+                    List<Requisicao> listaRequisicoes = response.body().getData();
                     List<Requisicao> pendentes = new ArrayList<>();
-                    for (Requisicao r : listaRequisicoes) {
-                        if ("pendente".equalsIgnoreCase(r.getStatus())) {
-                            pendentes.add(r);
+                    
+                    if (listaRequisicoes != null) {
+                        for (Requisicao r : listaRequisicoes) {
+                            if (r.getStatus() != null && "pendente".equalsIgnoreCase(r.getStatus())) {
+                                pendentes.add(r);
+                            }
                         }
                     }
+                    
                     adapter.updateList(pendentes);
+                    if (pendentes.isEmpty()) {
+                        Toast.makeText(getContext(), "Nenhuma requisição pendente.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(getContext(), "Erro ao carregar dados", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Erro no servidor: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Requisicao>> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "Erro de conexão: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            public void onFailure(@NonNull Call<RequisicaoResponse> call, @NonNull Throwable t) {
+                if (!isAdded()) return;
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
+                Log.e(TAG, "Falha na conexão: " + t.getMessage());
+                Toast.makeText(getContext(), "Erro de conexão", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -98,24 +132,31 @@ public class NotificacoesAprovacoesFragment extends Fragment {
         String token = tokenManager.getToken();
         if (token == null) return;
 
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        
+        String statusOriginal = requisicao.getStatus();
         requisicao.setStatus(novoStatus);
 
         RetrofitClient.getApiService().atualizarStatus("Bearer " + token, requisicao.getId(), requisicao).enqueue(new Callback<Requisicao>() {
             @Override
-            public void onResponse(Call<Requisicao> call, Response<Requisicao> response) {
-                progressBar.setVisibility(View.GONE);
+            public void onResponse(@NonNull Call<Requisicao> call, @NonNull Response<Requisicao> response) {
+                if (!isAdded()) return;
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
+
                 if (response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Status atualizado: " + novoStatus, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Sucesso!", Toast.LENGTH_SHORT).show();
                     carregarRequisicoes();
                 } else {
+                    requisicao.setStatus(statusOriginal);
                     Toast.makeText(getContext(), "Erro ao atualizar", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Requisicao> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
+            public void onFailure(@NonNull Call<Requisicao> call, @NonNull Throwable t) {
+                if (!isAdded()) return;
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
+                requisicao.setStatus(statusOriginal);
                 Toast.makeText(getContext(), "Falha na conexão", Toast.LENGTH_SHORT).show();
             }
         });

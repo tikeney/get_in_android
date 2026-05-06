@@ -16,6 +16,15 @@ public class Requisicao {
     private String descricao;
     private String empresa;
 
+    @SerializedName("tipo_requisicao")
+    private String tipoRequisicao;
+
+    @SerializedName("empresa_visitante")
+    private String empresaVisitante;
+
+    @SerializedName("validade_visita")
+    private String validadeVisita;
+
     // Campos extras que geralmente vêm no JOIN da API para facilitar o Adapter
     private String nomeUsuario;
     private String cpfUsuario;
@@ -47,6 +56,15 @@ public class Requisicao {
 
     public String getEmpresa() { return empresa; }
     public void setEmpresa(String empresa) { this.empresa = empresa; }
+
+    public String getTipoRequisicao() { return tipoRequisicao; }
+    public void setTipoRequisicao(String tipoRequisicao) { this.tipoRequisicao = tipoRequisicao; }
+
+    public String getEmpresaVisitante() { return empresaVisitante; }
+    public void setEmpresaVisitante(String empresaVisitante) { this.empresaVisitante = empresaVisitante; }
+
+    public String getValidadeVisita() { return validadeVisita; }
+    public void setValidadeVisita(String validadeVisita) { this.validadeVisita = validadeVisita; }
 
     public String getNomeUsuario() { return nomeUsuario; }
     public void setNomeUsuario(String nomeUsuario) { this.nomeUsuario = nomeUsuario; }
