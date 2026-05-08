@@ -8,14 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="40dp"
-        android:paddingVertical="20dp">
+        android:paddingTop="70dp"
+        android:paddingBottom="20dp">
 
         <TextView
             android:id="@+id/txtNotificacoes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Notificações de hoje"
-            android:textSize="16dp"
+            android:textSize="20dp"
             android:textColor="@color/secundary"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
