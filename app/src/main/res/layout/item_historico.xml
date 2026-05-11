@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/ivFoto"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvNome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textStyle="bold"
+        android:textColor="@color/secundary"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/ivFoto"
+        app:layout_constraintEnd_toStartOf="@+id/tvHora"
+        app:layout_constraintTop_toTopOf="@+id/ivFoto"/>
+
+    <TextView
+        android:id="@+id/tvEmpresa"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="#777777"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@+id/tvNome"
+        app:layout_constraintEnd_toStartOf="@+id/tvHora"
+        app:layout_constraintTop_toBottomOf="@+id/tvNome"/>
+
+    <TextView
+        android:id="@+id/tvSetor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#777777"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@+id/tvNome"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmpresa"/>
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/tvNome"
+        app:layout_constraintTop_toBottomOf="@+id/tvSetor"/>
+
+    <TextView
+        android:id="@+id/tvHora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textColor="@color/secundary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ivFoto"/>
+
+    <TextView
+        android:id="@+id/tvDuracao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#777777"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvHora"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
