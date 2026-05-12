@@ -1,24 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="secundary">#003061</color>
-    <color name="blue">#002449</color>
-    <color name="accent">#b6c7d8</color>
-    <color name="InputLoginHint">#888888</color>
-    <color name="InputLoginBackground">#F7F9FA</color>
+    <!-- Core Brand Colors -->
+    <color name="brand_blue">#0D243F</color>
+    <color name="brand_blue_dark">#0D243F</color>
+    <color name="brand_blue_light">#EEE8DF</color>
 
-    <color name="pending_border">#FFB300</color>
+    <!-- Absolute Neutrals -->
+    <color name="pure_white">#FFFFFF</color>
+    <color name="pure_black">#000000</color>
+
+    <!-- Light Theme Neutrals -->
+    <color name="light_background">#EEE8DF</color>
+    <color name="light_surface">#EEE8DF</color>
+    <color name="light_text_primary">#000000</color>
+    <color name="light_text_secondary">#444444</color>
+    <color name="light_divider">#EEE8DF</color>
+
+    <!-- Dark Theme Neutrals -->
+    <color name="dark_background">#000000</color>
+    <color name="dark_surface">#121212</color>
+    <color name="dark_text_primary">#EEE8DF</color>
+    <color name="dark_text_secondary">#A0A0A0</color>
+    <color name="dark_divider">#222222</color>
+
+    <!-- Legacy / Compatibility Mappings (will be used in layouts) -->
+    <color name="white">#EEE8DF</color>
+    <color name="black">#000000</color>
+    <color name="secundary">#0D243F</color>
+    <color name="blue">#0D243F</color>
+    <color name="accent">@color/brand_blue_light</color>
     <color name="gray_text">#757575</color>
     <color name="divider_color">#EEEEEE</color>
+    <color name="InputLoginBackground">#F8F9FA</color>
+    <color name="InputLoginHint">#757575</color>
 
-    <!-- Cores do novo design -->
-    <color name="icon_bg_light">#F5F5F5</color>
-    <color name="pill_bg_yellow">#FFF8E1</color>
-    <color name="pill_text_yellow">#F57F17</color>
-    <color name="pill_bg_blue">#E3F2FD</color>
-    <color name="pill_text_blue">#1976D2</color>
-    <color name="pill_bg_green">#E8F5E9</color>
-    <color name="pill_text_green">#2E7D32</color>
-    <color name="status_text_color">#424242</color>
+    <!-- Missing Colors for Requisition Items -->
+    <color name="pending_border">#EEE8DF</color>
+    <color name="icon_bg_light">#EEE8DF</color>
+    <color name="pill_bg_blue">@color/brand_blue_light</color>
 </resources>

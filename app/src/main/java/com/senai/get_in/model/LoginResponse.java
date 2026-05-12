@@ -21,19 +21,33 @@ public class LoginResponse {
     public void setData(UserData data) { this.data = data; }
 
     public static class UserData {
+        @SerializedName(value = "id", alternate = {"usuario_id", "userId"})
         private int id;
+        
+        @SerializedName(value = "nome", alternate = {"usuario_nome", "userName"})
         private String nome;
+
+        @SerializedName("cpf")
         private String cpf;
+
+        @SerializedName("celular")
         private String celular;
+
+        @SerializedName("email")
         private String email;
+
+        @SerializedName("cargo")
+        private String cargo;
+
+        @SerializedName(value = "data_criacao", alternate = {"dataDeCriacao", "createdAt"})
         private String dataDeCriacao;
 
-        // Getters e Setters
         public int getId() { return id; }
         public String getNome() { return nome; }
         public String getCpf() { return cpf; }
         public String getCelular() { return celular; }
         public String getEmail() { return email; }
+        public String getCargo() { return cargo; }
         public String getDataDeCriacao() { return dataDeCriacao; }
     }
 }

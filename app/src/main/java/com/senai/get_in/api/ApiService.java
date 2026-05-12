@@ -7,6 +7,7 @@ import com.senai.get_in.model.Requisicao;
 import com.senai.get_in.model.RequisicaoResponse;
 import com.senai.get_in.model.TagCracha;
 import com.senai.get_in.model.UsuarioDetalhado;
+import com.senai.get_in.model.UsuarioResponse;
 
 import java.util.List;
 
@@ -23,14 +24,18 @@ public interface ApiService {
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
 
+    // Rota correta no plural retornando o objeto UsuarioResponse (que contém a lista no campo 'data')
+    @GET("views/usuarios")
+    Call<UsuarioResponse> getUsuarios(@Header("Authorization") String token);
+
+    @GET("views/perfil_completo")
+    Call<List<UsuarioDetalhado>> getPerfilCompleto(@Header("Authorization") String token);
+
     @GET("views/requisicoes")
     Call<RequisicaoResponse> getRequisicoes(@Header("Authorization") String token);
 
     @GET("views/logs")
     Call<List<LogAcesso>> getLogs(@Header("Authorization") String token);
-
-    @GET("views/usuarios")
-    Call<List<UsuarioDetalhado>> getUsuarios(@Header("Authorization") String token);
 
     @GET("views/tags")
     Call<List<TagCracha>> getTags(@Header("Authorization") String token);
