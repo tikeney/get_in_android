@@ -149,7 +149,7 @@
                 android:hint=""
                 android:textColor="@color/secundary"
                 android:textColorHint="@color/InputLoginHint"
-                android:inputType="text"/>
+                android:inputType="number"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -173,6 +173,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginStart="8dp"
+
             app:boxBackgroundColor="@color/white"
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
@@ -191,7 +192,7 @@
                 android:hint=""
                 android:textColor="@color/secundary"
                 android:textColorHint="@color/InputLoginHint"
-                android:inputType="text"/>
+                android:inputType="number"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -276,7 +277,9 @@
             android:layout_marginTop="30dp"
             android:layout_marginStart="10dp"
             android:background="@color/accent"
-            app:layout_constraintTop_toBottomOf="@+id/inputMotivo" />
+            app:layout_constraintTop_toBottomOf="@+id/inputMotivo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <!--    Crachá    -->
         <TextView
