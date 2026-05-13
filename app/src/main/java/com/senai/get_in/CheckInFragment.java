@@ -126,7 +126,7 @@ public class CheckInFragment extends Fragment {
         inicializarViews(view);
         configurarMascaras();
         configurarFoto();
-        configurarCracha();
+        //configurarCracha();
         configurarBotaoFinalizar();
     }
 
@@ -306,24 +306,24 @@ public class CheckInFragment extends Fragment {
     // CRACHÁ
     // ──────────────────────────────────────────
 
-    private void configurarCracha() {
-        btnAdicionarCracha.setOnClickListener(v -> simularLeituraCracha());
-    }
+    //private void configurarCracha() {
+    //    btnAdicionarCracha.setOnClickListener(v -> simularLeituraCracha());
+    //}
 
-    private void simularLeituraCracha() {
+    //private void simularLeituraCracha() {
         // Simulação de leitura RFID — substitua pela lógica real de NFC/RFID
-        Toast.makeText(requireContext(),
-                "Aproxime o crachá do leitor...", Toast.LENGTH_SHORT).show();
+    //    Toast.makeText(requireContext(),
+    //            "Aproxime o crachá do leitor...", Toast.LENGTH_SHORT).show();
 
         // Simula sucesso após 1,5 s para fins de demonstração
-        btnAdicionarCracha.postDelayed(() -> {
-            crachaVinculado = true;
-            tvTituloCracha.setText("Crachá vinculado!");
-            tvSubtituloFoto.setText("Toque para desvincular");
-            tvSubtituloCracha.setText("ID: RFID-00847231");
-            Toast.makeText(requireContext(), "Crachá vinculado com sucesso!", Toast.LENGTH_SHORT).show();
-        }, 1500);
-    }
+    //    btnAdicionarCracha.postDelayed(() -> {
+    //        crachaVinculado = true;
+    //        tvTituloCracha.setText("Crachá vinculado!");
+    //        tvSubtituloFoto.setText("Toque para desvincular");
+    //        tvSubtituloCracha.setText("ID: RFID-00847231");
+    //        Toast.makeText(requireContext(), "Crachá vinculado com sucesso!", Toast.LENGTH_SHORT).show();
+    //   }, 1500);
+    //}
 
     // ──────────────────────────────────────────
     // VALIDAÇÃO E FINALIZAÇÃO
