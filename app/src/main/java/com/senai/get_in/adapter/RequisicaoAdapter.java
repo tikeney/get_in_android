@@ -44,8 +44,8 @@ public class RequisicaoAdapter extends RecyclerView.Adapter<RequisicaoAdapter.Vi
         Requisicao req = requisicoes.get(position);
         
         // Informações básicas
-        holder.txtNome.setText(req.getNomeUsuario() != null ? req.getNomeUsuario() : "Desconhecido");
-        holder.txtDocumento.setText(req.getCpfUsuario() != null ? req.getCpfUsuario() : "---.---.------");
+        holder.txtNome.setText(req.getUsuarioNome() != null ? req.getUsuarioNome() : "Desconhecido");
+        holder.txtDocumento.setText(req.getUsuarioCpf() != null ? req.getUsuarioCpf() : "---.---.------");
         
         // Separação de Data e Hora
         formatarDataHora(holder, req.getDataRequisicao());
@@ -60,7 +60,7 @@ public class RequisicaoAdapter extends RecyclerView.Adapter<RequisicaoAdapter.Vi
             holder.chipEmpresa.setVisibility(View.GONE);
         }
 
-        holder.chipSetor.setText(req.getNomeDepartamento() != null ? req.getNomeDepartamento() : "Geral");
+        holder.chipSetor.setText(req.getDepartamentoNome() != null ? req.getDepartamentoNome() : "Geral");
 
         // Descrição Responsiva
         String descricao = "";

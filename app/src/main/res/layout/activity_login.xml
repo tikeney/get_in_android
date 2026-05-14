@@ -171,6 +171,51 @@
                 android:indeterminateTint="@color/white" />
         </FrameLayout>
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginVertical="40dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/accent"
+            app:layout_constraintEnd_toStartOf="@+id/txtFormasDeLogin"
+            app:layout_constraintTop_toBottomOf="@+id/frameBtnLogin" />
+
+        <TextView
+            android:id="@+id/txtFormasDeLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginVertical="30dp"
+            android:text="ou entre com"
+            android:textColor="@color/accent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frameBtnLogin" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginVertical="40dp"
+            android:layout_marginStart="10dp"
+            android:background="@color/accent"
+            app:layout_constraintStart_toEndOf="@+id/txtFormasDeLogin"
+            app:layout_constraintTop_toBottomOf="@+id/frameBtnLogin" />
+
+        <Button
+            android:id="@+id/btnLoginRFID"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="@color/accent"
+            android:text="Entrar com crachá"
+            android:textColor="@color/secundary"
+            android:textSize="20dp"
+            app:cornerRadius="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtFormasDeLogin" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

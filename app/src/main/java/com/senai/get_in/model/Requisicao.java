@@ -25,10 +25,15 @@ public class Requisicao {
     @SerializedName("validade_visita")
     private String validadeVisita;
 
-    // Campos extras que geralmente vêm no JOIN da API para facilitar o Adapter
-    private String nomeUsuario;
-    private String cpfUsuario;
-    private String nomeDepartamento;
+    // Campos extras de visualização (da view)
+    @SerializedName("usuario_nome")
+    private String usuarioNome;
+    
+    @SerializedName("usuario_cpf")
+    private String usuarioCpf;
+    
+    @SerializedName("departamento_nome")
+    private String departamentoNome;
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -66,12 +71,12 @@ public class Requisicao {
     public String getValidadeVisita() { return validadeVisita; }
     public void setValidadeVisita(String validadeVisita) { this.validadeVisita = validadeVisita; }
 
-    public String getNomeUsuario() { return nomeUsuario; }
-    public void setNomeUsuario(String nomeUsuario) { this.nomeUsuario = nomeUsuario; }
+    public String getUsuarioNome() { return usuarioNome; }
+    public void setUsuarioNome(String usuarioNome) { this.usuarioNome = usuarioNome; }
 
-    public String getCpfUsuario() { return cpfUsuario; }
-    public void setCpfUsuario(String cpfUsuario) { this.cpfUsuario = cpfUsuario; }
+    public String getUsuarioCpf() { return usuarioCpf; }
+    public void setUsuarioCpf(String usuarioCpf) { this.usuarioCpf = usuarioCpf; }
 
-    public String getNomeDepartamento() { return nomeDepartamento; }
-    public void setNomeDepartamento(String nomeDepartamento) { this.nomeDepartamento = nomeDepartamento; }
+    public String getDepartamentoNome() { return departamentoNome; }
+    public void setDepartamentoNome(String departamentoNome) { this.departamentoNome = departamentoNome; }
 }
