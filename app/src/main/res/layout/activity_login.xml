@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:attr/windowBackground"
     tools:context=".LoginActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
             android:layout_marginTop="10dp"
             android:text="Bem-vindo de volta"
             android:textColor="@color/white"
-            android:textSize="38dp"
+            android:textSize="38sp"
             android:textStyle="bold"
             app:layout_constraintHeight_percent="0.4"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
             android:layout_marginTop="10dp"
             android:text="Acesse o painel de controle"
             android:textColor="@color/accent"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintHeight_percent="0.3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtTituloHeader" />
@@ -61,7 +61,7 @@
         android:id="@+id/ConstForm"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white"
+        android:background="?android:attr/windowBackground"
         android:paddingHorizontal="40dp"
         android:paddingTop="50dp"
         app:layout_constraintHeight_percent="0.7"
@@ -74,11 +74,11 @@
             android:id="@+id/txtUsuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Usuário"
-            android:textColor="@color/black"
-            android:textSize="16dp"
+            android:text="E-mail"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" /><!-- text: Usuário-->
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputUsuario"
@@ -99,10 +99,10 @@
                 android:id="@+id/etUsuario"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:hint="Digite seu usuário"
+                android:hint="Digite seu e-mail"
                 android:textColor="@color/secundary"
                 android:textColorHint="@color/InputLoginHint"
-                android:inputType="text"/>
+                android:inputType="textEmailAddress"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -112,10 +112,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Senha"
-            android:textColor="@color/black"
-            android:textSize="16dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inputUsuario" /><!-- text: Senha-->
+            app:layout_constraintTop_toBottomOf="@+id/inputUsuario" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputSenha"
@@ -145,18 +145,31 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btnLogin"
+        <FrameLayout
+            android:id="@+id/frameBtnLogin"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="40dp"
-            android:backgroundTint="@color/secundary"
-            android:text="Entrar"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            app:cornerRadius="20dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inputSenha" />
+            app:layout_constraintTop_toBottomOf="@+id/inputSenha">
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/secundary"
+                android:text="Entrar"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:cornerRadius="20dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBarLogin"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:indeterminateTint="@color/white" />
+        </FrameLayout>
 
         <View
             android:id="@+id/divider"
@@ -166,7 +179,7 @@
             android:layout_marginEnd="10dp"
             android:background="@color/accent"
             app:layout_constraintEnd_toStartOf="@+id/txtFormasDeLogin"
-            app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+            app:layout_constraintTop_toBottomOf="@+id/frameBtnLogin" />
 
         <TextView
             android:id="@+id/txtFormasDeLogin"
@@ -177,7 +190,7 @@
             android:textColor="@color/accent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+            app:layout_constraintTop_toBottomOf="@+id/frameBtnLogin" />
 
         <View
             android:id="@+id/divider2"
@@ -187,7 +200,7 @@
             android:layout_marginStart="10dp"
             android:background="@color/accent"
             app:layout_constraintStart_toEndOf="@+id/txtFormasDeLogin"
-            app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+            app:layout_constraintTop_toBottomOf="@+id/frameBtnLogin" />
 
         <Button
             android:id="@+id/btnLoginRFID"
@@ -201,6 +214,7 @@
             app:cornerRadius="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtFormasDeLogin" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

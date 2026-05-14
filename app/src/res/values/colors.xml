@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Basic Palette -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Modern Blues -->
+    <color name="primary_blue">#0066FF</color>
+    <color name="dark_blue">#004BB3</color>
+    <color name="light_blue_tint">#E6F0FF</color>
+
+    <!-- Grayscale Palette -->
+    <color name="gray_50">#FAFAFA</color>
+    <color name="gray_100">#F5F5F5</color>
+    <color name="gray_200">#EEEEEE</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_700">#616161</color>
+    <color name="gray_800">#424242</color>
+    <color name="gray_900">#212121</color>
+
+    <!-- Dark Mode Specifics -->
+    <color name="dark_bg">#000000</color>
+    <color name="dark_surface">#121212</color>
+    <color name="dark_elevated">#1E1E1E</color>
+
+    <!-- Semantic Mappings (Compatibility) -->
+    <color name="secundary">@color/primary_blue</color>
+    <color name="blue">@color/dark_blue</color>
+    <color name="accent">@color/primary_blue</color>
+    <color name="gray_text">@color/gray_700</color>
+    <color name="divider_color">@color/gray_200</color>
+
+    <!-- Status & UI -->
+    <color name="InputLoginBackground">@color/gray_100</color>
+    <color name="InputLoginHint">@color/gray_700</color>
+
+    <color name="pill_bg_blue">@color/light_blue_tint</color>
+    <color name="pill_text_blue">@color/primary_blue</color>
+    <color name="status_text_color">@color/gray_900</color>
+</resources>

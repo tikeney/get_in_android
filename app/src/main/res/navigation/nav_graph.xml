@@ -29,4 +29,14 @@
         android:name="com.senai.get_in.AutorizacaoFragment"
         android:label="Autorização" />
 
+    <fragment
+        android:id="@+id/nav_perfil"
+        android:name="com.senai.get_in.fragments.PerfilFragment"
+        android:label="Perfil" />
+
+    <fragment
+        android:id="@+id/menu_configuracoes"
+        android:name="com.senai.get_in.fragments.ConfiguracoesFragment"
+        android:label="Configurações" />
+
 </navigation>
