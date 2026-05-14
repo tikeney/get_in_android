@@ -12,12 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/secundary"
+        app:liftOnScroll="false"
         app:elevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:background="@color/secundary"
             android:paddingHorizontal="20dp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp">
@@ -46,7 +48,7 @@
                         android:id="@+id/tvContadorHoje"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12"
+                        android:text="0"
                         android:textColor="@color/white"
                         android:textSize="26sp"
                         android:textStyle="bold" />
@@ -75,7 +77,7 @@
                         android:id="@+id/tvContadorNaFabrica"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2"
+                        android:text="0"
                         android:textColor="@color/white"
                         android:textSize="26sp"
                         android:textStyle="bold" />
@@ -104,7 +106,7 @@
                         android:id="@+id/tvContadorNegados"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:textColor="@color/white"
                         android:textSize="26sp"
                         android:textStyle="bold" />
@@ -122,40 +124,41 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:scrollbars="none">
+                android:scrollbars="none"
+                android:layout_marginBottom="4dp">
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroupFiltros"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:singleSelection="true"
                     app:selectionRequired="true"
-                    app:singleSelection="true">
+                    app:chipSpacingHorizontal="8dp">
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipTodos"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
                         android:text="Todos"
+                        android:checked="true"
                         android:textColor="@color/chip_text_states"
-                        app:checkedIconVisible="false"
                         app:chipBackgroundColor="@color/chip_states"
                         app:chipStrokeColor="@color/accent"
-                        app:chipStrokeWidth="1dp" />
+                        app:chipStrokeWidth="1dp"
+                        app:checkedIconVisible="false" />
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chipPermitido"
+                        android:id="@+id/chipPermitidos"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Permitido"
                         android:textColor="@color/chip_text_states"
-                        app:checkedIconVisible="false"
                         app:chipBackgroundColor="@color/chip_states"
                         app:chipStrokeColor="@color/accent"
-                        app:chipStrokeWidth="1dp" />
+                        app:chipStrokeWidth="1dp"
+                        app:checkedIconVisible="false" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipNegado"
@@ -164,10 +167,10 @@
                         android:layout_height="wrap_content"
                         android:text="Negado"
                         android:textColor="@color/chip_text_states"
-                        app:checkedIconVisible="false"
                         app:chipBackgroundColor="@color/chip_states"
                         app:chipStrokeColor="@color/accent"
-                        app:chipStrokeWidth="1dp" />
+                        app:chipStrokeWidth="1dp"
+                        app:checkedIconVisible="false" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipSaiu"
@@ -176,10 +179,10 @@
                         android:layout_height="wrap_content"
                         android:text="Saiu"
                         android:textColor="@color/chip_text_states"
-                        app:checkedIconVisible="false"
                         app:chipBackgroundColor="@color/chip_states"
                         app:chipStrokeColor="@color/accent"
-                        app:chipStrokeWidth="1dp" />
+                        app:chipStrokeWidth="1dp"
+                        app:checkedIconVisible="false" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipNaFabrica"
@@ -188,10 +191,10 @@
                         android:layout_height="wrap_content"
                         android:text="Na fábrica"
                         android:textColor="@color/chip_text_states"
-                        app:checkedIconVisible="false"
                         app:chipBackgroundColor="@color/chip_states"
                         app:chipStrokeColor="@color/accent"
-                        app:chipStrokeWidth="1dp" />
+                        app:chipStrokeWidth="1dp"
+                        app:checkedIconVisible="false" />
 
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
@@ -240,8 +243,6 @@
                     android:imeOptions="actionSearch" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-
 
             <!-- Lista de Acessos -->
             <androidx.recyclerview.widget.RecyclerView
