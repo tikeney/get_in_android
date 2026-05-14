@@ -31,9 +31,6 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.senai.get_in.api.RetrofitClient;
-import com.senai.get_in.model.Requisicao;
-import com.senai.get_in.utils.TokenManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,13 +40,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class CheckInFragment extends Fragment {
-
-    private static final String TAG = "CheckInFragment";
 
     // Views
     private ConstraintLayout btnAdicionarFoto;
@@ -70,7 +61,6 @@ public class CheckInFragment extends Fragment {
     // Estado
     private Uri fotoUri = null;
     private boolean crachaVinculado = false;
-    private TokenManager tokenManager;
 
     // Launchers de resultado
     private ActivityResultLauncher<Intent> cameraLauncher;
@@ -86,40 +76,40 @@ public class CheckInFragment extends Fragment {
 
         // Launcher da câmera
         cameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK && cameraImageUri != null) {
-                definirFoto(cameraImageUri);
-            }
-        });
+                    if (result.getResultCode() == Activity.RESULT_OK && cameraImageUri != null) {
+                        definirFoto(cameraImageUri);
+                    }
+                });
 
         // Launcher da galeria
         galeriaLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                Uri uri = result.getData().getData();
-                if (uri != null) {
-                    definirFoto(uri);
-                }
-            }
-        });
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Uri uri = result.getData().getData();
+                        if (uri != null) {
+                            definirFoto(uri);
+                        }
+                    }
+                });
 
         // Launcher de permissão da câmera
         permissaoCameraLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
-            if (granted) {
-                abrirCamera();
-            } else {
-                Toast.makeText(requireContext(),
-                        "Permissão de câmera negada.", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    if (granted) {
+                        abrirCamera();
+                    } else {
+                        Toast.makeText(requireContext(),
+                                "Permissão de câmera negada.", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         // Launcher de permissão de armazenamento
         permissaoArmazenamentoLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
-            if (granted) {
-                abrirGaleria();
-            } else {
-                Toast.makeText(requireContext(),
-                        "Permissão de armazenamento negada.", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    if (granted) {
+                        abrirGaleria();
+                    } else {
+                        Toast.makeText(requireContext(),
+                                "Permissão de armazenamento negada.", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Nullable
@@ -127,9 +117,85 @@ public class CheckInFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_check_in, container, false);
 
+        etNome = view.findViewById(R.id.etNome);
+        etCPF = view.findViewById(R.id.etCPF);
+        etTelefone = view.findViewById(R.id.etTelefone);
+        etEmpresa = view.findViewById(R.id.etEmpresa);
+        etMotivo = view.findViewById(R.id.etMotivo);
+        chipGroupSetores = view.findViewById(R.id.chipGroupSetores);
+        btnFinalizar = view.findViewById(R.id.btnLogin); // O ID no XML é btnLogin para finalizar
+
         tokenManager = new TokenManager(requireContext());
 
+        btnFinalizar.setOnClickListener(v -> realizarCheckIn());
+
         return view;
+    }
+
+    private void realizarCheckIn() {
+        String nome = etNome.getText().toString().trim();
+        String cpf = etCPF.getText().toString().trim();
+        String empresa = etEmpresa.getText().toString().trim();
+        String motivo = etMotivo.getText().toString().trim();
+
+        if (nome.isEmpty() || cpf.isEmpty()) {
+            Toast.makeText(getContext(), "Nome e CPF são obrigatórios", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int selectedChipId = chipGroupSetores.getCheckedChipId();
+        String setor = "";
+        if (selectedChipId != View.NO_ID) {
+            Chip selectedChip = chipGroupSetores.findViewById(selectedChipId);
+            setor = selectedChip.getText().toString();
+        }
+
+        // Criar objeto de requisição para o visitante
+        Requisicao req = new Requisicao();
+        req.setUsuarioNome(nome);
+        req.setUsuarioCpf(cpf);
+        req.setEmpresaVisitante(empresa);
+        req.setMotivo(motivo);
+        req.setDepartamentoNome(setor);
+        // Note: A API pode exigir IDs de usuário/setor reais, mas aqui simulamos com os dados do form
+        
+        String token = tokenManager.getToken();
+        if (token == null) return;
+
+        btnFinalizar.setEnabled(false);
+        btnFinalizar.setText("Processando...");
+
+        RetrofitClient.getApiService().criarRequisicaoVisitante("Bearer " + token, req).enqueue(new Callback<Requisicao>() {
+            @Override
+            public void onResponse(Call<Requisicao> call, Response<Requisicao> response) {
+                btnFinalizar.setEnabled(true);
+                btnFinalizar.setText("Finalizar Check-in");
+                
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Check-in realizado com sucesso!", Toast.LENGTH_LONG).show();
+                    limparCampos();
+                } else {
+                    Toast.makeText(getContext(), "Erro ao realizar check-in: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Requisicao> call, Throwable t) {
+                btnFinalizar.setEnabled(true);
+                btnFinalizar.setText("Finalizar Check-in");
+                Log.e(TAG, "Falha: " + t.getMessage());
+                Toast.makeText(getContext(), "Falha na conexão", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void limparCampos() {
+        etNome.setText("");
+        etCPF.setText("");
+        etTelefone.setText("");
+        etEmpresa.setText("");
+        etMotivo.setText("");
+        chipGroupSetores.clearCheck();
     }
 
     @Override
@@ -193,6 +259,10 @@ public class CheckInFragment extends Fragment {
         etTelefone.addTextChangedListener(new MascaraTextWatcher(etTelefone, "(##) #####-####"));
     }
 
+    /**
+     * TextWatcher genérico para aplicar máscaras no formato "###.###-##".
+     * Cada '#' representa um dígito.
+     */
     private static class MascaraTextWatcher implements TextWatcher {
         private final TextInputEditText campo;
         private final String mascara;
@@ -211,6 +281,7 @@ public class CheckInFragment extends Fragment {
             if (editando) return;
             editando = true;
 
+            // Remove tudo que não for dígito
             String digits = s.toString().replaceAll("[^\\d]", "");
             StringBuilder sb = new StringBuilder();
             int di = 0;
@@ -259,6 +330,7 @@ public class CheckInFragment extends Fragment {
     }
 
     private void verificarPermissaoGaleria() {
+        // Android 13+ usa READ_MEDIA_IMAGES; abaixo usa READ_EXTERNAL_STORAGE
         String permissao;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             permissao = Manifest.permission.READ_MEDIA_IMAGES;
@@ -310,13 +382,36 @@ public class CheckInFragment extends Fragment {
     }
 
     // ──────────────────────────────────────────
+    // CRACHÁ
+    // ──────────────────────────────────────────
+
+    //private void configurarCracha() {
+    //    btnAdicionarCracha.setOnClickListener(v -> simularLeituraCracha());
+    //}
+
+    //private void simularLeituraCracha() {
+        // Simulação de leitura RFID — substitua pela lógica real de NFC/RFID
+    //    Toast.makeText(requireContext(),
+    //            "Aproxime o crachá do leitor...", Toast.LENGTH_SHORT).show();
+
+        // Simula sucesso após 1,5 s para fins de demonstração
+    //    btnAdicionarCracha.postDelayed(() -> {
+    //        crachaVinculado = true;
+    //        tvTituloCracha.setText("Crachá vinculado!");
+    //        tvSubtituloFoto.setText("Toque para desvincular");
+    //        tvSubtituloCracha.setText("ID: RFID-00847231");
+    //        Toast.makeText(requireContext(), "Crachá vinculado com sucesso!", Toast.LENGTH_SHORT).show();
+    //   }, 1500);
+    //}
+
+    // ──────────────────────────────────────────
     // VALIDAÇÃO E FINALIZAÇÃO
     // ──────────────────────────────────────────
 
     private void configurarBotaoFinalizar() {
         btnFinalizar.setOnClickListener(v -> {
             if (validarFormulario()) {
-                realizarCheckIn();
+                finalizarCheckIn();
             }
         });
     }
@@ -335,7 +430,7 @@ public class CheckInFragment extends Fragment {
 
         // CPF
         String cpf = etCPF.getText() != null ? etCPF.getText().toString().trim() : "";
-        if (cpf.length() < 14) {
+        if (cpf.length() < 14) { // "###.###.###-##" = 14 chars
             inputCPF.setError("CPF inválido");
             valido = false;
         } else {
@@ -344,7 +439,7 @@ public class CheckInFragment extends Fragment {
 
         // Telefone
         String tel = etTelefone.getText() != null ? etTelefone.getText().toString().trim() : "";
-        if (tel.length() < 15) {
+        if (tel.length() < 15) { // "(##) #####-####" = 15 chars
             inputTelefone.setError("Telefone inválido");
             valido = false;
         } else {
@@ -389,57 +484,23 @@ public class CheckInFragment extends Fragment {
         return setores;
     }
 
-    private void realizarCheckIn() {
-        String nome = etNome.getText().toString().trim();
-        String cpf = etCPF.getText().toString().trim();
+    private void finalizarCheckIn() {
+        String nome    = etNome.getText().toString().trim();
+        String cpf     = etCPF.getText().toString().trim();
+        String tel     = etTelefone.getText().toString().trim();
         String empresa = etEmpresa.getText().toString().trim();
-        String motivo = etMotivo.getText().toString().trim();
+        String motivo  = etMotivo.getText().toString().trim();
         List<String> setores = obterSetoresSelecionados();
-        String setor = setores.isEmpty() ? "" : setores.get(0);
 
-        // Criar objeto de requisição para o visitante
-        Requisicao req = new Requisicao();
-        req.setUsuarioNome(nome);
-        req.setUsuarioCpf(cpf);
-        req.setEmpresaVisitante(empresa);
-        req.setMotivo(motivo);
-        req.setDepartamentoNome(setor);
-        
-        String token = tokenManager.getToken();
-        if (token == null) {
-            Toast.makeText(requireContext(), "Sessão expirada. Faça login novamente.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // ── Aqui você conecta ao seu repositório / API ──
+        // Ex.: viewModel.salvarCheckIn(nome, cpf, tel, empresa, motivo, setores, fotoUri);
 
-        btnFinalizar.setEnabled(false);
-        btnFinalizar.setText("Processando...");
+        String msg = "Check-in realizado!\n"
+                + nome + " | " + empresa + "\n"
+                + "Setores: " + setores;
 
-        RetrofitClient.getApiService().criarRequisicaoVisitante("Bearer " + token, req).enqueue(new Callback<Requisicao>() {
-            @Override
-            public void onResponse(Call<Requisicao> call, Response<Requisicao> response) {
-                if (!isAdded()) return;
-                
-                btnFinalizar.setEnabled(true);
-                btnFinalizar.setText("Finalizar Check-in");
-                
-                if (response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Check-in realizado com sucesso!", Toast.LENGTH_LONG).show();
-                    limparFormulario();
-                } else {
-                    Toast.makeText(getContext(), "Erro ao realizar check-in: " + response.code(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Requisicao> call, Throwable t) {
-                if (!isAdded()) return;
-                
-                btnFinalizar.setEnabled(true);
-                btnFinalizar.setText("Finalizar Check-in");
-                Log.e(TAG, "Falha: " + t.getMessage());
-                Toast.makeText(getContext(), "Falha na conexão", Toast.LENGTH_SHORT).show();
-            }
-        });
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
+        limparFormulario();
     }
 
     private void limparFormulario() {
