@@ -31,6 +31,9 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.senai.get_in.api.RetrofitClient;
+import com.senai.get_in.model.Requisicao;
+import com.senai.get_in.utils.TokenManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +43,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class CheckInFragment extends Fragment {
+
+    private static final String TAG = "CheckInFragment";
 
     // Views
     private ConstraintLayout btnAdicionarFoto;
@@ -58,7 +67,8 @@ public class CheckInFragment extends Fragment {
 
     private Button btnFinalizar;
 
-    // Estado
+    // Utilitários e Estado
+    private TokenManager tokenManager;
     private Uri fotoUri = null;
     private boolean crachaVinculado = false;
 
@@ -73,6 +83,9 @@ public class CheckInFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Inicializa o TokenManager
+        tokenManager = new TokenManager(requireContext());
 
         // Launcher da câmera
         cameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -125,7 +138,7 @@ public class CheckInFragment extends Fragment {
         chipGroupSetores = view.findViewById(R.id.chipGroupSetores);
         btnFinalizar = view.findViewById(R.id.btnLogin); // O ID no XML é btnLogin para finalizar
 
-        tokenManager = new TokenManager(requireContext());
+        // tokenManager já inicializado no onCreate
 
         btnFinalizar.setOnClickListener(v -> realizarCheckIn());
 
@@ -157,10 +170,12 @@ public class CheckInFragment extends Fragment {
         req.setEmpresaVisitante(empresa);
         req.setMotivo(motivo);
         req.setDepartamentoNome(setor);
-        // Note: A API pode exigir IDs de usuário/setor reais, mas aqui simulamos com os dados do form
         
         String token = tokenManager.getToken();
-        if (token == null) return;
+        if (token == null) {
+            Toast.makeText(getContext(), "Erro: Token não encontrado.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         btnFinalizar.setEnabled(false);
         btnFinalizar.setText("Processando...");
@@ -168,6 +183,8 @@ public class CheckInFragment extends Fragment {
         RetrofitClient.getApiService().criarRequisicaoVisitante("Bearer " + token, req).enqueue(new Callback<Requisicao>() {
             @Override
             public void onResponse(Call<Requisicao> call, Response<Requisicao> response) {
+                if (!isAdded()) return;
+                
                 btnFinalizar.setEnabled(true);
                 btnFinalizar.setText("Finalizar Check-in");
                 
@@ -181,6 +198,8 @@ public class CheckInFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Requisicao> call, Throwable t) {
+                if (!isAdded()) return;
+                
                 btnFinalizar.setEnabled(true);
                 btnFinalizar.setText("Finalizar Check-in");
                 Log.e(TAG, "Falha: " + t.getMessage());
@@ -296,7 +315,9 @@ public class CheckInFragment extends Fragment {
             }
 
             campo.setText(sb.toString());
-            campo.setSelection(sb.length());
+            if (sb.length() > 0) {
+                campo.setSelection(sb.length());
+            }
             editando = false;
         }
     }
@@ -330,7 +351,6 @@ public class CheckInFragment extends Fragment {
     }
 
     private void verificarPermissaoGaleria() {
-        // Android 13+ usa READ_MEDIA_IMAGES; abaixo usa READ_EXTERNAL_STORAGE
         String permissao;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             permissao = Manifest.permission.READ_MEDIA_IMAGES;
@@ -382,36 +402,13 @@ public class CheckInFragment extends Fragment {
     }
 
     // ──────────────────────────────────────────
-    // CRACHÁ
-    // ──────────────────────────────────────────
-
-    //private void configurarCracha() {
-    //    btnAdicionarCracha.setOnClickListener(v -> simularLeituraCracha());
-    //}
-
-    //private void simularLeituraCracha() {
-        // Simulação de leitura RFID — substitua pela lógica real de NFC/RFID
-    //    Toast.makeText(requireContext(),
-    //            "Aproxime o crachá do leitor...", Toast.LENGTH_SHORT).show();
-
-        // Simula sucesso após 1,5 s para fins de demonstração
-    //    btnAdicionarCracha.postDelayed(() -> {
-    //        crachaVinculado = true;
-    //        tvTituloCracha.setText("Crachá vinculado!");
-    //        tvSubtituloFoto.setText("Toque para desvincular");
-    //        tvSubtituloCracha.setText("ID: RFID-00847231");
-    //        Toast.makeText(requireContext(), "Crachá vinculado com sucesso!", Toast.LENGTH_SHORT).show();
-    //   }, 1500);
-    //}
-
-    // ──────────────────────────────────────────
     // VALIDAÇÃO E FINALIZAÇÃO
     // ──────────────────────────────────────────
 
     private void configurarBotaoFinalizar() {
         btnFinalizar.setOnClickListener(v -> {
             if (validarFormulario()) {
-                finalizarCheckIn();
+                realizarCheckIn();
             }
         });
     }
@@ -430,20 +427,11 @@ public class CheckInFragment extends Fragment {
 
         // CPF
         String cpf = etCPF.getText() != null ? etCPF.getText().toString().trim() : "";
-        if (cpf.length() < 14) { // "###.###.###-##" = 14 chars
+        if (cpf.length() < 14) { 
             inputCPF.setError("CPF inválido");
             valido = false;
         } else {
             inputCPF.setError(null);
-        }
-
-        // Telefone
-        String tel = etTelefone.getText() != null ? etTelefone.getText().toString().trim() : "";
-        if (tel.length() < 15) { // "(##) #####-####" = 15 chars
-            inputTelefone.setError("Telefone inválido");
-            valido = false;
-        } else {
-            inputTelefone.setError(null);
         }
 
         // Empresa
@@ -455,52 +443,14 @@ public class CheckInFragment extends Fragment {
             inputEmpresa.setError(null);
         }
 
-        // Motivo
-        String motivo = etMotivo.getText() != null ? etMotivo.getText().toString().trim() : "";
-        if (motivo.isEmpty()) {
-            inputMotivo.setError("Informe o motivo da visita");
-            valido = false;
-        } else {
-            inputMotivo.setError(null);
-        }
-
-        // Setores — pelo menos 1 selecionado
-        if (obterSetoresSelecionados().isEmpty()) {
+        // Setores 
+        if (chipGroupSetores.getCheckedChipId() == View.NO_ID) {
             Toast.makeText(requireContext(),
-                    "Selecione pelo menos um setor permitido.", Toast.LENGTH_SHORT).show();
+                    "Selecione um setor.", Toast.LENGTH_SHORT).show();
             valido = false;
         }
 
         return valido;
-    }
-
-    private List<String> obterSetoresSelecionados() {
-        List<String> setores = new ArrayList<>();
-        if (chipManutencao.isChecked())    setores.add("Manutenção");
-        if (chipAlmoxarifado.isChecked())  setores.add("Almoxarifado");
-        if (chipProducao.isChecked())      setores.add("Produção");
-        if (chipLaboratorio.isChecked())   setores.add("Laboratório");
-        if (chipAdministracao.isChecked()) setores.add("Administração");
-        return setores;
-    }
-
-    private void finalizarCheckIn() {
-        String nome    = etNome.getText().toString().trim();
-        String cpf     = etCPF.getText().toString().trim();
-        String tel     = etTelefone.getText().toString().trim();
-        String empresa = etEmpresa.getText().toString().trim();
-        String motivo  = etMotivo.getText().toString().trim();
-        List<String> setores = obterSetoresSelecionados();
-
-        // ── Aqui você conecta ao seu repositório / API ──
-        // Ex.: viewModel.salvarCheckIn(nome, cpf, tel, empresa, motivo, setores, fotoUri);
-
-        String msg = "Check-in realizado!\n"
-                + nome + " | " + empresa + "\n"
-                + "Setores: " + setores;
-
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show();
-        limparFormulario();
     }
 
     private void limparFormulario() {
