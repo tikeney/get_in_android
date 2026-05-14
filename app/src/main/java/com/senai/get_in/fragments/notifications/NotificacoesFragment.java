@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -29,40 +30,41 @@ public class NotificacoesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Pega as referências dos componentes do layout
         ViewPager2 viewPager = view.findViewById(R.id.viewPager);
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
 
-        // 2. Cria o adapter passando:
-        //    - getChildFragmentManager(): gerenciador de fragments FILHO
-        //      (use getChildFragmentManager() dentro de Fragment, nunca getParentFragmentManager())
-        //    - getViewLifecycleOwner().getLifecycle(): ciclo de vida correto para fragments
         NotificacoesAdapter adapter = new NotificacoesAdapter(
                 getChildFragmentManager(),
                 getViewLifecycleOwner().getLifecycle()
         );
 
-        // 3. Conecta o adapter ao ViewPager
         viewPager.setAdapter(adapter);
 
-        // 4. TabLayoutMediator: conecta o TabLayout ao ViewPager2
-        //    Sem isso, as abas não sincronizam com o deslize
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            // Define o texto de cada aba pelo índice
             switch (position) {
-                case 0:
-                    tab.setText("Todas");
-                    break;
-                case 1:
-                    tab.setText("Aprovações");
-                    break;
-                case 2:
-                    tab.setText("Alertas");
-                    break;
-                case 3:
-                    tab.setText("Sistema");
-                    break;
+                case 0: tab.setText("Todas"); break;
+                case 1: tab.setText("Aprovações"); break;
+                case 2: tab.setText("Alertas"); break;
+                case 3: tab.setText("Sistema"); break;
             }
-        }).attach(); // .attach() é obrigatório para ativar a sincronização
+        }).attach();
+
+        // Sincroniza o título da Toolbar com a aba selecionada
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if (getActivity() != null && ((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+                    String title = "Notificações";
+                    switch (position) {
+                        case 0: title = "Todas as Notificações"; break;
+                        case 1: title = "Aprovações Pendentes"; break;
+                        case 2: title = "Alertas de Segurança"; break;
+                        case 3: title = "Notificações de Sistema"; break;
+                    }
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
+                }
+            }
+        });
     }
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_perfil"
+            android:icon="@drawable/outline_person_24"
+            android:title="Perfil" />
+        <item
+            android:id="@+id/menu_configuracoes"
+            android:icon="@drawable/outline_lock_24"
+            android:title="Configurações" />
+        <item
+            android:id="@+id/nav_notificacoes"
+            android:icon="@drawable/outline_notifications_24"
+            android:title="Notificações" />
+        <item
+            android:id="@+id/nav_checkIn"
+            android:icon="@drawable/outline_add_24"
+            android:title="Check-in" />
+        <item
+            android:id="@+id/nav_visitantes"
+            android:icon="@drawable/outline_group_24"
+            android:title="Visitantes" />
+        <item
+            android:id="@+id/nav_historico"
+            android:icon="@drawable/outline_list_alt_24"
+            android:title="Histórico" />
+    </group>
+
+    <item android:title="Outros">
+        <menu>
+            <item
+                android:id="@+id/menu_sair"
+                android:icon="@drawable/outline_logout_24"
+                android:title="Sair" />
+        </menu>
+    </item>
+</menu>

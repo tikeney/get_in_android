@@ -1,54 +1,277 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="?android:attr/windowBackground">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- ===== CABEÇALHO FIXO COM ESTATÍSTICAS ===== -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarHistorico"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="40dp"
-        android:paddingVertical="20dp">
+        android:layout_height="wrap_content"
+        android:background="@color/secundary"
+        app:liftOnScroll="false"
+        app:elevation="0dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputBusca"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            app:boxBackgroundColor="@color/white"
-            app:boxCornerRadiusBottomEnd="15dp"
-            app:boxCornerRadiusBottomStart="15dp"
-            app:boxCornerRadiusTopEnd="15dp"
-            app:boxCornerRadiusTopStart="15dp"
-            app:boxStrokeColor="@color/input_stroke"
-            app:hintEnabled="false"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical"
+            android:background="@color/secundary"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etNome"
+            <!-- Cards de estatísticas -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Buscar visitante ou setor"
-                android:textColor="@color/secundary"
-                android:textColorHint="@color/InputLoginHint"
-                android:inputType="text"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <!-- Card: Hoje -->
+                <LinearLayout
+                    android:id="@+id/cardHoje"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/bg_stat_card"
+                    android:padding="12dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerHistorico"
+                    <TextView
+                        android:id="@+id/tvContadorHoje"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textSize="26sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hoje"
+                        android:textColor="@color/accent"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- Card: Na fábrica -->
+                <LinearLayout
+                    android:id="@+id/cardNaFabrica"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="6dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/bg_stat_card"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tvContadorNaFabrica"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textSize="26sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Na fábrica"
+                        android:textColor="@color/accent"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- Card: Negados -->
+                <LinearLayout
+                    android:id="@+id/cardNegados"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/bg_stat_card"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tvContadorNegados"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textSize="26sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Negados"
+                        android:textColor="@color/accent"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Filtros por Chip -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginBottom="4dp">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupFiltros"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:chipSpacingHorizontal="8dp">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipTodos"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Todos"
+                        android:checked="true"
+                        android:textColor="@color/chip_text_states"
+                        app:chipBackgroundColor="@color/chip_states"
+                        app:chipStrokeColor="@color/accent"
+                        app:chipStrokeWidth="1dp"
+                        app:checkedIconVisible="false" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipPermitidos"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Permitido"
+                        android:textColor="@color/chip_text_states"
+                        app:chipBackgroundColor="@color/chip_states"
+                        app:chipStrokeColor="@color/accent"
+                        app:chipStrokeWidth="1dp"
+                        app:checkedIconVisible="false" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipNegado"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Negado"
+                        android:textColor="@color/chip_text_states"
+                        app:chipBackgroundColor="@color/chip_states"
+                        app:chipStrokeColor="@color/accent"
+                        app:chipStrokeWidth="1dp"
+                        app:checkedIconVisible="false" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSaiu"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Saiu"
+                        android:textColor="@color/chip_text_states"
+                        app:chipBackgroundColor="@color/chip_states"
+                        app:chipStrokeColor="@color/accent"
+                        app:chipStrokeWidth="1dp"
+                        app:checkedIconVisible="false" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipNaFabrica"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Na fábrica"
+                        android:textColor="@color/chip_text_states"
+                        app:chipBackgroundColor="@color/chip_states"
+                        app:chipStrokeColor="@color/accent"
+                        app:chipStrokeWidth="1dp"
+                        app:checkedIconVisible="false" />
+
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ===== CONTEÚDO SCROLLÁVEL ===== -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/inputBusca"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="24dp">
 
+            <!-- Campo de Busca -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputBusca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundColor="?android:attr/windowBackground"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxStrokeColor="@color/input_stroke"
+                app:hintEnabled="false"
+                app:startIconDrawable="@drawable/outline_person_24"
+                app:startIconTint="@color/InputLoginHint">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etBusca"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Buscar visitante ou setor..."
+                    android:textColor="@color/secundary"
+                    android:textColorHint="@color/InputLoginHint"
+                    android:inputType="text"
+                    android:imeOptions="actionSearch" />
 
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Lista de Acessos -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerHistorico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-</FrameLayout>
+            <!-- Estado Vazio -->
+            <LinearLayout
+                android:id="@+id/layoutVazio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingVertical="48dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nenhum acesso encontrado"
+                    android:textColor="@color/accent"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
