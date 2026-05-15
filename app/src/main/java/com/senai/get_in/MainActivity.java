@@ -196,8 +196,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (isPortaria()) {
-            // Portaria: Checkin, Perfil, Configuração, Notificações
-            return id == R.id.nav_checkIn || id == R.id.nav_notificacoes || id == R.id.nav_perfil || id == R.id.menu_configuracoes;
+            // Portaria: Checkin, Autorização, Perfil, Configuração, Notificações
+            return id == R.id.nav_checkIn || id == R.id.nav_autorizacao || id == R.id.nav_notificacoes || id == R.id.nav_perfil || id == R.id.menu_configuracoes;
         }
 
         if (isFuncionario()) {
