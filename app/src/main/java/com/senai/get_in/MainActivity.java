@@ -31,7 +31,7 @@ import com.senai.get_in.model.UsuarioDetalhado;
 import com.senai.get_in.utils.TokenManager;
 import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private TokenManager tokenManager;
@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return insets;
         });
 
-        navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -99,7 +98,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         
         navController = navHostFragment.getNavController();
 
-        // Aplica restrições de visibilidade
+        // Configura a navegação automática com os menus
+        NavigationUI.setupWithNavController(navigationView, navController);
+        NavigationUI.setupWithNavController(bottomNav, navController);
+
+        // Intercepta cliques no NavigationView para tratar o Logout
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.menu_sair) {
+                logout();
+                return true;
+            }
+            
+            // Tenta navegar automaticamente
+            boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
+            if (handled) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            }
+            return handled;
+        });
+
+        // Aplica restrições de visibilidade APÓS a configuração inicial
         restrictMenu(navigationView.getMenu());
         restrictMenu(bottomNav.getMenu());
 
@@ -109,30 +128,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navController.setGraph(navGraph);
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            int id = destination.getId();
-            if (!isAllowedDestination(id)) {
-                Log.w(TAG, "Acesso proibido à tela " + id + ". Redirecionando para tela principal.");
-                // Use post para evitar crash durante a transição de fragmentos
-                new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
-                    controller.navigate(startId);
-                });
-            }
             if (getSupportActionBar() != null && destination.getLabel() != null) {
                 getSupportActionBar().setTitle(destination.getLabel());
             }
         });
-
-        // Configura Bottom Navigation
-        NavigationUI.setupWithNavController(bottomNav, navController);
         
-        // Esconde BottomNav se o usuário tiver acesso a poucas páginas (opcional, mas melhora fluidez)
+        // Esconde BottomNav se o usuário tiver acesso a poucas páginas
         if (isFuncionario()) {
             bottomNav.setVisibility(View.GONE);
         } else {
             bottomNav.setVisibility(View.VISIBLE);
         }
 
-        // Garante que o tema seja aplicado corretamente na barra de status
         if (getSupportActionBar() != null) {
             getSupportActionBar().setElevation(0);
         }
@@ -244,21 +251,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.menu_sair) {
-            logout();
-        } else {
-            if (isAllowedDestination(id)) {
-                navController.navigate(id);
-            } else {
-                Toast.makeText(this, "Acesso restrito", Toast.LENGTH_SHORT).show();
-            }
-        }
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
+
 
     @Override
     public void onBackPressed() {
