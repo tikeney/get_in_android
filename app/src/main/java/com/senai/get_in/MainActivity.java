@@ -98,11 +98,17 @@ public class MainActivity extends AppCompatActivity {
         
         navController = navHostFragment.getNavController();
 
-        // Configura a navegação automática com os menus
+        // 1. Configura o gráfico de navegação PRIMEIRO
+        NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.nav_graph);
+        int startId = getStartDestinationId();
+        navGraph.setStartDestination(startId);
+        navController.setGraph(navGraph);
+
+        // 2. Configura a navegação automática com os menus
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupWithNavController(bottomNav, navController);
 
-        // Intercepta cliques no NavigationView para tratar o Logout
+        // 3. Intercepta cliques no NavigationView para tratar o Logout e restrições
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.menu_sair) {
@@ -110,7 +116,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             
-            // Tenta navegar automaticamente
+            if (!isAllowedDestination(id)) {
+                Toast.makeText(this, "Acesso não permitido para seu cargo", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            
             boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
             if (handled) {
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -118,27 +128,24 @@ public class MainActivity extends AppCompatActivity {
             return handled;
         });
 
-        // Aplica restrições de visibilidade APÓS a configuração inicial
-        restrictMenu(navigationView.getMenu());
-        restrictMenu(bottomNav.getMenu());
-
-        NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.nav_graph);
-        int startId = getStartDestinationId();
-        navGraph.setStartDestination(startId);
-        navController.setGraph(navGraph);
+        // 4. Aplica restrições de visibilidade FORÇADA
+        runOnUiThread(() -> {
+            restrictMenu(navigationView.getMenu());
+            restrictMenu(bottomNav.getMenu());
+            
+            // Controle da BottomNav
+            if (isAdmin() || isGerente() || isPortaria() || isSupervisor()) {
+                bottomNav.setVisibility(View.VISIBLE);
+            } else {
+                bottomNav.setVisibility(View.GONE);
+            }
+        });
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (getSupportActionBar() != null && destination.getLabel() != null) {
                 getSupportActionBar().setTitle(destination.getLabel());
             }
         });
-        
-        // Mostra BottomNav apenas se o usuário tiver acesso a mais de 2 páginas além do perfil/config
-        if (isAdmin() || isGerente() || isPortaria() || isSupervisor()) {
-            bottomNav.setVisibility(View.VISIBLE);
-        } else {
-            bottomNav.setVisibility(View.GONE);
-        }
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setElevation(0);
@@ -207,8 +214,13 @@ public class MainActivity extends AppCompatActivity {
             MenuItem item = menu.getItem(i);
             int id = item.getItemId();
 
+            // Log para depuração interna
+            Log.d(TAG, "Validando item: " + item.getTitle() + " (ID: " + id + ")");
+
             if (item.hasSubMenu()) {
                 restrictMenu(item.getSubMenu());
+                
+                // Verifica se sobrou algum filho visível
                 boolean anyChildVisible = false;
                 Menu sub = item.getSubMenu();
                 for (int j = 0; j < sub.size(); j++) {
@@ -219,7 +231,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 item.setVisible(anyChildVisible);
             } else {
-                item.setVisible(isAllowedDestination(id));
+                boolean allowed = isAllowedDestination(id);
+                item.setVisible(allowed);
+                Log.d(TAG, "Item " + item.getTitle() + " permitido? " + allowed);
             }
         }
     }
