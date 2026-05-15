@@ -53,6 +53,20 @@ public interface ApiService {
     @GET("user/{id}")
     Call<UsuarioResponse> getUsuarioPorId(@Header("Authorization") String token, @Path("id") int id);
 
+    @PUT("user/{id}")
+    Call<UsuarioResponse> atualizarUsuario(@Header("Authorization") String token, @Path("id") int id, @Body UsuarioDetalhado usuario);
+
     @DELETE("user/{id}")
     Call<Void> deletarUsuario(@Header("Authorization") String token, @Path("id") int id);
+
+    // --- Departamentos ---
+    @GET("dep/")
+    Call<List<Departamento>> getDepartamentos(@Header("Authorization") String token);
+
+    // --- Requisições Específicas ---
+    @GET("requisicao/func/{id}")
+    Call<RequisicaoResponse> getRequisicoesPorFuncionario(@Header("Authorization") String token, @Path("id") int id);
+
+    @GET("requisicao-visitante/user/{id}")
+    Call<RequisicaoResponse> getRequisicoesVisitantePorUsuario(@Header("Authorization") String token, @Path("id") int id);
 }
