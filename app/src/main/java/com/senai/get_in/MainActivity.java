@@ -91,26 +91,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setupNavigation() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
+        
+        if (navHostFragment == null) {
+            Log.e(TAG, "NavHostFragment não encontrado!");
+            return;
+        }
+        
         navController = navHostFragment.getNavController();
 
-        // Aplica restrições de visibilidade IMEDIATAMENTE antes de configurar a navegação
+        // Aplica restrições de visibilidade
         restrictMenu(navigationView.getMenu());
         restrictMenu(bottomNav.getMenu());
+
+        NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.nav_graph);
+        int startId = getStartDestinationId();
+        navGraph.setStartDestination(startId);
+        navController.setGraph(navGraph);
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             int id = destination.getId();
             if (!isAllowedDestination(id)) {
                 Log.w(TAG, "Acesso proibido à tela " + id + ". Redirecionando para tela principal.");
-                controller.navigate(getStartDestinationId());
+                // Use post para evitar crash durante a transição de fragmentos
+                new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
+                    controller.navigate(startId);
+                });
             }
             if (getSupportActionBar() != null && destination.getLabel() != null) {
                 getSupportActionBar().setTitle(destination.getLabel());
             }
         });
-
-        NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.nav_graph);
-        navGraph.setStartDestination(getStartDestinationId());
-        navController.setGraph(navGraph);
 
         // Configura Bottom Navigation
         NavigationUI.setupWithNavController(bottomNav, navController);
@@ -155,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private boolean isAllowedDestination(int id) {
         // Itens sempre permitidos
-        if (id == R.id.menu_sair || id == R.id.nav_perfil || id == R.id.menu_configuracoes) {
+        if (id == R.id.menu_sair || id == R.id.nav_perfil || id == R.id.menu_configuracoes || id == R.id.nav_host_fragment) {
             return true;
         }
 
