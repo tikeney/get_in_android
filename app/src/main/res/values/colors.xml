@@ -33,6 +33,15 @@
     <color name="dark_text_secondary">#BDBDBD</color>
     <color name="dark_divider">#2C2C2C</color>
 
+    <!-- Status Colors -->
+    <color name="pending_border">#FFB300</color>
+
+    <!-- UI Component Colors -->
+    <color name="divider_color">@color/light_divider</color>
+    <color name="gray_text">@color/light_text_secondary</color>
+    <color name="icon_bg_light">#F0F2F5</color>
+    <color name="pill_bg_blue">#E8EBF0</color>
+
     <!-- Legacy / Compatibility Mappings -->
     <color name="white">@color/soft_white</color>
     <color name="black">@color/pure_black</color>
