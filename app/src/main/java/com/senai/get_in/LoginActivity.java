@@ -42,11 +42,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         
         tokenManager = new TokenManager(this);
-        
-        if (tokenManager.getToken() != null) {
-            irParaMain();
-            return;
-        }
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);

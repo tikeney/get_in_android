@@ -2,40 +2,43 @@
 <resources>
     <!-- Core Brand Colors -->
     <color name="brand_blue">#0D243F</color>
-    <color name="brand_blue_dark">#0D243F</color>
-    <color name="brand_blue_light">#EEE8DF</color>
+    <color name="brand_blue_dark">#0A1C31</color>
+    <color name="brand_blue_light">#1A3A5E</color>
 
     <!-- Absolute Neutrals -->
     <color name="pure_white">#FFFFFF</color>
     <color name="pure_black">#000000</color>
 
-    <!-- Light Theme Neutrals -->
-    <color name="light_background">#EEE8DF</color>
-    <color name="light_surface">#EEE8DF</color>
-    <color name="light_text_primary">#000000</color>
-    <color name="light_text_secondary">#444444</color>
-    <color name="light_divider">#EEE8DF</color>
+    <!-- Neutrals (Comfortable Palette) -->
+    <color name="soft_white">#F5F5F5</color>
+    <color name="off_white">#E0E0E0</color>
+    <color name="light_gray">#BDBDBD</color>
+    <color name="medium_gray">#757575</color>
+    <color name="dark_gray">#424242</color>
+    <color name="deep_black">#121212</color>
 
-    <!-- Dark Theme Neutrals -->
-    <color name="dark_background">#000000</color>
-    <color name="dark_surface">#121212</color>
-    <color name="dark_text_primary">#EEE8DF</color>
-    <color name="dark_text_secondary">#A0A0A0</color>
-    <color name="dark_divider">#222222</color>
+    <!-- Theme Specific Mappings -->
+    
+    <!-- Light Theme -->
+    <color name="light_bg">#F8F9FA</color>
+    <color name="light_surface">#FFFFFF</color>
+    <color name="light_text_primary">#212121</color>
+    <color name="light_text_secondary">#616161</color>
+    <color name="light_divider">#E0E0E0</color>
 
-    <!-- Legacy / Compatibility Mappings (will be used in layouts) -->
-    <color name="white">#EEE8DF</color>
-    <color name="black">#000000</color>
-    <color name="secundary">#0D243F</color>
-    <color name="blue">#0D243F</color>
+    <!-- Dark Theme -->
+    <color name="dark_bg">#121212</color>
+    <color name="dark_surface">#1E1E1E</color>
+    <color name="dark_text_primary">#E0E0E0</color>
+    <color name="dark_text_secondary">#BDBDBD</color>
+    <color name="dark_divider">#2C2C2C</color>
+
+    <!-- Legacy / Compatibility Mappings -->
+    <color name="white">@color/soft_white</color>
+    <color name="black">@color/pure_black</color>
+    <color name="blue">@color/brand_blue</color>
+    <color name="secundary">@color/brand_blue</color>
     <color name="accent">@color/brand_blue_light</color>
-    <color name="gray_text">#757575</color>
-    <color name="divider_color">#EEEEEE</color>
-    <color name="InputLoginBackground">#F8F9FA</color>
-    <color name="InputLoginHint">#757575</color>
-
-    <!-- Missing Colors for Requisition Items -->
-    <color name="pending_border">#EEE8DF</color>
-    <color name="icon_bg_light">#EEE8DF</color>
-    <color name="pill_bg_blue">@color/brand_blue_light</color>
+    <color name="InputLoginBackground">#F0F0F0</color>
+    <color name="InputLoginHint">@color/medium_gray</color>
 </resources>

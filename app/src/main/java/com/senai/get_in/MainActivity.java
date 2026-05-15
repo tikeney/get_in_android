@@ -29,6 +29,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.senai.get_in.model.UsuarioDetalhado;
 import com.senai.get_in.utils.TokenManager;
+import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setupUI() {
         AppBarLayout appBarLayout = findViewById(R.id.app_bar);
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((androidx.appcompat.widget.Toolbar) toolbar);
 
         bottomNav = findViewById(R.id.bottom_navigation);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -119,6 +120,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             bottomNav.setVisibility(View.GONE);
         } else {
             bottomNav.setVisibility(View.VISIBLE);
+        }
+
+        // Garante que o tema seja aplicado corretamente na barra de status
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setElevation(0);
         }
     }
 

@@ -12,7 +12,7 @@
         android:id="@+id/ConstHeader"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/secundary"
+        android:background="?attr/colorPrimary"
         android:paddingStart="40dp"
         android:paddingTop="20dp"
         app:layout_constraintHeight_percent="0.3"
@@ -25,7 +25,8 @@
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:src="@drawable/ic_launcher_background"
+            android:src="@drawable/ic_launcher_foreground"
+            app:tint="?attr/colorOnPrimary"
             app:layout_constraintHeight_percent="0.3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -36,7 +37,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:text="Bem-vindo de volta"
-            android:textColor="@color/white"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="38sp"
             android:textStyle="bold"
             app:layout_constraintHeight_percent="0.4"
@@ -49,7 +50,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:text="Acesse o painel de controle"
-            android:textColor="@color/accent"
+            android:textColor="?attr/colorOnPrimaryContainer"
             android:textSize="16sp"
             app:layout_constraintHeight_percent="0.3"
             app:layout_constraintStart_toStartOf="parent"
@@ -85,24 +86,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            app:boxBackgroundColor="@color/InputLoginBackground"
-            app:boxCornerRadiusBottomEnd="20dp"
-            app:boxCornerRadiusBottomStart="20dp"
-            app:boxCornerRadiusTopEnd="20dp"
-            app:boxCornerRadiusTopStart="20dp"
-            app:boxStrokeColor="@color/secundary"
-            app:hintEnabled="false"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtUsuario">
+        app:boxBackgroundColor="?attr/colorSurfaceVariant"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxStrokeColor="?attr/colorPrimary"
+        app:hintEnabled="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtUsuario">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etUsuario"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:hint="Digite seu e-mail"
-                android:textColor="@color/secundary"
-                android:textColorHint="@color/InputLoginHint"
-                android:inputType="textEmailAddress"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="Digite seu e-mail"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurfaceVariant"
+            android:inputType="textEmailAddress"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -122,26 +123,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            app:boxBackgroundColor="@color/InputLoginBackground"
-            app:boxCornerRadiusBottomEnd="20dp"
-            app:boxCornerRadiusBottomStart="20dp"
-            app:boxCornerRadiusTopEnd="20dp"
-            app:boxCornerRadiusTopStart="20dp"
-            app:boxStrokeColor="@color/secundary"
-            app:endIconMode="password_toggle"
-            app:endIconTint="@color/secundary"
-            app:hintEnabled="false"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtSenha">
+        app:boxBackgroundColor="?attr/colorSurfaceVariant"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxStrokeColor="?attr/colorPrimary"
+        app:endIconMode="password_toggle"
+        app:endIconTint="?attr/colorPrimary"
+        app:hintEnabled="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSenha">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etSenha"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:hint="Senha"
-                android:inputType="textPassword"
-                android:textColor="@color/secundary"
-                android:textColorHint="@color/InputLoginHint" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etSenha"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="Senha"
+            android:inputType="textPassword"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurfaceVariant" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -156,9 +157,9 @@
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:backgroundTint="@color/secundary"
+                android:backgroundTint="?attr/colorPrimary"
                 android:text="Entrar"
-                android:textColor="@color/white"
+                android:textColor="?attr/colorOnPrimary"
                 android:textSize="20sp"
                 app:cornerRadius="20dp" />
 
@@ -207,9 +208,9 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="40dp"
-            android:backgroundTint="@color/accent"
+            android:backgroundTint="?attr/colorPrimaryContainer"
             android:text="Entrar com crachá"
-            android:textColor="@color/secundary"
+            android:textColor="?attr/colorOnPrimaryContainer"
             android:textSize="20dp"
             app:cornerRadius="20dp"
             app:layout_constraintStart_toStartOf="parent"
