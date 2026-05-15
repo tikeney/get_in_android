@@ -29,9 +29,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.senai.get_in.model.UsuarioDetalhado;
 import com.senai.get_in.utils.TokenManager;
-import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
     private TokenManager tokenManager;
@@ -55,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Normalização do cargo
+        // Cargos esperados (conforme documentação): port, func, sup, ger, adm
         cargo = (user.getCargo() != null) ? user.getCargo().trim().toLowerCase() : "";
-        Log.d(TAG, "Sessão iniciada - Cargo detectado: [" + cargo + "]");
+        Log.d(TAG, "Sessão iniciada - Usuário: " + user.getNome() + " | Cargo: [" + cargo + "]");
 
         setupUI();
         setupNavigation();
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupUI() {
         AppBarLayout appBarLayout = findViewById(R.id.app_bar);
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar((androidx.appcompat.widget.Toolbar) toolbar);
+        setSupportActionBar(toolbar);
 
         bottomNav = findViewById(R.id.bottom_navigation);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -90,118 +90,82 @@ public class MainActivity extends AppCompatActivity {
     private void setupNavigation() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
-        
-        if (navHostFragment == null) {
-            Log.e(TAG, "NavHostFragment não encontrado!");
-            return;
-        }
-        
         navController = navHostFragment.getNavController();
 
-        // 1. Configura o gráfico de navegação PRIMEIRO
-        NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.nav_graph);
-        int startId = getStartDestinationId();
-        navGraph.setStartDestination(startId);
-        navController.setGraph(navGraph);
-
-        // 2. Configura a navegação automática com os menus
-        NavigationUI.setupWithNavController(navigationView, navController);
-        NavigationUI.setupWithNavController(bottomNav, navController);
-
-        // 3. Intercepta cliques no NavigationView para tratar o Logout e restrições
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.menu_sair) {
-                logout();
-                return true;
-            }
-            
-            if (!isAllowedDestination(id)) {
-                Toast.makeText(this, "Acesso não permitido para seu cargo", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            
-            boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
-            if (handled) {
-                drawerLayout.closeDrawer(GravityCompat.START);
-            }
-            return handled;
-        });
-
-        // 4. Aplica restrições de visibilidade FORÇADA e garante que o NavigationUI não as desfaça
-        navigationView.post(() -> {
-            restrictMenu(navigationView.getMenu());
-            restrictMenu(bottomNav.getMenu());
-            
-            if (isAdmin() || isGerente() || isPortaria() || isSupervisor()) {
-                bottomNav.setVisibility(View.VISIBLE);
-            } else {
-                bottomNav.setVisibility(View.GONE);
-            }
-        });
+        final int startId = getStartDestinationId();
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            int id = destination.getId();
+            
+            // Verifica se o destino atual é permitido para o cargo logado
+            if (!isAllowedDestination(id)) {
+                Log.w(TAG, "Acesso bloqueado para tela: " + id + ". Redirecionando.");
+                
+                // Evita loop infinito: só navega se o destino atual for diferente do destino de início
+                if (id != startId) {
+                    controller.navigate(startId);
+                } else if (id != R.id.nav_perfil) {
+                    // Fallback absoluto: Perfil é sempre permitido para qualquer usuário logado
+                    controller.navigate(R.id.nav_perfil);
+                }
+            }
+            
             if (getSupportActionBar() != null && destination.getLabel() != null) {
                 getSupportActionBar().setTitle(destination.getLabel());
             }
         });
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setElevation(0);
-        }
+        NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.nav_graph);
+        navGraph.setStartDestination(startId);
+        navController.setGraph(navGraph);
+
+        NavigationUI.setupWithNavController(bottomNav, navController);
+        
+        // Filtra menus baseado nas permissões do cargo
+        restrictMenu(navigationView.getMenu());
+        restrictMenu(bottomNav.getMenu());
+        
+        // Visibilidade da barra inferior (esconde para funcionários comuns)
+        bottomNav.setVisibility(isFuncionario() ? View.GONE : View.VISIBLE);
     }
 
-    // --- MÉTODOS DE CONTROLE DE ACESSO ---
+    // --- CONTROLE DE ACESSO (BASEADO NA DOCUMENTAÇÃO DA API) ---
 
-    private boolean isAdmin() { 
-        return cargo.contains("adm"); 
-    }
-    private boolean isGerente() { 
-        return cargo.contains("ger") || cargo.contains("geracesso"); 
-    }
-    private boolean isSupervisor() { 
-        return cargo.contains("sup"); 
-    }
-    private boolean isPortaria() { 
-        return cargo.contains("port"); 
-    }
-    private boolean isFuncionario() { 
-        return cargo.contains("func"); 
-    }
+    private boolean isAdmin() { return cargo.equals("adm") || cargo.equals("administrador"); }
+    private boolean isGerente() { return cargo.equals("ger") || cargo.equals("gerente"); }
+    private boolean isSupervisor() { return cargo.equals("sup") || cargo.equals("supervisor"); }
+    private boolean isPortaria() { return cargo.equals("port") || cargo.equals("portaria") || cargo.equals("porteiro"); }
+    private boolean isFuncionario() { return cargo.equals("func") || cargo.equals("funcionario") || cargo.isEmpty(); }
 
     private int getStartDestinationId() {
-        // Agora abre sempre no Perfil como página principal para todos
+        if (isPortaria()) return R.id.nav_checkIn;
+        if (isAdmin() || isGerente()) return R.id.nav_notificacoes;
+        // Início seguro para Supervisor e Funcionário (Perfil é sempre permitido)
         return R.id.nav_perfil;
     }
 
     private boolean isAllowedDestination(int id) {
-        // Itens sempre permitidos
-        if (id == R.id.menu_sair || id == R.id.nav_perfil || id == R.id.menu_configuracoes || id == R.id.nav_host_fragment) {
+        // Itens universais: Perfil, Configurações e Sair
+        if (id == R.id.nav_perfil || id == R.id.menu_configuracoes || id == R.id.menu_sair) {
             return true;
         }
 
-        if (isAdmin()) {
-            return true; // Adm tem acesso a tudo
-        }
+        if (isAdmin()) return true;
 
         if (isGerente()) {
-            // Gerente tem acesso a tudo menos checkin
+            // Gerente vê tudo menos o Check-in físico da portaria
             return id != R.id.nav_checkIn;
         }
 
         if (isSupervisor()) {
-            // Supervisor: Perfil, Configuração, Autorização e Notificação
-            return id == R.id.nav_autorizacao || id == R.id.nav_notificacoes;
+            // Supervisor: Notificações, Autorização, Histórico e Visitantes
+            return id == R.id.nav_notificacoes || id == R.id.nav_autorizacao || 
+                   id == R.id.nav_historico || id == R.id.nav_visitantes;
         }
 
         if (isPortaria()) {
-            // Portaria: Checkin, Autorização, Perfil, Configuração, Notificações
-            return id == R.id.nav_checkIn || id == R.id.nav_autorizacao || id == R.id.nav_notificacoes || id == R.id.nav_perfil || id == R.id.menu_configuracoes;
-        }
-
-        if (isFuncionario()) {
-            // Funcionário: Perfil e Configuração (já retornados no topo)
-            return false; 
+            // Portaria: Check-in, Visitantes e Notificações
+            return id == R.id.nav_checkIn || id == R.id.nav_visitantes || id == R.id.nav_notificacoes;
         }
 
         return false;
@@ -211,31 +175,20 @@ public class MainActivity extends AppCompatActivity {
         if (menu == null) return;
         for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
-            int id = item.getItemId();
-
             if (item.hasSubMenu()) {
                 restrictMenu(item.getSubMenu());
-                
-                boolean anyChildVisible = false;
-                Menu sub = item.getSubMenu();
-                for (int j = 0; j < sub.size(); j++) {
-                    if (sub.getItem(j).isVisible()) {
-                        anyChildVisible = true;
-                        break;
-                    }
-                }
-                item.setVisible(anyChildVisible);
+                item.setVisible(hasVisibleChildren(item.getSubMenu()));
             } else {
-                // Força a visibilidade baseada na lógica de permissão
-                boolean allowed = isAllowedDestination(id);
-                item.setVisible(allowed);
-                
-                // Log para garantir que a lógica está sendo aplicada
-                if (isPortaria()) {
-                    Log.d(TAG, "Portaria - Validando " + item.getTitle() + ": " + allowed);
-                }
+                item.setVisible(isAllowedDestination(item.getItemId()));
             }
         }
+    }
+
+    private boolean hasVisibleChildren(Menu menu) {
+        for (int i = 0; i < menu.size(); i++) {
+            if (menu.getItem(i).isVisible()) return true;
+        }
+        return false;
     }
 
     @Override
@@ -247,8 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.menu_sair) {
+        if (item.getItemId() == R.id.menu_sair) {
             logout();
             return true;
         }
@@ -263,7 +215,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_sair) {
+            logout();
+        } else {
+            if (isAllowedDestination(id)) {
+                navController.navigate(id);
+            } else {
+                Toast.makeText(this, "Seu acesso é restrito para esta funcionalidade.", Toast.LENGTH_SHORT).show();
+            }
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
     @Override
     public void onBackPressed() {
