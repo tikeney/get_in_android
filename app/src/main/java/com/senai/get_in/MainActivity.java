@@ -93,6 +93,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .findFragmentById(R.id.nav_host_fragment);
         navController = navHostFragment.getNavController();
 
+        // Aplica restrições de visibilidade IMEDIATAMENTE antes de configurar a navegação
+        restrictMenu(navigationView.getMenu());
+        restrictMenu(bottomNav.getMenu());
+
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             int id = destination.getId();
             if (!isAllowedDestination(id)) {
@@ -111,10 +115,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Configura Bottom Navigation
         NavigationUI.setupWithNavController(bottomNav, navController);
         
-        // Aplica restrições de visibilidade
-        restrictMenu(navigationView.getMenu());
-        restrictMenu(bottomNav.getMenu());
-        
         // Esconde BottomNav se o usuário tiver acesso a poucas páginas (opcional, mas melhora fluidez)
         if (isFuncionario()) {
             bottomNav.setVisibility(View.GONE);
@@ -130,11 +130,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // --- MÉTODOS DE CONTROLE DE ACESSO ---
 
-    private boolean isAdmin() { return cargo.equals("adm") || cargo.equals("administrador"); }
-    private boolean isGerente() { return cargo.equals("ger") || cargo.equals("gerente"); }
-    private boolean isSupervisor() { return cargo.equals("sup") || cargo.equals("supervisor"); }
-    private boolean isPortaria() { return cargo.equals("port") || cargo.equals("portaria") || cargo.equals("porteiro"); }
-    private boolean isFuncionario() { return cargo.equals("func") || cargo.equals("funcionario"); }
+    private boolean isAdmin() { 
+        return cargo.contains("adm"); 
+    }
+    private boolean isGerente() { 
+        return cargo.contains("ger") || cargo.contains("geracesso"); 
+    }
+    private boolean isSupervisor() { 
+        return cargo.contains("sup"); 
+    }
+    private boolean isPortaria() { 
+        return cargo.contains("port"); 
+    }
+    private boolean isFuncionario() { 
+        return cargo.contains("func"); 
+    }
 
     private int getStartDestinationId() {
         if (isPortaria()) return R.id.nav_checkIn;
@@ -144,9 +154,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private boolean isAllowedDestination(int id) {
-        if (id == R.id.menu_sair) return true;
+        // Itens sempre permitidos
+        if (id == R.id.menu_sair || id == R.id.nav_perfil || id == R.id.menu_configuracoes) {
+            return true;
+        }
 
-        if (isAdmin()) return true; // Adm tem acesso a tudo
+        if (isAdmin()) {
+            return true; // Adm tem acesso a tudo
+        }
 
         if (isGerente()) {
             // Gerente tem acesso a tudo menos checkin
@@ -154,23 +169,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if (isSupervisor()) {
-            // Supervisor: Perfil(principal), Configuração, Autorização e Notificação
-            return id == R.id.nav_perfil || id == R.id.menu_configuracoes || 
-                   id == R.id.nav_autorizacao || id == R.id.nav_notificacoes;
+            // Supervisor: Perfil, Configuração, Autorização e Notificação
+            return id == R.id.nav_autorizacao || id == R.id.nav_notificacoes;
         }
 
         if (isPortaria()) {
-            // Portaria: Checkin(principal), Perfil, Configuração, Notificações
-            return id == R.id.nav_checkIn || id == R.id.nav_perfil || 
-                   id == R.id.menu_configuracoes || id == R.id.nav_notificacoes;
+            // Portaria: Checkin, Perfil, Configuração, Notificações
+            return id == R.id.nav_checkIn || id == R.id.nav_notificacoes;
         }
 
         if (isFuncionario()) {
-            // Funcionário: Perfil(principal) e Configuração
-            return id == R.id.nav_perfil || id == R.id.menu_configuracoes;
+            // Funcionário: Perfil e Configuração (já retornados no topo)
+            return false; 
         }
 
-        return id == R.id.nav_perfil; // Fallback
+        return false;
     }
 
     private void restrictMenu(Menu menu) {
