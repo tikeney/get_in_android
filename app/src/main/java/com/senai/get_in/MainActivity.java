@@ -133,11 +133,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         
-        // Esconde BottomNav se o usuário tiver acesso a poucas páginas
-        if (isFuncionario()) {
-            bottomNav.setVisibility(View.GONE);
-        } else {
+        // Mostra BottomNav apenas se o usuário tiver acesso a mais de 2 páginas além do perfil/config
+        if (isAdmin() || isGerente() || isPortaria() || isSupervisor()) {
             bottomNav.setVisibility(View.VISIBLE);
+        } else {
+            bottomNav.setVisibility(View.GONE);
         }
 
         if (getSupportActionBar() != null) {
@@ -164,10 +164,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int getStartDestinationId() {
-        if (isPortaria()) return R.id.nav_checkIn;
-        if (isSupervisor()) return R.id.nav_perfil; // Principal do sup é perfil
-        if (isFuncionario()) return R.id.nav_perfil; // Principal do func é perfil
-        return R.id.nav_notificacoes; // Gerente e Admin começam em notificações/geral
+        // Agora abre sempre no Perfil como página principal para todos
+        return R.id.nav_perfil;
     }
 
     private boolean isAllowedDestination(int id) {
@@ -192,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (isPortaria()) {
             // Portaria: Checkin, Perfil, Configuração, Notificações
-            return id == R.id.nav_checkIn || id == R.id.nav_notificacoes;
+            return id == R.id.nav_checkIn || id == R.id.nav_notificacoes || id == R.id.nav_perfil || id == R.id.menu_configuracoes;
         }
 
         if (isFuncionario()) {
