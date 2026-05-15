@@ -128,12 +128,11 @@ public class MainActivity extends AppCompatActivity {
             return handled;
         });
 
-        // 4. Aplica restrições de visibilidade FORÇADA
-        runOnUiThread(() -> {
+        // 4. Aplica restrições de visibilidade FORÇADA e garante que o NavigationUI não as desfaça
+        navigationView.post(() -> {
             restrictMenu(navigationView.getMenu());
             restrictMenu(bottomNav.getMenu());
             
-            // Controle da BottomNav
             if (isAdmin() || isGerente() || isPortaria() || isSupervisor()) {
                 bottomNav.setVisibility(View.VISIBLE);
             } else {
@@ -214,13 +213,9 @@ public class MainActivity extends AppCompatActivity {
             MenuItem item = menu.getItem(i);
             int id = item.getItemId();
 
-            // Log para depuração interna
-            Log.d(TAG, "Validando item: " + item.getTitle() + " (ID: " + id + ")");
-
             if (item.hasSubMenu()) {
                 restrictMenu(item.getSubMenu());
                 
-                // Verifica se sobrou algum filho visível
                 boolean anyChildVisible = false;
                 Menu sub = item.getSubMenu();
                 for (int j = 0; j < sub.size(); j++) {
@@ -231,9 +226,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 item.setVisible(anyChildVisible);
             } else {
+                // Força a visibilidade baseada na lógica de permissão
                 boolean allowed = isAllowedDestination(id);
                 item.setVisible(allowed);
-                Log.d(TAG, "Item " + item.getTitle() + " permitido? " + allowed);
+                
+                // Log para garantir que a lógica está sendo aplicada
+                if (isPortaria()) {
+                    Log.d(TAG, "Portaria - Validando " + item.getTitle() + ": " + allowed);
+                }
             }
         }
     }
