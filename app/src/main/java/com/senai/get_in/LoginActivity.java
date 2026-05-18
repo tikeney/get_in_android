@@ -21,6 +21,7 @@ import com.senai.get_in.api.RetrofitClient;
 import com.senai.get_in.model.LoginRequest;
 import com.senai.get_in.model.LoginResponse;
 import com.senai.get_in.model.UsuarioDetalhado;
+import com.senai.get_in.model.UsuarioResponse;
 import com.senai.get_in.utils.TokenManager;
 
 import java.util.List;
@@ -41,12 +42,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         
         tokenManager = new TokenManager(this);
-
-        // Se já estiver logado, vai direto para a Main
-        if (tokenManager.getToken() != null && tokenManager.getUserData() != null) {
-            irParaMain();
-            return;
-        }
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
@@ -104,23 +99,28 @@ public class LoginActivity extends AppCompatActivity {
         RetrofitClient.getApiService().login(loginRequest).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                setProgressBar(false);
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
                     
-                    if (loginResponse.isSucesso() && loginResponse.getData() != null && !loginResponse.getData().isEmpty()) {
+                    if (loginResponse.isSucesso()) {
                         String token = loginResponse.getToken();
-                        // Pega o primeiro usuário da lista conforme o novo formato da API
-                        UsuarioDetalhado user = loginResponse.getData().get(0);
+                        UsuarioDetalhado user = converterParaUsuarioDetalhado(loginResponse.getData());
                         
-                        Log.d(TAG, "Login bem-sucedido. Usuário: " + user.getNome() + " | Cargo: " + user.getCargo());
-                        
-                        finalizarLogin(token, user);
+                        Log.d(TAG, "Login bem-sucedido. Validando perfil...");
+
+                        if (user.getCargo() != null && !user.getCargo().isEmpty() && !user.getCargo().equalsIgnoreCase("null")) {
+                            finalizarLogin(token, user);
+                        } else {
+                            Log.d(TAG, "Cargo ausente no login, buscando dados em /usuarios...");
+                            buscarDadosCargo(token, user);
+                        }
                     } else {
-                        String msg = loginResponse.getMensagem() != null ? loginResponse.getMensagem() : "Credenciais inválidas ou usuário não encontrado.";
+                        setProgressBar(false);
+                        String msg = loginResponse.getMensagem() != null ? loginResponse.getMensagem() : "Erro ao autenticar.";
                         Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_LONG).show();
                     }
                 } else {
+                    setProgressBar(false);
                     try {
                         String errorJson = response.errorBody().string();
                         LoginResponse errorResp = new Gson().fromJson(errorJson, LoginResponse.class);
@@ -138,6 +138,50 @@ public class LoginActivity extends AppCompatActivity {
                 setProgressBar(false);
                 Log.e(TAG, "Falha na conexão: " + t.getMessage());
                 Toast.makeText(LoginActivity.this, "Falha na conexão com o servidor. Verifique sua internet.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private UsuarioDetalhado converterParaUsuarioDetalhado(LoginResponse.UserData data) {
+        UsuarioDetalhado user = new UsuarioDetalhado();
+        if (data != null) {
+            user.setId(data.getId());
+            user.setNome(data.getNome());
+            user.setEmail(data.getEmail());
+            user.setCargo(data.getCargo());
+            user.setCpf(data.getCpf());
+            user.setCelular(data.getCelular());
+            user.setDataDeCriacao(data.getDataDeCriacao());
+        }
+        return user;
+    }
+
+    private void buscarDadosCargo(String token, UsuarioDetalhado userIncompleto) {
+        String authHeader = "Bearer " + token;
+        RetrofitClient.getApiService().getUsuarios(authHeader).enqueue(new Callback<UsuarioResponse>() {
+            @Override
+            public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
+                setProgressBar(false);
+                UsuarioDetalhado userFinal = userIncompleto;
+                if (response.isSuccessful() && response.body() != null) {
+                    List<UsuarioDetalhado> lista = response.body().getData();
+                    if (lista != null) {
+                        for (UsuarioDetalhado u : lista) {
+                            if (u.getEmail() != null && userIncompleto.getEmail() != null &&
+                                userIncompleto.getEmail().equalsIgnoreCase(u.getEmail().trim())) {
+                                userFinal = u;
+                                break;
+                            }
+                        }
+                    }
+                }
+                finalizarLogin(token, userFinal);
+            }
+
+            @Override
+            public void onFailure(Call<UsuarioResponse> call, Throwable t) {
+                setProgressBar(false);
+                finalizarLogin(token, userIncompleto);
             }
         });
     }
