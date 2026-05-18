@@ -52,7 +52,7 @@
                 android:layout_marginStart="16dp"
                 android:text="Adicionar foto do visitante"
                 android:textStyle="bold"
-                android:textColor="#333333"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/tv_subtitulo_foto"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +64,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Toque para abrir a câmera"
-                android:textColor="#777777"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_icone_perfil"
                 app:layout_constraintEnd_toEndOf="@+id/tv_titulo_foto"
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:text="Nome Completo"
             android:textSize="16dp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@+id/btnAdicionarFoto"/>
 
@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:text="CPF"
             android:textSize="16dp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintTop_toBottomOf="@+id/inputNome"
@@ -157,7 +157,7 @@
             android:layout_height="wrap_content"
             android:text="Telefone"
             android:textSize="16dp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginTop="16dp"
             android:layout_marginStart="8dp"
             app:layout_constraintTop_toBottomOf="@+id/inputNome"
@@ -198,7 +198,7 @@
             android:layout_height="wrap_content"
             android:text="Empresa"
             android:textSize="16dp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@+id/inputCPF"/>
 
@@ -234,7 +234,7 @@
             android:layout_height="wrap_content"
             android:text="Motivo da visita"
             android:textSize="16dp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@+id/inputEmpresa"/>
 
@@ -269,7 +269,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="30dp"
             android:layout_marginStart="10dp"
-            android:background="@color/accent"
+            android:background="?attr/colorOutline"
             app:layout_constraintTop_toBottomOf="@+id/inputMotivo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -423,7 +423,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="40dp"
-            android:backgroundTint="@color/secundary"
+            android:backgroundTint="?attr/colorPrimary"
             android:text="Finalizar Check-in"
             android:textColor="@color/white"
             android:textSize="16dp"

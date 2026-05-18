@@ -11,7 +11,7 @@
         android:id="@+id/appBarHistorico"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/secundary"
+        android:background="?attr/colorPrimary"
         app:liftOnScroll="false"
         app:elevation="0dp">
 
@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/secundary"
+            android:background="?attr/colorPrimary"
             android:paddingHorizontal="20dp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp">
@@ -57,7 +57,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hoje"
-                        android:textColor="@color/accent"
+                        android:textColor="?attr/colorOnPrimaryContainer"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -86,7 +86,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Na fábrica"
-                        android:textColor="@color/accent"
+                        android:textColor="?attr/colorOnPrimaryContainer"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -115,7 +115,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Negados"
-                        android:textColor="@color/accent"
+                        android:textColor="?attr/colorOnPrimaryContainer"
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -144,7 +144,7 @@
                         android:checked="true"
                         android:textColor="@color/chip_text_states"
                         app:chipBackgroundColor="@color/chip_states"
-                        app:chipStrokeColor="@color/accent"
+                        app:chipStrokeColor="?attr/colorOutline"
                         app:chipStrokeWidth="1dp"
                         app:checkedIconVisible="false" />
 
@@ -156,7 +156,7 @@
                         android:text="Permitido"
                         android:textColor="@color/chip_text_states"
                         app:chipBackgroundColor="@color/chip_states"
-                        app:chipStrokeColor="@color/accent"
+                        app:chipStrokeColor="?attr/colorOutline"
                         app:chipStrokeWidth="1dp"
                         app:checkedIconVisible="false" />
 
@@ -168,7 +168,7 @@
                         android:text="Negado"
                         android:textColor="@color/chip_text_states"
                         app:chipBackgroundColor="@color/chip_states"
-                        app:chipStrokeColor="@color/accent"
+                        app:chipStrokeColor="?attr/colorOutline"
                         app:chipStrokeWidth="1dp"
                         app:checkedIconVisible="false" />
 
@@ -180,7 +180,7 @@
                         android:text="Saiu"
                         android:textColor="@color/chip_text_states"
                         app:chipBackgroundColor="@color/chip_states"
-                        app:chipStrokeColor="@color/accent"
+                        app:chipStrokeColor="?attr/colorOutline"
                         app:chipStrokeWidth="1dp"
                         app:checkedIconVisible="false" />
 
@@ -192,7 +192,7 @@
                         android:text="Na fábrica"
                         android:textColor="@color/chip_text_states"
                         app:chipBackgroundColor="@color/chip_states"
-                        app:chipStrokeColor="@color/accent"
+                        app:chipStrokeColor="?attr/colorOutline"
                         app:chipStrokeWidth="1dp"
                         app:checkedIconVisible="false" />
 
@@ -237,7 +237,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="Buscar visitante ou setor..."
-                    android:textColor="@color/secundary"
+                    android:textColor="?attr/colorPrimary"
                     android:textColorHint="@color/InputLoginHint"
                     android:inputType="text"
                     android:imeOptions="actionSearch" />
@@ -266,7 +266,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nenhum acesso encontrado"
-                    android:textColor="@color/accent"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:textSize="16sp" />
 
             </LinearLayout>

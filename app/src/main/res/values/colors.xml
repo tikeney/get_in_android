@@ -1,53 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Core Brand Colors -->
-    <color name="brand_blue">#0D243F</color>
-    <color name="brand_blue_dark">#0A1C31</color>
-    <color name="brand_blue_light">#1A3A5E</color>
+    <!-- Brand Colors (Material 3 Blue Palette) -->
+    <color name="md_theme_light_primary">#0D47A1</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#D1E4FF</color>
+    <color name="md_theme_light_onPrimaryContainer">#001D36</color>
 
-    <!-- Absolute Neutrals -->
+    <color name="md_theme_dark_primary">#90CAF9</color>
+    <color name="md_theme_dark_onPrimary">#003258</color>
+    <color name="md_theme_dark_primaryContainer">#00497D</color>
+    <color name="md_theme_dark_onPrimaryContainer">#D1E4FF</color>
+
+    <!-- Neutrals Light -->
+    <color name="md_theme_light_background">#F8F9FA</color>
+    <color name="md_theme_light_onBackground">#1A1C1E</color>
+    <color name="md_theme_light_surface">#FFFFFF</color>
+    <color name="md_theme_light_onSurface">#1A1C1E</color>
+    <color name="md_theme_light_surfaceVariant">#E1E2EC</color>
+    <color name="md_theme_light_onSurfaceVariant">#44474E</color>
+    <color name="md_theme_light_outline">#74777F</color>
+
+    <!-- Neutrals Dark -->
+    <color name="md_theme_dark_background">#000000</color>
+    <color name="md_theme_dark_onBackground">#E2E2E6</color>
+    <color name="md_theme_dark_surface">#121212</color>
+    <color name="md_theme_dark_onSurface">#E2E2E6</color>
+    <color name="md_theme_dark_surfaceVariant">#44474E</color>
+    <color name="md_theme_dark_onSurfaceVariant">#C4C6D0</color>
+    <color name="md_theme_dark_outline">#8E9099</color>
+
+    <!-- Status Colors -->
+    <color name="error">#B00020</color>
+    <color name="success">#2E7D32</color>
+    <color name="warning">#F9A825</color>
+    <color name="pending_border">#F9A825</color>
+
+    <!-- Legacy Compatibility Mappings (Redirecting to Theme Attributes via Styles) -->
+    <!-- These are kept for direct reference in layouts where ?attr might not be used yet -->
+    <color name="brand_blue">@color/md_theme_light_primary</color>
+    <color name="brand_blue_dark">#002152</color>
+    <color name="brand_blue_light">#4285F4</color>
+
     <color name="pure_white">#FFFFFF</color>
     <color name="pure_black">#000000</color>
 
-    <!-- Neutrals (Comfortable Palette) -->
-    <color name="soft_white">#F5F5F5</color>
-    <color name="off_white">#E0E0E0</color>
-    <color name="light_gray">#BDBDBD</color>
-    <color name="medium_gray">#757575</color>
-    <color name="dark_gray">#424242</color>
-    <color name="deep_black">#121212</color>
+    <!-- Compatibility aliases to avoid breaking existing layouts immediately -->
+    <color name="secundary">@color/md_theme_light_primary</color>
+    <color name="accent">@color/md_theme_light_primaryVariant_compat</color>
+    <color name="md_theme_light_primaryVariant_compat">#1565C0</color>
 
-    <!-- Theme Specific Mappings -->
-    
-    <!-- Light Theme -->
-    <color name="light_bg">#F8F9FA</color>
-    <color name="light_surface">#FFFFFF</color>
-    <color name="light_text_primary">#212121</color>
-    <color name="light_text_secondary">#616161</color>
-    <color name="light_divider">#E0E0E0</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="blue">@color/md_theme_light_primary</color>
 
-    <!-- Dark Theme -->
-    <color name="dark_bg">#121212</color>
-    <color name="dark_surface">#1E1E1E</color>
-    <color name="dark_text_primary">#E0E0E0</color>
-    <color name="dark_text_secondary">#BDBDBD</color>
-    <color name="dark_divider">#2C2C2C</color>
+    <color name="InputLoginBackground">#F0F2F5</color>
+    <color name="InputLoginHint">#74777F</color>
 
-    <!-- Status Colors -->
-    <color name="pending_border">#FFB300</color>
-
-    <!-- UI Component Colors -->
-    <color name="divider_color">@color/light_divider</color>
-    <color name="gray_text">@color/light_text_secondary</color>
+    <color name="divider_color">#E1E2EC</color>
+    <color name="gray_text">#44474E</color>
     <color name="icon_bg_light">#F0F2F5</color>
-    <color name="pill_bg_blue">#E8EBF0</color>
-
-    <!-- Legacy / Compatibility Mappings -->
-    <color name="white">@color/soft_white</color>
-    <color name="black">@color/pure_black</color>
-    <color name="blue">@color/brand_blue</color>
-    <color name="secundary">@color/brand_blue</color>
-    <color name="accent">@color/brand_blue_light</color>
-    <color name="InputLoginBackground">#F0F0F0</color>
-    <color name="InputLoginHint">@color/medium_gray</color>
+    <color name="pill_bg_blue">#E1E2EC</color>
 </resources>

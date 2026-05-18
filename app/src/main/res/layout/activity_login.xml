@@ -86,24 +86,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-        app:boxBackgroundColor="?attr/colorSurfaceVariant"
-        app:boxCornerRadiusBottomEnd="20dp"
-        app:boxCornerRadiusBottomStart="20dp"
-        app:boxCornerRadiusTopEnd="20dp"
-        app:boxCornerRadiusTopStart="20dp"
-        app:boxStrokeColor="?attr/colorPrimary"
-        app:hintEnabled="false"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtUsuario">
+            app:boxBackgroundColor="?attr/colorSurfaceVariant"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:hintEnabled="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtUsuario">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:hint="Digite seu e-mail"
-            android:textColor="?attr/colorOnSurface"
-            android:textColorHint="?attr/colorOnSurfaceVariant"
-            android:inputType="textEmailAddress"/>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="Digite seu e-mail"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
+                android:inputType="textEmailAddress"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,26 +123,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-        app:boxBackgroundColor="?attr/colorSurfaceVariant"
-        app:boxCornerRadiusBottomEnd="20dp"
-        app:boxCornerRadiusBottomStart="20dp"
-        app:boxCornerRadiusTopEnd="20dp"
-        app:boxCornerRadiusTopStart="20dp"
-        app:boxStrokeColor="?attr/colorPrimary"
-        app:endIconMode="password_toggle"
-        app:endIconTint="?attr/colorPrimary"
-        app:hintEnabled="false"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSenha">
+            app:boxBackgroundColor="?attr/colorSurfaceVariant"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:endIconMode="password_toggle"
+            app:endIconTint="?attr/colorPrimary"
+            app:hintEnabled="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtSenha">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSenha"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:hint="Senha"
-            android:inputType="textPassword"
-            android:textColor="?attr/colorOnSurface"
-            android:textColorHint="?attr/colorOnSurfaceVariant" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSenha"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="Senha"
+                android:inputType="textPassword"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/colorOnSurfaceVariant" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -169,7 +169,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                android:indeterminateTint="@color/white" />
+                android:indeterminateTint="?attr/colorOnPrimary" />
         </FrameLayout>
 
         <View
@@ -178,7 +178,7 @@
             android:layout_height="1dp"
             android:layout_marginVertical="40dp"
             android:layout_marginEnd="10dp"
-            android:background="@color/accent"
+            android:background="?attr/colorOutline"
             app:layout_constraintEnd_toStartOf="@+id/txtFormasDeLogin"
             app:layout_constraintTop_toBottomOf="@+id/frameBtnLogin" />
 
@@ -188,7 +188,7 @@
             android:layout_height="20dp"
             android:layout_marginVertical="30dp"
             android:text="ou entre com"
-            android:textColor="@color/accent"
+            android:textColor="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frameBtnLogin" />
@@ -199,7 +199,7 @@
             android:layout_height="1dp"
             android:layout_marginVertical="40dp"
             android:layout_marginStart="10dp"
-            android:background="@color/accent"
+            android:background="?attr/colorOutline"
             app:layout_constraintStart_toEndOf="@+id/txtFormasDeLogin"
             app:layout_constraintTop_toBottomOf="@+id/frameBtnLogin" />
 
