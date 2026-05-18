@@ -127,8 +127,15 @@ public class LoginActivity extends AppCompatActivity {
                         String msg = (errorResp != null && errorResp.getMensagem() != null) ? errorResp.getMensagem() : "E-mail ou senha incorretos.";
                         Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
+                        String errorMsg = "Erro " + response.code();
+                        try {
+                            if (response.errorBody() != null) {
+                                String errorBody = response.errorBody().string();
+                                Log.e(TAG, "Corpo do erro: " + errorBody);
+                            }
+                        } catch (Exception ignored) {}
                         Log.e(TAG, "Erro no servidor: " + response.code());
-                        Toast.makeText(LoginActivity.this, "Erro de servidor: " + response.code(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "Erro de servidor: " + errorMsg, Toast.LENGTH_LONG).show();
                     }
                 }
             }
