@@ -1,12 +1,20 @@
 package com.senai.get_in.model;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class LoginResponse {
+    @SerializedName("token")
     private String token;
+    
+    @SerializedName("sucesso")
     private boolean sucesso;
+    
+    @SerializedName("mensagem")
     private String mensagem;
-    private UserData data;
+    
+    @SerializedName("data")
+    private List<UsuarioDetalhado> data;
 
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
@@ -17,37 +25,6 @@ public class LoginResponse {
     public String getMensagem() { return mensagem; }
     public void setMensagem(String mensagem) { this.mensagem = mensagem; }
 
-    public UserData getData() { return data; }
-    public void setData(UserData data) { this.data = data; }
-
-    public static class UserData {
-        @SerializedName(value = "id", alternate = {"usuario_id", "userId"})
-        private int id;
-        
-        @SerializedName(value = "nome", alternate = {"usuario_nome", "userName"})
-        private String nome;
-
-        @SerializedName("cpf")
-        private String cpf;
-
-        @SerializedName("celular")
-        private String celular;
-
-        @SerializedName("email")
-        private String email;
-
-        @SerializedName("cargo")
-        private String cargo;
-
-        @SerializedName(value = "data_criacao", alternate = {"dataDeCriacao", "createdAt"})
-        private String dataDeCriacao;
-
-        public int getId() { return id; }
-        public String getNome() { return nome; }
-        public String getCpf() { return cpf; }
-        public String getCelular() { return celular; }
-        public String getEmail() { return email; }
-        public String getCargo() { return cargo; }
-        public String getDataDeCriacao() { return dataDeCriacao; }
-    }
+    public List<UsuarioDetalhado> getData() { return data; }
+    public void setData(List<UsuarioDetalhado> data) { this.data = data; }
 }

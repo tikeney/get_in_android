@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean isGerente() { return cargo.equals("ger") || cargo.equals("gerente"); }
     private boolean isSupervisor() { return cargo.equals("sup") || cargo.equals("supervisor"); }
     private boolean isPortaria() { return cargo.equals("port") || cargo.equals("portaria") || cargo.equals("porteiro"); }
-    private boolean isFuncionario() { return cargo.equals("func") || cargo.equals("funcionario") || cargo.isEmpty(); }
+    private boolean isFuncionario() { return cargo.equals("func") || cargo.equals("funcionario") || cargo.isEmpty() || cargo.equals("colaborador"); }
 
     private int getStartDestinationId() {
         if (isPortaria()) return R.id.nav_checkIn;

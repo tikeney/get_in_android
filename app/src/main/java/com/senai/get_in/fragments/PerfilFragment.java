@@ -61,10 +61,12 @@ public class PerfilFragment extends Fragment {
         RetrofitClient.getApiService().getUsuarioPorId(token, user.getId()).enqueue(new Callback<UsuarioResponse>() {
             @Override
             public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                    // O backend retorna uma lista ou objeto único dependendo da implementação, 
-                    // mas o UsuarioResponse do app mapeia como objeto único via getUsuarioPorId
-                    // Se o backend retornar lista, precisaríamos ajustar o UsuarioResponse
+                if (response.isSuccessful() && response.body() != null && 
+                    response.body().isSucesso() && response.body().getData() != null && !response.body().getData().isEmpty()) {
+                    
+                    UsuarioDetalhado userAtualizado = response.body().getData().get(0);
+                    tokenManager.saveUserData(userAtualizado);
+                    exibirUsuario(userAtualizado);
                 }
             }
 
