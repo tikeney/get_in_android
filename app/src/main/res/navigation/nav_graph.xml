@@ -7,36 +7,92 @@
     <fragment
         android:id="@+id/nav_notificacoes"
         android:name="com.senai.get_in.fragments.notifications.NotificacoesFragment"
-        android:label="Notificações" />
+        android:label="Notificações">
+        <action
+            android:id="@+id/action_global_nav_notificacoes"
+            app:destination="@id/nav_notificacoes"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_checkIn"
         android:name="com.senai.get_in.CheckInFragment"
-        android:label="Check-in" />
+        android:label="Check-in">
+        <action
+            android:id="@+id/action_global_nav_checkIn"
+            app:destination="@id/nav_checkIn"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_visitantes"
         android:name="com.senai.get_in.VisitantesFragment"
-        android:label="Visitantes" />
+        android:label="Visitantes">
+        <action
+            android:id="@+id/action_global_nav_visitantes"
+            app:destination="@id/nav_visitantes"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_historico"
         android:name="com.senai.get_in.HistoricoFragment"
-        android:label="Histórico" />
+        android:label="Histórico">
+        <action
+            android:id="@+id/action_global_nav_historico"
+            app:destination="@id/nav_historico"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_autorizacao"
         android:name="com.senai.get_in.AutorizacaoFragment"
-        android:label="Autorização" />
+        android:label="Autorização">
+        <action
+            android:id="@+id/action_global_nav_autorizacao"
+            app:destination="@id/nav_autorizacao"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_perfil"
         android:name="com.senai.get_in.fragments.PerfilFragment"
-        android:label="Perfil" />
+        android:label="Perfil">
+        <action
+            android:id="@+id/action_global_nav_perfil"
+            app:destination="@id/nav_perfil"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/menu_configuracoes"
         android:name="com.senai.get_in.fragments.ConfiguracoesFragment"
-        android:label="Configurações" />
+        android:label="Configurações">
+        <action
+            android:id="@+id/action_global_menu_configuracoes"
+            app:destination="@id/menu_configuracoes"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
 </navigation>

@@ -6,16 +6,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.senai.get_in.R;
+import com.senai.get_in.utils.ToastUtils;
 
 public class ConfiguracoesFragment extends Fragment {
 
@@ -54,17 +53,15 @@ public class ConfiguracoesFragment extends Fragment {
 
         switchNotificacoes.setOnCheckedChangeListener((buttonView, isChecked) -> {
             sharedPreferences.edit().putBoolean(KEY_NOTIFICATIONS, isChecked).apply();
-            Toast.makeText(getContext(), isChecked ? "Notificações ativadas" : "Notificações desativadas", Toast.LENGTH_SHORT).show();
+            ToastUtils.showInfo(getContext(), isChecked ? "Notificações ativadas" : "Notificações desativadas");
         });
 
         switchSomNotificacao.setOnCheckedChangeListener((buttonView, isChecked) -> {
             sharedPreferences.edit().putBoolean(KEY_SOUND, isChecked).apply();
         });
 
-
-
         view.findViewById(R.id.btnAlterarSenha).setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Funcionalidade de alterar senha em breve", Toast.LENGTH_SHORT).show();
+            ToastUtils.showInfo(getContext(), "Funcionalidade de alterar senha em breve");
         });
 
         return view;

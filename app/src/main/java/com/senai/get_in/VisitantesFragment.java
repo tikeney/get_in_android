@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +19,7 @@ import com.senai.get_in.adapter.VisitanteAdapter;
 import com.senai.get_in.api.RetrofitClient;
 import com.senai.get_in.model.VisitanteLocal;
 import com.senai.get_in.model.VisitanteLocalResponse;
+import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
 
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ public class VisitantesFragment extends Fragment {
                         recycler.scheduleLayoutAnimation();
                     }
                 } else {
-                    Toast.makeText(getContext(), "Erro ao carregar visitantes", Toast.LENGTH_SHORT).show();
+                    ToastUtils.showError(getContext(), "Erro ao carregar visitantes");
                 }
             }
 
@@ -99,7 +99,7 @@ public class VisitantesFragment extends Fragment {
                 if (progressBar != null) progressBar.setVisibility(View.GONE);
                 if (recycler != null) recycler.setVisibility(View.VISIBLE);
                 Log.e(TAG, "Erro: " + t.getMessage());
-                Toast.makeText(getContext(), "Falha na conexão", Toast.LENGTH_SHORT).show();
+                ToastUtils.showError(getContext(), "Falha na conexão");
             }
         });
     }

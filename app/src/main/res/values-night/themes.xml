@@ -26,5 +26,12 @@
         <!-- Status Bar & Navigation Bar -->
         <item name="android:statusBarColor">@color/md_theme_dark_background</item>
         <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Force white hamburger icon -->
+        <item name="drawerArrowStyle">@style/WhiteDrawerArrowToggle</item>
+    </style>
+
+    <style name="WhiteDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/white</item>
     </style>
 </resources>

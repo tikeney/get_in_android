@@ -12,7 +12,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -29,6 +28,7 @@ import com.senai.get_in.model.LoginResponse;
 import com.senai.get_in.model.TagLoginRequest;
 import com.senai.get_in.model.UsuarioDetalhado;
 import com.senai.get_in.model.UsuarioResponse;
+import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
 
 import java.util.List;
@@ -85,11 +85,11 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(v -> validarLogin());
         btnLoginRFID.setOnClickListener(v -> {
             if (nfcAdapter == null) {
-                Toast.makeText(this, "NFC não disponível", Toast.LENGTH_SHORT).show();
+                ToastUtils.showInfo(this, "NFC não disponível");
             } else if (!nfcAdapter.isEnabled()) {
-                Toast.makeText(this, "Por favor, ative o NFC", Toast.LENGTH_SHORT).show();
+                ToastUtils.showInfo(this, "Por favor, ative o NFC");
             } else {
-                Toast.makeText(this, "Aproxime o crachá do leitor", Toast.LENGTH_LONG).show();
+                ToastUtils.showInfo(this, "Aproxime o crachá do leitor");
             }
         });
     }
@@ -153,11 +153,11 @@ public class LoginActivity extends AppCompatActivity {
                         finalizarLogin(loginResponse.getToken(), converterParaUsuarioDetalhado(loginResponse.getData()));
                     } else {
                         setProgressBar(false);
-                        Toast.makeText(LoginActivity.this, loginResponse.getMensagem(), Toast.LENGTH_LONG).show();
+                        ToastUtils.showError(LoginActivity.this, loginResponse.getMensagem());
                     }
                 } else {
                     setProgressBar(false);
-                    Toast.makeText(LoginActivity.this, "Crachá não reconhecido ou erro no servidor", Toast.LENGTH_SHORT).show();
+                    ToastUtils.showError(LoginActivity.this, "Crachá não reconhecido");
                 }
             }
 
@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
                 setProgressBar(false);
                 Log.e(TAG, "Erro login por tag: " + t.getMessage());
-                Toast.makeText(LoginActivity.this, "Falha na conexão", Toast.LENGTH_SHORT).show();
+                ToastUtils.showError(LoginActivity.this, "Falha na conexão");
             }
         });
     }
@@ -229,7 +229,7 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         setProgressBar(false);
                         String msg = loginResponse.getMensagem() != null ? loginResponse.getMensagem() : "Erro ao autenticar.";
-                        Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_LONG).show();
+                        ToastUtils.showError(LoginActivity.this, msg);
                     }
                 } else {
                     setProgressBar(false);
@@ -237,10 +237,10 @@ public class LoginActivity extends AppCompatActivity {
                         String errorJson = response.errorBody().string();
                         LoginResponse errorResp = new Gson().fromJson(errorJson, LoginResponse.class);
                         String msg = (errorResp != null && errorResp.getMensagem() != null) ? errorResp.getMensagem() : "E-mail ou senha incorretos.";
-                        Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_LONG).show();
+                        ToastUtils.showError(LoginActivity.this, msg);
                     } catch (Exception e) {
                         Log.e(TAG, "Erro no servidor: " + response.code());
-                        Toast.makeText(LoginActivity.this, "Erro de servidor: " + response.code(), Toast.LENGTH_LONG).show();
+                        ToastUtils.showError(LoginActivity.this, "Erro de servidor: " + response.code());
                     }
                 }
             }
@@ -249,7 +249,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 setProgressBar(false);
                 Log.e(TAG, "Falha na conexão: " + t.getMessage());
-                Toast.makeText(LoginActivity.this, "Falha na conexão com o servidor. Verifique sua internet.", Toast.LENGTH_LONG).show();
+                ToastUtils.showError(LoginActivity.this, "Falha na conexão com o servidor.");
             }
         });
     }
@@ -307,7 +307,7 @@ public class LoginActivity extends AppCompatActivity {
     private void irParaMain() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_in); // Transição suave
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 }

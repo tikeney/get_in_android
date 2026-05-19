@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -36,6 +35,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.senai.get_in.api.RetrofitClient;
 import com.senai.get_in.model.Requisicao;
+import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
 
 import java.io.File;
@@ -104,12 +104,12 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
 
         permissaoCameraLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
             if (granted) abrirCamera();
-            else Toast.makeText(requireContext(), "Permissão de câmera negada.", Toast.LENGTH_SHORT).show();
+            else ToastUtils.showInfo(getContext(), "Permissão de câmera negada.");
         });
 
         permissaoArmazenamentoLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
             if (granted) abrirGaleria();
-            else Toast.makeText(requireContext(), "Permissão de armazenamento negada.", Toast.LENGTH_SHORT).show();
+            else ToastUtils.showInfo(getContext(), "Permissão de armazenamento negada.");
         });
     }
 
@@ -140,7 +140,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         codigoTagVinculada = tagId;
         tvTituloCracha.setText("Crachá Vinculado");
         tvSubtituloCracha.setText("Código: " + tagId);
-        Toast.makeText(getContext(), "Crachá lido com sucesso!", Toast.LENGTH_SHORT).show();
+        ToastUtils.showSuccess(getContext(), "Crachá lido com sucesso!");
     }
 
     private void inicializarViews(View view) {
@@ -173,7 +173,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
 
     private void configurarCracha() {
         btnAdicionarCracha.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Aproxime o crachá para vincular", Toast.LENGTH_LONG).show();
+            ToastUtils.showInfo(getContext(), "Aproxime o crachá para vincular");
         });
     }
 
@@ -212,7 +212,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         
         String token = tokenManager.getToken();
         if (token == null) {
-            Toast.makeText(getContext(), "Erro: Token não encontrado.", Toast.LENGTH_SHORT).show();
+            ToastUtils.showError(getContext(), "Erro: Token não encontrado.");
             return;
         }
 
@@ -224,10 +224,10 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
                 if (!isAdded()) return;
                 setProgressBar(false);
                 if (response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Check-in realizado com sucesso!", Toast.LENGTH_LONG).show();
+                    ToastUtils.showSuccess(getContext(), "Check-in realizado com sucesso!");
                     limparFormulario();
                 } else {
-                    Toast.makeText(getContext(), "Erro ao realizar check-in: " + response.code(), Toast.LENGTH_SHORT).show();
+                    ToastUtils.showError(getContext(), "Erro ao realizar check-in: " + response.code());
                 }
             }
 
@@ -236,7 +236,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
                 if (!isAdded()) return;
                 setProgressBar(false);
                 Log.e(TAG, "Falha: " + t.getMessage());
-                Toast.makeText(getContext(), "Falha na conexão", Toast.LENGTH_SHORT).show();
+                ToastUtils.showError(getContext(), "Falha na conexão");
             }
         });
     }
@@ -260,12 +260,12 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         } else inputEmpresa.setError(null);
 
         if (chipGroupSetores.getCheckedChipId() == View.NO_ID) {
-            Toast.makeText(requireContext(), "Selecione um setor.", Toast.LENGTH_SHORT).show();
+            ToastUtils.showInfo(getContext(), "Selecione um setor.");
             valido = false;
         }
 
         if (codigoTagVinculada == null) {
-            Toast.makeText(requireContext(), "É obrigatório vincular um crachá!", Toast.LENGTH_LONG).show();
+            ToastUtils.showInfo(getContext(), "É obrigatório vincular um crachá!");
             valido = false;
         }
 
@@ -311,7 +311,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
             intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
             cameraLauncher.launch(intent);
         } catch (IOException e) {
-            Toast.makeText(requireContext(), "Erro ao criar arquivo de foto.", Toast.LENGTH_SHORT).show();
+            ToastUtils.showError(getContext(), "Erro ao criar arquivo de foto.");
         }
     }
 

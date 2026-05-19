@@ -5,18 +5,20 @@ import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
@@ -25,6 +27,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -36,6 +39,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.senai.get_in.api.RetrofitClient;
 import com.senai.get_in.model.AvatarResponse;
 import com.senai.get_in.model.UsuarioDetalhado;
+import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
 
 import retrofit2.Call;
@@ -151,8 +155,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         navigationView.setNavigationItemSelectedListener(this);
+        
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        
+        toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.white));
+
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -169,6 +177,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             int id = destination.getId();
             
+            // Sincroniza a seleção nos menus (BottomNav e Drawer)
+            Menu navMenu = navigationView.getMenu();
+            MenuItem navItem = navMenu.findItem(id);
+            if (navItem != null) navItem.setChecked(true);
+
+            Menu bottomMenu = bottomNav.getMenu();
+            MenuItem bottomItem = bottomMenu.findItem(id);
+            if (bottomItem != null) bottomItem.setChecked(true);
+
             if (!isAllowedDestination(id)) {
                 Log.w(TAG, "Acesso bloqueado para tela: " + id + ". Redirecionando.");
                 if (id != startId) {
@@ -187,7 +204,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navGraph.setStartDestination(startId);
         navController.setGraph(navGraph);
 
-        NavigationUI.setupWithNavController(bottomNav, navController);
+        // Configuração do BottomNav com animações suaves
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() == id) {
+                return true;
+            }
+            
+            NavOptions options = new NavOptions.Builder()
+                    .setEnterAnim(R.anim.fade_in)
+                    .setExitAnim(R.anim.fade_out)
+                    .setPopEnterAnim(R.anim.fade_in)
+                    .setPopExitAnim(R.anim.fade_out)
+                    .build();
+            
+            navController.navigate(id, null, options);
+            return true;
+        });
         
         restrictMenu(navigationView.getMenu());
         restrictMenu(bottomNav.getMenu());
@@ -302,16 +335,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.menu_sair) {
-            logout();
-        } else {
-            if (isAllowedDestination(id)) {
-                navController.navigate(id);
-            } else {
-                Toast.makeText(this, "Seu acesso é restrito para esta funcionalidade.", Toast.LENGTH_SHORT).show();
-            }
-        }
         drawerLayout.closeDrawer(GravityCompat.START);
+
+        if (id == R.id.menu_sair) {
+            new Handler(Looper.getMainLooper()).postDelayed(this::logout, 250);
+            return true;
+        }
+
+        if (!isAllowedDestination(id)) {
+            ToastUtils.showInfo(this, "Seu acesso é restrito para esta funcionalidade.");
+            return true;
+        }
+
+        // Navega após um pequeno delay para suavizar a transição enquanto o Drawer fecha
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() != id) {
+                NavOptions options = new NavOptions.Builder()
+                        .setEnterAnim(R.anim.slide_in_right)
+                        .setExitAnim(R.anim.slide_out_left)
+                        .setPopEnterAnim(R.anim.slide_in_left)
+                        .setPopExitAnim(R.anim.slide_out_right)
+                        .setLaunchSingleTop(true)
+                        .setRestoreState(true)
+                        .build();
+                navController.navigate(id, null, options);
+            }
+        }, 280);
+
         return true;
     }
 
@@ -329,6 +379,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 }
