@@ -19,8 +19,15 @@ public interface ApiService {
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
 
+    @POST("auth/login-tag")
+    Call<LoginResponse> loginByTag(@Body TagLoginRequest tagLoginRequest);
+
     @POST("auth/")
     Call<LoginResponse> register(@Body UsuarioDetalhado usuario);
+
+    // --- Avatar ---
+    @GET("avatar/{funcId}")
+    Call<AvatarResponse> getAvatar(@Path("funcId") int funcId);
 
     // --- Views Consolidadas (Leitura) ---
     @GET("views/usuarios")

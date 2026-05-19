@@ -35,6 +35,9 @@ public class Requisicao {
     @SerializedName("departamento_nome")
     private String departamentoNome;
 
+    @SerializedName("codigo_tag")
+    private String codigoTag;
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -79,4 +82,7 @@ public class Requisicao {
 
     public String getDepartamentoNome() { return departamentoNome; }
     public void setDepartamentoNome(String departamentoNome) { this.departamentoNome = departamentoNome; }
+
+    public String getCodigoTag() { return codigoTag; }
+    public void setCodigoTag(String codigoTag) { this.codigoTag = codigoTag; }
 }

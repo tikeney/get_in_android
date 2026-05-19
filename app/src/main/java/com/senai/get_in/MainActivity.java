@@ -1,11 +1,15 @@
 package com.senai.get_in;
 
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,17 +22,25 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.senai.get_in.api.RetrofitClient;
+import com.senai.get_in.model.AvatarResponse;
 import com.senai.get_in.model.UsuarioDetalhado;
 import com.senai.get_in.utils.TokenManager;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -39,6 +51,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private BottomNavigationView bottomNav;
     private String cargo;
+    
+    private NfcAdapter nfcAdapter;
+    private PendingIntent pendingIntent;
+
+    public interface NfcTagListener {
+        void onTagRead(String tagId);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +73,65 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
 
-        // Cargos esperados (conforme documentação): port, func, sup, ger, adm
         cargo = (user.getCargo() != null) ? user.getCargo().trim().toLowerCase() : "";
         Log.d(TAG, "Sessão iniciada - Usuário: " + user.getNome() + " | Cargo: [" + cargo + "]");
 
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (nfcAdapter != null) {
+            pendingIntent = PendingIntent.getActivity(this, 0,
+                    new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+                    PendingIntent.FLAG_MUTABLE);
+        }
+
         setupUI();
         setupNavigation();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (nfcAdapter != null) {
+            nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (nfcAdapter != null) {
+            nfcAdapter.disableForegroundDispatch(this);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction()) ||
+            NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            if (tag != null) {
+                String tagId = bytesToHexString(tag.getId());
+                dispatchTagToFragments(tagId);
+            }
+        }
+    }
+
+    private void dispatchTagToFragments(String tagId) {
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null) {
+            Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
+            if (currentFragment instanceof NfcTagListener) {
+                ((NfcTagListener) currentFragment).onTagRead(tagId);
+            }
+        }
+    }
+
+    private String bytesToHexString(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02X", b));
+        }
+        return sb.toString();
     }
 
     private void setupUI() {
@@ -97,15 +169,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             int id = destination.getId();
             
-            // Verifica se o destino atual é permitido para o cargo logado
             if (!isAllowedDestination(id)) {
                 Log.w(TAG, "Acesso bloqueado para tela: " + id + ". Redirecionando.");
-                
-                // Evita loop infinito: só navega se o destino atual for diferente do destino de início
                 if (id != startId) {
                     controller.navigate(startId);
                 } else if (id != R.id.nav_perfil) {
-                    // Fallback absoluto: Perfil é sempre permitido para qualquer usuário logado
                     controller.navigate(R.id.nav_perfil);
                 }
             }
@@ -121,15 +189,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationUI.setupWithNavController(bottomNav, navController);
         
-        // Filtra menus baseado nas permissões do cargo
         restrictMenu(navigationView.getMenu());
         restrictMenu(bottomNav.getMenu());
         
-        // Visibilidade da barra inferior (esconde para funcionários comuns)
         bottomNav.setVisibility(isFuncionario() ? View.GONE : View.VISIBLE);
     }
-
-    // --- CONTROLE DE ACESSO (BASEADO NA DOCUMENTAÇÃO DA API) ---
 
     private boolean isAdmin() { return cargo.equals("adm") || cargo.equals("administrador"); }
     private boolean isGerente() { return cargo.equals("ger") || cargo.equals("gerente"); }
@@ -140,34 +204,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int getStartDestinationId() {
         if (isPortaria()) return R.id.nav_checkIn;
         if (isAdmin() || isGerente()) return R.id.nav_notificacoes;
-        // Início seguro para Supervisor e Funcionário (Perfil é sempre permitido)
         return R.id.nav_perfil;
     }
 
     private boolean isAllowedDestination(int id) {
-        // Itens universais: Perfil, Configurações e Sair
         if (id == R.id.nav_perfil || id == R.id.menu_configuracoes || id == R.id.menu_sair) {
             return true;
         }
 
         if (isAdmin()) return true;
-
-        if (isGerente()) {
-            // Gerente vê tudo menos o Check-in físico da portaria
-            return id != R.id.nav_checkIn;
-        }
-
+        if (isGerente()) return id != R.id.nav_checkIn;
         if (isSupervisor()) {
-            // Supervisor: Notificações, Autorização, Histórico e Visitantes
             return id == R.id.nav_notificacoes || id == R.id.nav_autorizacao || 
                    id == R.id.nav_historico || id == R.id.nav_visitantes;
         }
-
         if (isPortaria()) {
-            // Portaria: Check-in, Visitantes e Notificações
             return id == R.id.nav_checkIn || id == R.id.nav_visitantes || id == R.id.nav_notificacoes;
         }
-
         return false;
     }
 
@@ -210,8 +263,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateNavHeader(UsuarioDetalhado user) {
         View headerView = navigationView.getHeaderView(0);
         if (headerView != null && user != null) {
-            ((TextView) headerView.findViewById(R.id.tvHeaderNome)).setText(user.getNome());
-            ((TextView) headerView.findViewById(R.id.tvHeaderEmail)).setText(user.getEmail());
+            TextView tvNome = headerView.findViewById(R.id.tvHeaderNome);
+            TextView tvEmail = headerView.findViewById(R.id.tvHeaderEmail);
+            ImageView ivFoto = headerView.findViewById(R.id.ivHeaderFoto);
+
+            tvNome.setText(user.getNome());
+            tvEmail.setText(user.getEmail());
+
+            if (user.getFotoPerfil() != null && !user.getFotoPerfil().isEmpty()) {
+                Glide.with(this)
+                        .load(user.getFotoPerfil())
+                        .placeholder(R.drawable.outline_person_24)
+                        .into(ivFoto);
+            } else {
+                RetrofitClient.getApiService().getAvatar(user.getId()).enqueue(new Callback<AvatarResponse>() {
+                    @Override
+                    public void onResponse(Call<AvatarResponse> call, Response<AvatarResponse> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                            String url = response.body().getData().getUrl();
+                            if (url != null && !url.isEmpty() && !isDestroyed()) {
+                                Glide.with(MainActivity.this)
+                                        .load(url)
+                                        .placeholder(R.drawable.outline_person_24)
+                                        .into(ivFoto);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AvatarResponse> call, Throwable t) {
+                        Log.e(TAG, "Erro ao buscar avatar via rota: " + t.getMessage());
+                    }
+                });
+            }
         }
     }
 
