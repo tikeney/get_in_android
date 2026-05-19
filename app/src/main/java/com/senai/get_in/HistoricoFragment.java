@@ -1,17 +1,19 @@
 package com.senai.get_in;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,6 +41,7 @@ public class HistoricoFragment extends Fragment {
     private ChipGroup chipGroupFiltros;
     private LinearLayout layoutVazio;
     private TextView tvContadorHoje, tvContadorNaFabrica, tvContadorNegados;
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
@@ -48,11 +51,11 @@ public class HistoricoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_historico, container, false);
 
         initViews(view);
-        setupData();
         setupRecyclerView();
         setupFilters();
         setupSearch();
-        updateCounters();
+        
+        loadData();
 
         return view;
     }
@@ -65,6 +68,26 @@ public class HistoricoFragment extends Fragment {
         tvContadorHoje = view.findViewById(R.id.tvContadorHoje);
         tvContadorNaFabrica = view.findViewById(R.id.tvContadorNaFabrica);
         tvContadorNegados = view.findViewById(R.id.tvContadorNegados);
+        progressBar = view.findViewById(R.id.progressBarHistorico);
+    }
+
+    private void loadData() {
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        recyclerHistorico.setVisibility(View.GONE);
+        layoutVazio.setVisibility(View.GONE);
+
+        // Simulando carregamento assíncrono para UX
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (!isAdded()) return;
+            
+            setupData();
+            updateCounters();
+            filterList();
+            
+            if (progressBar != null) progressBar.setVisibility(View.GONE);
+            recyclerHistorico.setVisibility(View.VISIBLE);
+            recyclerHistorico.scheduleLayoutAnimation();
+        }, 600);
     }
 
     private void setupData() {
@@ -80,9 +103,12 @@ public class HistoricoFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        adapter = new HistoricoAdapter(listaFiltrada);
+        adapter = new HistoricoAdapter(new ArrayList<>());
         recyclerHistorico.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerHistorico.setAdapter(adapter);
+        
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
+        recyclerHistorico.setLayoutAnimation(animation);
     }
 
     private void setupFilters() {
@@ -105,6 +131,8 @@ public class HistoricoFragment extends Fragment {
     }
 
     private void filterList() {
+        if (listaCompleta == null) return;
+        
         String query = etBusca.getText().toString().toLowerCase().trim();
         int checkedChipId = chipGroupFiltros.getCheckedChipId();
 
@@ -114,7 +142,6 @@ public class HistoricoFragment extends Fragment {
                              h.getEmpresa().toLowerCase().contains(query)))
                 .filter(h -> {
                     if (checkedChipId == R.id.chipPermitidos) {
-                        // Filtro Permitidos: Na fábrica OU Saiu
                         return h.getStatus().equalsIgnoreCase("Na fábrica") || h.getStatus().equalsIgnoreCase("Saiu") || h.getStatus().equalsIgnoreCase("Permitido");
                     } else if (checkedChipId == R.id.chipNegado) {
                         return h.getStatus().equalsIgnoreCase("Negado");
@@ -123,7 +150,7 @@ public class HistoricoFragment extends Fragment {
                     } else if (checkedChipId == R.id.chipNaFabrica) {
                         return h.getStatus().equalsIgnoreCase("Na fábrica");
                     }
-                    return true; // "Todos" ou nenhum selecionado
+                    return true;
                 })
                 .collect(Collectors.toList());
 
@@ -139,6 +166,8 @@ public class HistoricoFragment extends Fragment {
     }
 
     private void updateCounters() {
+        if (listaCompleta == null) return;
+
         int hoje = listaCompleta.size();
         long naFabrica = listaCompleta.stream().filter(h -> h.getStatus().equalsIgnoreCase("Na fábrica")).count();
         long negados = listaCompleta.stream().filter(h -> h.getStatus().equalsIgnoreCase("Negado")).count();

@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -68,12 +70,16 @@ public class NotificacoesAprovacoesFragment extends Fragment {
             }
         });
         rvRequisicoes.setAdapter(adapter);
+        
+        // Adiciona animação de entrada na lista
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
+        rvRequisicoes.setLayoutAnimation(animation);
     }
 
     private void setupSwipeRefresh() {
         if (swipeRefresh != null) {
             swipeRefresh.setOnRefreshListener(this::carregarRequisicoes);
-            swipeRefresh.setColorSchemeResources(R.color.blue); // Ajuste para sua cor primária
+            swipeRefresh.setColorSchemeResources(R.color.blue);
         }
     }
 
@@ -87,6 +93,7 @@ public class NotificacoesAprovacoesFragment extends Fragment {
 
         if (progressBar != null && (swipeRefresh == null || !swipeRefresh.isRefreshing())) {
             progressBar.setVisibility(View.VISIBLE);
+            rvRequisicoes.setVisibility(View.INVISIBLE);
         }
 
         RetrofitClient.getApiService().getRequisicoes("Bearer " + token).enqueue(new Callback<RequisicaoResponse>() {
@@ -95,6 +102,7 @@ public class NotificacoesAprovacoesFragment extends Fragment {
                 if (!isAdded()) return;
                 if (progressBar != null) progressBar.setVisibility(View.GONE);
                 if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
+                rvRequisicoes.setVisibility(View.VISIBLE);
 
                 if (response.isSuccessful() && response.body() != null) {
                     List<Requisicao> listaRequisicoes = response.body().getData();
@@ -109,6 +117,8 @@ public class NotificacoesAprovacoesFragment extends Fragment {
                     }
                     
                     adapter.updateList(pendentes);
+                    rvRequisicoes.scheduleLayoutAnimation();
+                    
                     if (pendentes.isEmpty()) {
                         Toast.makeText(getContext(), "Nenhuma requisição pendente.", Toast.LENGTH_SHORT).show();
                     }
@@ -122,6 +132,7 @@ public class NotificacoesAprovacoesFragment extends Fragment {
                 if (!isAdded()) return;
                 if (progressBar != null) progressBar.setVisibility(View.GONE);
                 if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
+                rvRequisicoes.setVisibility(View.VISIBLE);
                 Log.e(TAG, "Falha na conexão: " + t.getMessage());
                 Toast.makeText(getContext(), "Erro de conexão", Toast.LENGTH_LONG).show();
             }

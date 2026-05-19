@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -43,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private TokenManager tokenManager;
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
+    private View constHeader, constForm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,11 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
         
+        constHeader = findViewById(R.id.ConstHeader);
+        constForm = findViewById(R.id.ConstForm);
+        
+        applyEntryAnimations();
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -84,6 +92,14 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Aproxime o crachá do leitor", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void applyEntryAnimations() {
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        
+        constHeader.startAnimation(fadeIn);
+        constForm.startAnimation(slideUp);
     }
 
     @Override
@@ -291,6 +307,7 @@ public class LoginActivity extends AppCompatActivity {
     private void irParaMain() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_in); // Transição suave
         finish();
     }
 }

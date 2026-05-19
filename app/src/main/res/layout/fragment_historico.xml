@@ -244,32 +244,46 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Lista de Acessos -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerHistorico"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                android:layout_height="wrap_content">
 
-            <!-- Estado Vazio -->
-            <LinearLayout
-                android:id="@+id/layoutVazio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:paddingVertical="48dp"
-                android:visibility="gone">
+                <!-- Lista de Acessos -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerHistorico"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <TextView
+                <!-- Estado Vazio -->
+                <LinearLayout
+                    android:id="@+id/layoutVazio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingVertical="48dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nenhum acesso encontrado"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <!-- ProgressBar -->
+                <ProgressBar
+                    android:id="@+id/progressBarHistorico"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nenhum acesso encontrado"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone" />
+            </FrameLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

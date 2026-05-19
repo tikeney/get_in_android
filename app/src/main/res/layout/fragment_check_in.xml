@@ -6,8 +6,9 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/containerCheckIn"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingHorizontal="40dp"
         android:paddingVertical="20dp">
 
@@ -418,18 +419,32 @@
 
         </com.google.android.material.chip.ChipGroup>
 
-        <Button
-            android:id="@+id/btnLogin"
+        <FrameLayout
+            android:id="@+id/frameBtnFinalizar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="40dp"
-            android:backgroundTint="?attr/colorPrimary"
-            android:text="Finalizar Check-in"
-            android:textColor="@color/white"
-            android:textSize="16dp"
-            app:cornerRadius="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chipGroupSetores" />
+            app:layout_constraintTop_toBottomOf="@+id/chipGroupSetores">
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="?attr/colorPrimary"
+                android:text="Finalizar Check-in"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                app:cornerRadius="20dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBarCheckIn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:indeterminateTint="@color/white" />
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

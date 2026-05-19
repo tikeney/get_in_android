@@ -13,8 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +65,8 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
 
     private ChipGroup chipGroupSetores;
     private Button btnFinalizar;
+    private ProgressBar progressBar;
+    private View containerCheckIn;
 
     // Utilitários e Estado
     private TokenManager tokenManager;
@@ -119,6 +124,11 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        
+        // Aplica animação de entrada
+        Animation slideUp = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
+        containerCheckIn.startAnimation(slideUp);
+        
         configurarMascaras();
         configurarFoto();
         configurarCracha();
@@ -134,6 +144,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     }
 
     private void inicializarViews(View view) {
+        containerCheckIn = view.findViewById(R.id.containerCheckIn);
         btnAdicionarFoto = view.findViewById(R.id.btnAdicionarFoto);
         ivIconePerfil = view.findViewById(R.id.iv_icone_perfil);
         tvTituloFoto = view.findViewById(R.id.tv_titulo_foto);
@@ -157,12 +168,25 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
 
         chipGroupSetores = view.findViewById(R.id.chipGroupSetores);
         btnFinalizar = view.findViewById(R.id.btnLogin);
+        progressBar = view.findViewById(R.id.progressBarCheckIn);
     }
 
     private void configurarCracha() {
         btnAdicionarCracha.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Aproxime o crachá para vincular", Toast.LENGTH_LONG).show();
         });
+    }
+
+    private void setProgressBar(boolean loading) {
+        if (loading) {
+            btnFinalizar.setEnabled(false);
+            btnFinalizar.setText("");
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            btnFinalizar.setEnabled(true);
+            btnFinalizar.setText("Finalizar Check-in");
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     private void realizarCheckIn() {
@@ -192,15 +216,13 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
             return;
         }
 
-        btnFinalizar.setEnabled(false);
-        btnFinalizar.setText("Processando...");
+        setProgressBar(true);
 
         RetrofitClient.getApiService().criarRequisicaoVisitante("Bearer " + token, req).enqueue(new Callback<Requisicao>() {
             @Override
             public void onResponse(@NonNull Call<Requisicao> call, @NonNull Response<Requisicao> response) {
                 if (!isAdded()) return;
-                btnFinalizar.setEnabled(true);
-                btnFinalizar.setText("Finalizar Check-in");
+                setProgressBar(false);
                 if (response.isSuccessful()) {
                     Toast.makeText(getContext(), "Check-in realizado com sucesso!", Toast.LENGTH_LONG).show();
                     limparFormulario();
@@ -212,8 +234,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
             @Override
             public void onFailure(@NonNull Call<Requisicao> call, @NonNull Throwable t) {
                 if (!isAdded()) return;
-                btnFinalizar.setEnabled(true);
-                btnFinalizar.setText("Finalizar Check-in");
+                setProgressBar(false);
                 Log.e(TAG, "Falha: " + t.getMessage());
                 Toast.makeText(getContext(), "Falha na conexão", Toast.LENGTH_SHORT).show();
             }
