@@ -26,7 +26,7 @@ import retrofit2.Response;
 public class PerfilFragment extends Fragment {
 
     private static final String TAG = "PerfilFragment";
-    private TextView tvNome, tvCargo, tvEmail, tvCpf, tvCelular;
+    private TextView tvNome, tvCargo, tvEmail, tvCpf, tvCelular, tvStatusLabel, tvStatusValue, tvDepartamento;
     private ImageView ivPerfilFoto;
     private TokenManager tokenManager;
 
@@ -40,7 +40,9 @@ public class PerfilFragment extends Fragment {
         tvEmail = view.findViewById(R.id.tvPerfilEmail);
         tvCpf = view.findViewById(R.id.tvPerfilCpf);
         tvCelular = view.findViewById(R.id.tvPerfilCelular);
+        tvDepartamento = view.findViewById(R.id.tvPerfilDepartamento);
         ivPerfilFoto = view.findViewById(R.id.ivPerfilFoto);
+
 
         tokenManager = new TokenManager(requireContext());
         
@@ -86,9 +88,24 @@ public class PerfilFragment extends Fragment {
 
     private void exibirUsuario(UsuarioDetalhado user) {
         tvNome.setText(user.getNome());
-        tvCargo.setText(user.getCargo() != null ? user.getCargo() : "Usuário");
+        Object cargo;
+        if (user.getCargo().equals("sup")) {
+            cargo = "Suporte";
+        } else if (user.getCargo().equals("port")) {
+            cargo = "Portaria";
+        } else if (user.getCargo().equals("func")) {
+            cargo = "Funcionario";
+        } else if (user.getCargo().equals("ger")) {
+            cargo = "Gerente";
+        } else if (user.getCargo().equals("adm")) {
+            cargo = "Administrador";
+        }else {
+            cargo = "Usuário";
+        }
+        tvCargo.setText(cargo.toString());
         tvEmail.setText(user.getEmail());
         tvCpf.setText(user.getCpf());
+        tvDepartamento.setText(user.getDepartamentoNome() != null ? user.getDepartamentoNome() : "Departamento");
         tvCelular.setText(user.getCelular());
         
         if (user.getFotoPerfil() != null && !user.getFotoPerfil().isEmpty()) {
