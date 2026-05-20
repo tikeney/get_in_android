@@ -5,49 +5,47 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardBackgroundColor="?android:attr/windowBackground"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
-    app:strokeColor="@color/divider_color"
+    app:strokeColor="#F1F3F5"
     app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp">
+        android:padding="16dp">
 
         <!-- Ícone/Avatar -->
-        <View
+        <FrameLayout
             android:id="@+id/viewIconBg"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/fundo_cracha"
-            android:backgroundTint="@color/icon_bg_light"
+            android:background="@drawable/bg_tag_status"
+            android:backgroundTint="#F0F4F8"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/imgIcone"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/outline_person_24"
-            app:layout_constraintBottom_toBottomOf="@id/viewIconBg"
-            app:layout_constraintEnd_toEndOf="@id/viewIconBg"
-            app:layout_constraintStart_toStartOf="@id/viewIconBg"
-            app:layout_constraintTop_toTopOf="@id/viewIconBg"
-            app:tint="@color/gray_text" />
+            <ImageView
+                android:id="@+id/imgIcone"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/outline_person_24"
+                app:tint="@color/primary" />
+        </FrameLayout>
 
         <!-- Nome e Documento -->
         <TextView
             android:id="@+id/txtNome"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Nome do Usuário"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/primary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/txtDia"
@@ -60,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="000.000.000-00"
-            android:textColor="@color/gray_text"
+            android:textColor="#6C757D"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="@id/txtNome"
             app:layout_constraintStart_toStartOf="@id/txtNome"
@@ -72,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="02/05"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/primary"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00:00"
-            android:textColor="@color/gray_text"
+            android:textColor="#ADB5BD"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txtDia" />
@@ -93,12 +91,22 @@
             android:id="@+id/chipGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             app:chipSpacingHorizontal="8dp"
-            app:chipSpacingVertical="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewIconBg">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMotivo"
+                style="@style/Widget.Material3.Chip.Assist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Motivo"
+                app:chipBackgroundColor="#F1F3F5"
+                app:chipStrokeWidth="0dp"
+                android:textColor="#495057"
+                android:textSize="11sp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipEmpresa"
@@ -106,22 +114,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Empresa"
-                app:chipBackgroundColor="@color/pill_bg_blue"
-                app:chipCornerRadius="12dp"
+                app:chipBackgroundColor="#F1F3F5"
                 app:chipStrokeWidth="0dp"
-                android:textColor="@color/secundary"
-                android:textSize="11sp" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipMotivo"
-                style="@style/Widget.Material3.Chip.Assist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tipo"
-                app:chipBackgroundColor="@color/pill_bg_blue"
-                app:chipCornerRadius="12dp"
-                app:chipStrokeWidth="0dp"
-                android:textColor="@color/secundary"
+                android:textColor="#495057"
                 android:textSize="11sp" />
 
             <com.google.android.material.chip.Chip
@@ -130,79 +125,58 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Setor"
-                app:chipBackgroundColor="@color/pill_bg_blue"
-                app:chipCornerRadius="12dp"
+                app:chipBackgroundColor="#F1F3F5"
                 app:chipStrokeWidth="0dp"
-                android:textColor="@color/secundary"
+                android:textColor="#495057"
                 android:textSize="11sp" />
 
         </com.google.android.material.chip.ChipGroup>
 
         <!-- Bloco de Descrição -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/bgDescricao"
+        <TextView
+            android:id="@+id/txtDescricao"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:cardBackgroundColor="@color/InputLoginBackground"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="0dp"
+            android:background="#F8F9FA"
+            android:padding="12dp"
+            android:text="Descrição detalhada da solicitação de acesso para este visitante."
+            android:textColor="#495057"
+            android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/chipGroup">
-
-            <TextView
-                android:id="@+id/txtDescricao"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Descrição detalhada aqui..."
-                android:textColor="@color/gray_text"
-                android:textSize="12sp" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Divisor -->
-        <View
-            android:id="@+id/dividerItem"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="12dp"
-            android:background="@color/divider_color"
-            app:layout_constraintTop_toBottomOf="@id/bgDescricao" />
+            app:layout_constraintTop_toBottomOf="@id/chipGroup" />
 
         <!-- Botões de Ação -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/dividerItem">
+            app:layout_constraintTop_toBottomOf="@id/txtDescricao">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnNegar"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="Negar"
-                android:textAllCaps="false"
-                android:textColor="?android:attr/textColorPrimary"
-                app:strokeColor="@color/divider_color" />
+                android:textColor="#C62828"
+                app:backgroundTint="#FFEBEE"
+                app:cornerRadius="8dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAceitar"
-                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="Aprovar"
-                android:textAllCaps="false"
+                android:backgroundTint="@color/primary"
                 android:textColor="@color/white"
-                android:textStyle="bold"
-                android:backgroundTint="@color/secundary" />
+                app:cornerRadius="8dp" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

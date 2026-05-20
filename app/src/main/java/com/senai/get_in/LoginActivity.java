@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
         setProgressBar(true);
         TagLoginRequest request = new TagLoginRequest(tagId);
 
-        RetrofitClient.getApiService().loginByTag(request).enqueue(new Callback<LoginResponse>() {
+        RetrofitClient.getApiService(this).loginByTag(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -208,7 +208,7 @@ public class LoginActivity extends AppCompatActivity {
         LoginRequest loginRequest = new LoginRequest(email, senha);
         Log.d(TAG, "Tentando login para: " + email);
 
-        RetrofitClient.getApiService().login(loginRequest).enqueue(new Callback<LoginResponse>() {
+        RetrofitClient.getApiService(this).login(loginRequest).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -269,8 +269,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void buscarDadosCargo(String token, UsuarioDetalhado userIncompleto) {
-        String authHeader = "Bearer " + token;
-        RetrofitClient.getApiService().getUsuarios(authHeader).enqueue(new Callback<UsuarioResponse>() {
+        // Agora o interceptor cuidará do header se o token já estiver salvo, 
+        // mas aqui acabamos de receber o token, então podemos salvá-lo antes de chamar
+        tokenManager.saveToken(token);
+        
+        RetrofitClient.getApiService(this).getUsuarios().enqueue(new Callback<UsuarioResponse>() {
             @Override
             public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
                 setProgressBar(false);

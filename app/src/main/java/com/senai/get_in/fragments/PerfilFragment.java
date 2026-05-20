@@ -61,8 +61,8 @@ public class PerfilFragment extends Fragment {
         UsuarioDetalhado user = tokenManager.getUserData();
         if (user == null) return;
 
-        // Chamada para a rota de avatar
-        RetrofitClient.getApiService().getAvatar(user.getId()).enqueue(new Callback<AvatarResponse>() {
+        // Chamada para a rota de avatar (agora usando o interceptor automático)
+        RetrofitClient.getApiService(requireContext()).getAvatar(user.getId()).enqueue(new Callback<AvatarResponse>() {
             @Override
             public void onResponse(@NonNull Call<AvatarResponse> call, @NonNull Response<AvatarResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {

@@ -1,75 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#F1F3F5"
+    app:strokeWidth="1dp">
 
-    <ImageView
-        android:id="@+id/ivFoto"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <TextView
-        android:id="@+id/tvNome"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:textStyle="bold"
-        android:textColor="@color/secundary"
-        android:textSize="15sp"
-        app:layout_constraintStart_toEndOf="@+id/ivFoto"
-        app:layout_constraintEnd_toStartOf="@+id/tvHora"
-        app:layout_constraintTop_toTopOf="@+id/ivFoto"/>
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tvEmpresa"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="#777777"
-        android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="@+id/tvNome"
-        app:layout_constraintEnd_toStartOf="@+id/tvHora"
-        app:layout_constraintTop_toBottomOf="@+id/tvNome"/>
+        <!-- Ícone/Foto -->
+        <FrameLayout
+            android:id="@+id/containerFoto"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_tag_status"
+            android:backgroundTint="#F0F4F8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tvSetor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#777777"
-        android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="@+id/tvNome"
-        app:layout_constraintTop_toBottomOf="@+id/tvEmpresa"/>
+            <ImageView
+                android:id="@+id/ivFoto"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/outline_person_24"
+                app:tint="@color/primary" />
+        </FrameLayout>
 
-    <TextView
-        android:id="@+id/tvStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/tvNome"
-        app:layout_constraintTop_toBottomOf="@+id/tvSetor"/>
+        <!-- Nome e Empresa -->
+        <TextView
+            android:id="@+id/tvNome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="João Carlos Silva"
+            android:textColor="@color/primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/tvHora"
+            app:layout_constraintStart_toEndOf="@+id/containerFoto"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvHora"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="13sp"
-        android:textColor="@color/secundary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ivFoto"/>
+        <TextView
+            android:id="@+id/tvEmpresa"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="TechFix Ltda"
+            android:textColor="#6C757D"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/tvHora"
+            app:layout_constraintStart_toStartOf="@+id/tvNome"
+            app:layout_constraintTop_toBottomOf="@+id/tvNome" />
 
-    <TextView
-        android:id="@+id/tvDuracao"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="#777777"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHora"/>
+        <!-- Tag Setor -->
+        <TextView
+            android:id="@+id/tvSetor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_tag_status"
+            android:backgroundTint="#E3F2FD"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:text="Manutenção"
+            android:textColor="#1565C0"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tvNome"
+            app:layout_constraintTop_toBottomOf="@+id/tvEmpresa" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Tag Status -->
+        <LinearLayout
+            android:id="@+id/layoutStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_tag_status"
+            android:backgroundTint="#E8F5E9"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            app:layout_constraintStart_toStartOf="@+id/tvNome"
+            app:layout_constraintTop_toBottomOf="@+id/tvSetor">
+
+            <View
+                android:id="@+id/viewStatusDot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_circle_translucent"
+                android:backgroundTint="#4CAF50" />
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Permitido"
+                android:textColor="#2E7D32"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Hora e Duração -->
+        <TextView
+            android:id="@+id/tvHora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="08:14"
+            android:textColor="@color/primary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDuracao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2h 30min"
+            android:textColor="#ADB5BD"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvHora" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

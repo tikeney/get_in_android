@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .placeholder(R.drawable.outline_person_24)
                         .into(ivFoto);
             } else {
-                RetrofitClient.getApiService().getAvatar(user.getId()).enqueue(new Callback<AvatarResponse>() {
+                RetrofitClient.getApiService(this).getAvatar(user.getId()).enqueue(new Callback<AvatarResponse>() {
                     @Override
                     public void onResponse(Call<AvatarResponse> call, Response<AvatarResponse> response) {
                         if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {

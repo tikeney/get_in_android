@@ -7,7 +7,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.PUT;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -31,49 +30,53 @@ public interface ApiService {
 
     // --- Views Consolidadas (Leitura) ---
     @GET("views/usuarios")
-    Call<UsuarioResponse> getUsuarios(@Header("Authorization") String token);
+    Call<UsuarioResponse> getUsuarios();
 
     @GET("views/requisicoes")
-    Call<RequisicaoResponse> getRequisicoes(@Header("Authorization") String token);
+    Call<RequisicaoResponse> getRequisicoes();
 
     @GET("views/logs")
-    Call<LogResponse> getLogs(@Header("Authorization") String token);
+    Call<LogResponse> getLogs();
 
     @GET("views/tags")
-    Call<TagResponse> getTags(@Header("Authorization") String token);
+    Call<TagResponse> getTags();
 
     // --- Requisições ---
     @PUT("requisicao/{id}")
-    Call<Requisicao> atualizarStatus(@Header("Authorization") String token, @Path("id") int id, @Body Requisicao requisicao);
+    Call<Requisicao> atualizarStatus(@Path("id") int id, @Body Requisicao requisicao);
 
     @POST("requisicao/")
-    Call<Requisicao> criarRequisicao(@Header("Authorization") String token, @Body Requisicao requisicao);
+    Call<Requisicao> criarRequisicao(@Body Requisicao requisicao);
 
     @POST("requisicao-visitante/")
-    Call<Requisicao> criarRequisicaoVisitante(@Header("Authorization") String token, @Body Requisicao requisicao);
+    Call<Requisicao> criarRequisicaoVisitante(@Body Requisicao requisicao);
 
     // --- Portaria ---
     @GET("portaria/vlocal")
-    Call<VisitanteLocalResponse> getVisitantesLocal(@Header("Authorization") String token);
+    Call<VisitanteLocalResponse> getVisitantesLocal();
 
     // --- Usuários ---
     @GET("user/{id}")
-    Call<UsuarioResponse> getUsuarioPorId(@Header("Authorization") String token, @Path("id") int id);
+    Call<UsuarioResponse> getUsuarioPorId(@Path("id") int id);
 
     @PUT("user/{id}")
-    Call<UsuarioResponse> atualizarUsuario(@Header("Authorization") String token, @Path("id") int id, @Body UsuarioDetalhado usuario);
+    Call<UsuarioResponse> atualizarUsuario(@Path("id") int id, @Body UsuarioDetalhado usuario);
 
     @DELETE("user/{id}")
-    Call<Void> deletarUsuario(@Header("Authorization") String token, @Path("id") int id);
+    Call<Void> deletarUsuario(@Path("id") int id);
 
     // --- Departamentos ---
     @GET("dep/")
-    Call<List<Departamento>> getDepartamentos(@Header("Authorization") String token);
+    Call<List<Departamento>> getDepartamentos();
+
+    // --- Setores ---
+    @GET("setores/")
+    Call<List<Setor>> getSetores();
 
     // --- Requisições Específicas ---
     @GET("requisicao/func/{id}")
-    Call<RequisicaoResponse> getRequisicoesPorFuncionario(@Header("Authorization") String token, @Path("id") int id);
+    Call<RequisicaoResponse> getRequisicoesPorFuncionario(@Path("id") int id);
 
     @GET("requisicao-visitante/user/{id}")
-    Call<RequisicaoResponse> getRequisicoesVisitantePorUsuario(@Header("Authorization") String token, @Path("id") int id);
+    Call<RequisicaoResponse> getRequisicoesVisitantePorUsuario(@Path("id") int id);
 }

@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class Requisicao {
     private int id;
-    private int idUsuario;
-    private int idDepartamento;
+    private Integer idUsuario;
+    private Integer idSetor;
     private String status;
     private String motivo;
     private String validade;
@@ -26,13 +26,13 @@ public class Requisicao {
     private String validadeVisita;
 
     // Campos extras de visualização (da view)
-    @SerializedName("usuario_nome")
+    @SerializedName(value = "usuario_nome", alternate = {"nome", "visitante"})
     private String usuarioNome;
     
-    @SerializedName("usuario_cpf")
+    @SerializedName(value = "usuario_cpf", alternate = {"cpf"})
     private String usuarioCpf;
     
-    @SerializedName("departamento_nome")
+    @SerializedName(value = "departamento_nome", alternate = {"setor"})
     private String departamentoNome;
 
     @SerializedName("codigo_tag")
@@ -41,11 +41,11 @@ public class Requisicao {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public int getIdUsuario() { return idUsuario; }
-    public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
+    public Integer getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }
 
-    public int getIdDepartamento() { return idDepartamento; }
-    public void setIdDepartamento(int idDepartamento) { this.idDepartamento = idDepartamento; }
+    public Integer getIdSetor() { return idSetor; }
+    public void setIdSetor(Integer idSetor) { this.idSetor = idSetor; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }

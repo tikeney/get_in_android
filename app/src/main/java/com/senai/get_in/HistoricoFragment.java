@@ -1,8 +1,6 @@
 package com.senai.get_in;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -14,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,24 +21,34 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
-import com.senai.get_in.adapter.HistoricoAdapter;
-import com.senai.get_in.model.Historico;
+import com.senai.get_in.adapter.LogAdapter;
+import com.senai.get_in.api.RetrofitClient;
+import com.senai.get_in.model.LogAcesso;
+import com.senai.get_in.model.LogResponse;
+import com.senai.get_in.utils.ToastUtils;
+import com.senai.get_in.utils.TokenManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class HistoricoFragment extends Fragment {
 
+    private static final String TAG = "HistoricoFragment";
     private RecyclerView recyclerHistorico;
-    private HistoricoAdapter adapter;
-    private List<Historico> listaCompleta;
-    private List<Historico> listaFiltrada;
+    private LogAdapter adapter;
+    private List<LogAcesso> listaCompleta = new ArrayList<>();
+    private List<LogAcesso> listaFiltrada = new ArrayList<>();
     private TextInputEditText etBusca;
     private ChipGroup chipGroupFiltros;
     private LinearLayout layoutVazio;
     private TextView tvContadorHoje, tvContadorNaFabrica, tvContadorNegados;
     private ProgressBar progressBar;
+    private TokenManager tokenManager;
 
     @Nullable
     @Override
@@ -55,6 +62,7 @@ public class HistoricoFragment extends Fragment {
         setupFilters();
         setupSearch();
         
+        tokenManager = new TokenManager(requireContext());
         loadData();
 
         return view;
@@ -72,38 +80,42 @@ public class HistoricoFragment extends Fragment {
     }
 
     private void loadData() {
-        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         recyclerHistorico.setVisibility(View.GONE);
         layoutVazio.setVisibility(View.GONE);
 
-        // Simulando carregamento assíncrono para UX
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            if (!isAdded()) return;
-            
-            setupData();
-            updateCounters();
-            filterList();
-            
-            if (progressBar != null) progressBar.setVisibility(View.GONE);
-            recyclerHistorico.setVisibility(View.VISIBLE);
-            recyclerHistorico.scheduleLayoutAnimation();
-        }, 600);
-    }
+        RetrofitClient.getApiService(requireContext()).getLogs().enqueue(new Callback<LogResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<LogResponse> call, @NonNull Response<LogResponse> response) {
+                if (!isAdded()) return;
+                progressBar.setVisibility(View.GONE);
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    listaCompleta = response.body().getData();
+                    if (listaCompleta == null) listaCompleta = new ArrayList<>();
+                    
+                    updateCounters();
+                    filterList();
+                    
+                    recyclerHistorico.setVisibility(View.VISIBLE);
+                    recyclerHistorico.scheduleLayoutAnimation();
+                } else {
+                    ToastUtils.showError(getContext(), "Erro ao carregar histórico");
+                }
+            }
 
-    private void setupData() {
-        listaCompleta = new ArrayList<>();
-        listaCompleta.add(new Historico("João Silva", "Tech Corp", "TI", "Na fábrica", "08:30", "2h 15min", R.mipmap.ic_launcher_round));
-        listaCompleta.add(new Historico("Maria Santos", "Limpeza Ltda", "Serviços", "Saiu", "09:15", "1h 00min", R.mipmap.ic_launcher_round));
-        listaCompleta.add(new Historico("Ricardo Oliveira", "Logística S.A", "Expedição", "Negado", "10:00", "-", R.mipmap.ic_launcher_round));
-        listaCompleta.add(new Historico("Ana Souza", "Senai", "Educação", "Saiu", "10:30", "45min", R.mipmap.ic_launcher_round));
-        listaCompleta.add(new Historico("Carlos Lima", "Pintura & Cia", "Manutenção", "Na fábrica", "11:00", "15min", R.mipmap.ic_launcher_round));
-        listaCompleta.add(new Historico("Fernanda Costa", "Alimentos S.A", "RH", "Na fábrica", "14:00", "1h 30min", R.mipmap.ic_launcher_round));
-
-        listaFiltrada = new ArrayList<>(listaCompleta);
+            @Override
+            public void onFailure(@NonNull Call<LogResponse> call, @NonNull Throwable t) {
+                if (!isAdded()) return;
+                progressBar.setVisibility(View.GONE);
+                Log.e(TAG, "Erro: " + t.getMessage());
+                ToastUtils.showError(getContext(), "Falha na conexão");
+            }
+        });
     }
 
     private void setupRecyclerView() {
-        adapter = new HistoricoAdapter(new ArrayList<>());
+        adapter = new LogAdapter(new ArrayList<>());
         recyclerHistorico.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerHistorico.setAdapter(adapter);
         
@@ -137,18 +149,14 @@ public class HistoricoFragment extends Fragment {
         int checkedChipId = chipGroupFiltros.getCheckedChipId();
 
         listaFiltrada = listaCompleta.stream()
-                .filter(h -> (h.getNome().toLowerCase().contains(query) || 
-                             h.getSetor().toLowerCase().contains(query) || 
-                             h.getEmpresa().toLowerCase().contains(query)))
-                .filter(h -> {
-                    if (checkedChipId == R.id.chipPermitidos) {
-                        return h.getStatus().equalsIgnoreCase("Na fábrica") || h.getStatus().equalsIgnoreCase("Saiu") || h.getStatus().equalsIgnoreCase("Permitido");
-                    } else if (checkedChipId == R.id.chipNegado) {
-                        return h.getStatus().equalsIgnoreCase("Negado");
+                .filter(l -> (l.getUsuarioNome() != null && l.getUsuarioNome().toLowerCase().contains(query)) || 
+                             (l.getDepartamentoUsuario() != null && l.getDepartamentoUsuario().toLowerCase().contains(query)))
+                .filter(l -> {
+                    boolean isNaFabrica = l.getDataSaida() == null || l.getDataSaida().isEmpty();
+                    if (checkedChipId == R.id.chipNaFabrica) {
+                        return isNaFabrica;
                     } else if (checkedChipId == R.id.chipSaiu) {
-                        return h.getStatus().equalsIgnoreCase("Saiu");
-                    } else if (checkedChipId == R.id.chipNaFabrica) {
-                        return h.getStatus().equalsIgnoreCase("Na fábrica");
+                        return !isNaFabrica;
                     }
                     return true;
                 })
@@ -168,12 +176,14 @@ public class HistoricoFragment extends Fragment {
     private void updateCounters() {
         if (listaCompleta == null) return;
 
-        int hoje = listaCompleta.size();
-        long naFabrica = listaCompleta.stream().filter(h -> h.getStatus().equalsIgnoreCase("Na fábrica")).count();
-        long negados = listaCompleta.stream().filter(h -> h.getStatus().equalsIgnoreCase("Negado")).count();
+        int total = listaCompleta.size();
+        long naFabrica = listaCompleta.stream()
+                .filter(l -> l.getDataSaida() == null || l.getDataSaida().isEmpty())
+                .count();
 
-        tvContadorHoje.setText(String.valueOf(hoje));
+        tvContadorHoje.setText(String.valueOf(total));
         tvContadorNaFabrica.setText(String.valueOf(naFabrica));
-        tvContadorNegados.setText(String.valueOf(negados));
+        // Nota: O contador de negados não existe diretamente nos Logs de Acesso da View
+        tvContadorNegados.setText("0"); 
     }
 }

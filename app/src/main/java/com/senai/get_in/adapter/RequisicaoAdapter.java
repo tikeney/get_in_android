@@ -72,11 +72,9 @@ public class RequisicaoAdapter extends RecyclerView.Adapter<RequisicaoAdapter.Vi
 
         if (descricao.isEmpty()) {
             holder.txtDescricao.setVisibility(View.GONE);
-            holder.bgDescricao.setVisibility(View.GONE);
         } else {
             holder.txtDescricao.setText(descricao);
             holder.txtDescricao.setVisibility(View.VISIBLE);
-            holder.bgDescricao.setVisibility(View.VISIBLE);
         }
 
         holder.btnAceitar.setOnClickListener(v -> listener.onAprovarClick(req));
@@ -141,7 +139,7 @@ public class RequisicaoAdapter extends RecyclerView.Adapter<RequisicaoAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtNome, txtDocumento, txtDia, txtHorario, txtDescricao;
         Chip chipEmpresa, chipMotivo, chipSetor;
-        View btnAceitar, btnNegar, bgDescricao;
+        View btnAceitar, btnNegar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -150,7 +148,6 @@ public class RequisicaoAdapter extends RecyclerView.Adapter<RequisicaoAdapter.Vi
             txtDia = itemView.findViewById(R.id.txtDia);
             txtHorario = itemView.findViewById(R.id.txtHorario);
             txtDescricao = itemView.findViewById(R.id.txtDescricao);
-            bgDescricao = itemView.findViewById(R.id.bgDescricao);
             
             chipEmpresa = itemView.findViewById(R.id.chipEmpresa);
             chipMotivo = itemView.findViewById(R.id.chipMotivo);

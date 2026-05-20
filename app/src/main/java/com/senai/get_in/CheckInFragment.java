@@ -35,6 +35,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.senai.get_in.api.RetrofitClient;
 import com.senai.get_in.model.Requisicao;
+import com.senai.get_in.model.Setor;
 import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
 
@@ -42,6 +43,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -133,6 +135,8 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         configurarFoto();
         configurarCracha();
         configurarBotaoFinalizar();
+        
+        carregarSetores();
     }
 
     @Override
@@ -167,8 +171,42 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         tvSubtituloCracha = view.findViewById(R.id.tv_subtitulo_cracha);
 
         chipGroupSetores = view.findViewById(R.id.chipGroupSetores);
-        btnFinalizar = view.findViewById(R.id.btnLogin);
+        btnFinalizar = view.findViewById(R.id.btnFinalizarCheckIn);
         progressBar = view.findViewById(R.id.progressBarCheckIn);
+    }
+
+    private void carregarSetores() {
+        RetrofitClient.getApiService(requireContext()).getSetores().enqueue(new Callback<List<Setor>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Setor>> call, @NonNull Response<List<Setor>> response) {
+                if (!isAdded()) return;
+                if (response.isSuccessful() && response.body() != null) {
+                    preencherChipsSetores(response.body());
+                } else {
+                    Log.e(TAG, "Erro ao carregar setores: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Setor>> call, @NonNull Throwable t) {
+                if (!isAdded()) return;
+                Log.e(TAG, "Falha ao carregar setores: " + t.getMessage());
+            }
+        });
+    }
+
+    private void preencherChipsSetores(List<Setor> setores) {
+        if (chipGroupSetores == null) return;
+        chipGroupSetores.removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        for (Setor setor : setores) {
+            Chip chip = (Chip) inflater.inflate(R.layout.layout_chip_filtro, chipGroupSetores, false);
+            chip.setText(setor.getNome());
+            chip.setTag(setor.getId());
+            chip.setCheckable(true);
+            chipGroupSetores.addView(chip);
+        }
     }
 
     private void configurarCracha() {
@@ -180,11 +218,11 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     private void setProgressBar(boolean loading) {
         if (loading) {
             btnFinalizar.setEnabled(false);
-            btnFinalizar.setText("");
+            btnFinalizar.setAlpha(0.5f);
             progressBar.setVisibility(View.VISIBLE);
         } else {
             btnFinalizar.setEnabled(true);
-            btnFinalizar.setText("Finalizar Check-in");
+            btnFinalizar.setAlpha(1.0f);
             progressBar.setVisibility(View.GONE);
         }
     }
@@ -196,10 +234,10 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         String motivo = etMotivo.getText().toString().trim();
 
         int selectedChipId = chipGroupSetores.getCheckedChipId();
-        String setor = "";
+        Integer idSetor = null;
         if (selectedChipId != View.NO_ID) {
             Chip selectedChip = chipGroupSetores.findViewById(selectedChipId);
-            setor = selectedChip.getText().toString();
+            idSetor = (Integer) selectedChip.getTag();
         }
 
         Requisicao req = new Requisicao();
@@ -207,18 +245,12 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         req.setUsuarioCpf(cpf);
         req.setEmpresaVisitante(empresa);
         req.setMotivo(motivo);
-        req.setDepartamentoNome(setor);
+        req.setIdSetor(idSetor);
         req.setCodigoTag(codigoTagVinculada);
         
-        String token = tokenManager.getToken();
-        if (token == null) {
-            ToastUtils.showError(getContext(), "Erro: Token não encontrado.");
-            return;
-        }
-
         setProgressBar(true);
 
-        RetrofitClient.getApiService().criarRequisicaoVisitante("Bearer " + token, req).enqueue(new Callback<Requisicao>() {
+        RetrofitClient.getApiService(requireContext()).criarRequisicaoVisitante(req).enqueue(new Callback<Requisicao>() {
             @Override
             public void onResponse(@NonNull Call<Requisicao> call, @NonNull Response<Requisicao> response) {
                 if (!isAdded()) return;
@@ -228,6 +260,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
                     limparFormulario();
                 } else {
                     ToastUtils.showError(getContext(), "Erro ao realizar check-in: " + response.code());
+                    Log.e(TAG, "Erro response: " + response.errorBody());
                 }
             }
 
@@ -249,8 +282,9 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
             valido = false;
         } else inputNome.setError(null);
 
-        if (etCPF.getText().toString().trim().length() < 14) { 
-            inputCPF.setError("CPF inválido");
+        String cpfLimpo = etCPF.getText().toString().replaceAll("[^\\d]", "");
+        if (cpfLimpo.length() < 11) { 
+            inputCPF.setError("CPF incompleto");
             valido = false;
         } else inputCPF.setError(null);
 

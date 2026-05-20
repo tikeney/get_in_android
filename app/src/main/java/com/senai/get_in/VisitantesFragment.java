@@ -67,15 +67,12 @@ public class VisitantesFragment extends Fragment {
     }
 
     private void carregarVisitantes() {
-        String token = tokenManager.getToken();
-        if (token == null) return;
-
         if (progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
             if (recycler != null) recycler.setVisibility(View.INVISIBLE);
         }
 
-        RetrofitClient.getApiService().getVisitantesLocal("Bearer " + token).enqueue(new Callback<VisitanteLocalResponse>() {
+        RetrofitClient.getApiService(requireContext()).getVisitantesLocal().enqueue(new Callback<VisitanteLocalResponse>() {
             @Override
             public void onResponse(Call<VisitanteLocalResponse> call, Response<VisitanteLocalResponse> response) {
                 if (!isAdded()) return;

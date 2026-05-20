@@ -1,81 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/windowBackground">
+    android:background="#F8F9FA">
 
-    <ScrollView
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        app:elevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp">
 
-            <!-- Card Aparência -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Configurações"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Personalize sua experiência no app"
+                android:textColor="#B0C4DE"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Seção Aparência -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="APARÊNCIA"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="16dp" />
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?android:attr/windowBackground"
-                app:cardCornerRadius="16dp"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="#F8F9FA"
+                app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:strokeColor="@color/divider_color"
-                app:strokeWidth="1dp">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:text="Aparência"
-                        android:textColor="@color/secundary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                    android:padding="12dp">
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchDarkMode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Modo Escuro"
-                        android:textColor="?android:attr/textColorPrimary" />
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        app:thumbTint="@color/primary"
+                        app:trackTint="@color/header_subtitle" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card Notificações -->
+            <!-- Seção Notificações -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PREFERÊNCIAS"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="16dp" />
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?android:attr/windowBackground"
-                app:cardCornerRadius="16dp"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="#F8F9FA"
+                app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:strokeColor="@color/divider_color"
-                app:strokeWidth="1dp">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:text="Preferências"
-                        android:textColor="@color/secundary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                    android:padding="12dp">
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchNotificacoes"
@@ -83,7 +120,15 @@
                         android:layout_height="wrap_content"
                         android:checked="true"
                         android:text="Receber Notificações"
-                        android:textColor="?android:attr/textColorPrimary" />
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        app:thumbTint="@color/primary" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#E9ECEF"
+                        android:layout_marginVertical="8dp"/>
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchSomNotificacao"
@@ -91,72 +136,87 @@
                         android:layout_height="wrap_content"
                         android:checked="true"
                         android:text="Som de Notificação"
-                        android:textColor="?android:attr/textColorPrimary" />
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        app:thumbTint="@color/primary" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card Conta -->
+            <!-- Seção Conta -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CONTA E SEGURANÇA"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="16dp" />
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?android:attr/windowBackground"
-                app:cardCornerRadius="16dp"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="#F8F9FA"
+                app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:strokeColor="@color/divider_color"
-                app:strokeWidth="1dp">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:text="Sua Conta"
-                        android:textColor="@color/secundary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
+                    android:padding="8dp">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnAlterarSenha"
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="56dp"
                         android:text="Alterar Senha"
                         android:textAlignment="viewStart"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="@color/primary"
                         app:icon="@drawable/outline_lock_24"
-                        app:iconTint="@color/secundary" />
+                        app:iconTint="@color/primary" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnAlterarEmail"
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Alterar Senha"
+                        android:layout_height="56dp"
+                        android:text="Alterar E-mail"
                         android:textAlignment="viewStart"
-                        android:textColor="?android:attr/textColorPrimary"
-                        app:icon="@drawable/outline_lock_24"
-                        app:iconTint="@color/secundary" />
+                        android:textColor="@color/primary"
+                        app:icon="@drawable/outline_person_24"
+                        app:iconTint="@color/primary" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnAlterarNumero"
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Alterar Senha"
+                        android:layout_height="56dp"
+                        android:text="Alterar Telefone"
                         android:textAlignment="viewStart"
-                        android:textColor="?android:attr/textColorPrimary"
-                        app:icon="@drawable/outline_lock_24"
-                        app:iconTint="@color/secundary" />
+                        android:textColor="@color/primary"
+                        app:icon="@drawable/outline_list_alt_24"
+                        app:iconTint="@color/primary" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSair"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:text="Sair da Conta"
+                android:textColor="#C62828"
+                app:backgroundTint="#FFEBEE"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/outline_logout_24"
+                app:iconTint="#C62828" />
+
         </LinearLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

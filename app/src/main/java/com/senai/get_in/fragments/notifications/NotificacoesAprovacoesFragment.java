@@ -77,24 +77,17 @@ public class NotificacoesAprovacoesFragment extends Fragment {
     private void setupSwipeRefresh() {
         if (swipeRefresh != null) {
             swipeRefresh.setOnRefreshListener(this::carregarRequisicoes);
-            swipeRefresh.setColorSchemeResources(R.color.blue);
+            swipeRefresh.setColorSchemeResources(R.color.primary);
         }
     }
 
     private void carregarRequisicoes() {
-        String token = tokenManager.getToken();
-        if (token == null) {
-            Log.e(TAG, "Token não encontrado!");
-            if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
-            return;
-        }
-
         if (progressBar != null && (swipeRefresh == null || !swipeRefresh.isRefreshing())) {
             progressBar.setVisibility(View.VISIBLE);
             rvRequisicoes.setVisibility(View.INVISIBLE);
         }
 
-        RetrofitClient.getApiService().getRequisicoes("Bearer " + token).enqueue(new Callback<RequisicaoResponse>() {
+        RetrofitClient.getApiService(requireContext()).getRequisicoes().enqueue(new Callback<RequisicaoResponse>() {
             @Override
             public void onResponse(@NonNull Call<RequisicaoResponse> call, @NonNull Response<RequisicaoResponse> response) {
                 if (!isAdded()) return;
@@ -138,15 +131,12 @@ public class NotificacoesAprovacoesFragment extends Fragment {
     }
 
     private void atualizarStatusRequisicao(Requisicao requisicao, String novoStatus) {
-        String token = tokenManager.getToken();
-        if (token == null) return;
-
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         
         String statusOriginal = requisicao.getStatus();
         requisicao.setStatus(novoStatus);
 
-        RetrofitClient.getApiService().atualizarStatus("Bearer " + token, requisicao.getId(), requisicao).enqueue(new Callback<Requisicao>() {
+        RetrofitClient.getApiService(requireContext()).atualizarStatus(requisicao.getId(), requisicao).enqueue(new Callback<Requisicao>() {
             @Override
             public void onResponse(@NonNull Call<Requisicao> call, @NonNull Response<Requisicao> response) {
                 if (!isAdded()) return;

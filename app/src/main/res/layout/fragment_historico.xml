@@ -2,35 +2,73 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/windowBackground">
+    android:background="#F8F9FA">
 
     <!-- ===== CABEÇALHO FIXO COM ESTATÍSTICAS ===== -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarHistorico"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        app:liftOnScroll="false"
+        android:background="@color/primary"
         app:elevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="?attr/colorPrimary"
             android:paddingHorizontal="20dp"
             android:paddingTop="16dp"
-            android:paddingBottom="16dp">
+            android:paddingBottom="24dp">
+
+            <!-- Top Header with Back Button and Title -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_circle_translucent"
+                    android:src="@drawable/outline_arrow_back_24"
+                    app:tint="@color/white"
+                    android:contentDescription="Voltar" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Histórico de Acessos"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="VisitaTrack · Segurança Patrimonial"
+                        android:textColor="#B0C4DE"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
 
             <!-- Cards de estatísticas -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginBottom="16dp">
+                android:gravity="center">
 
                 <!-- Card: Hoje -->
                 <LinearLayout
@@ -38,27 +76,27 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
+                    android:layout_marginEnd="8dp"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:background="@drawable/bg_stat_card"
-                    android:padding="12dp">
+                    android:paddingVertical="12dp">
 
                     <TextView
                         android:id="@+id/tvContadorHoje"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
+                        android:text="12"
                         android:textColor="@color/white"
-                        android:textSize="26sp"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hoje"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        android:textSize="12sp" />
+                        android:textColor="#A0B0C0"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
                 <!-- Card: Na fábrica -->
@@ -67,27 +105,27 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginHorizontal="6dp"
+                    android:layout_marginHorizontal="4dp"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:background="@drawable/bg_stat_card"
-                    android:padding="12dp">
+                    android:paddingVertical="12dp">
 
                     <TextView
                         android:id="@+id/tvContadorNaFabrica"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
+                        android:text="2"
                         android:textColor="@color/white"
-                        android:textSize="26sp"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Na fábrica"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        android:textSize="12sp" />
+                        android:textColor="#A0B0C0"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
                 <!-- Card: Negados -->
@@ -96,36 +134,54 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginStart="8dp"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:background="@drawable/bg_stat_card"
-                    android:padding="12dp">
+                    android:paddingVertical="12dp">
 
                     <TextView
                         android:id="@+id/tvContadorNegados"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
+                        android:text="1"
                         android:textColor="@color/white"
-                        android:textSize="26sp"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Negados"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        android:textSize="12sp" />
+                        android:textColor="#A0B0C0"
+                        android:textSize="11sp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Filtros por Chip -->
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ===== CONTEÚDO SCROLLÁVEL ===== -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
+
+            <!-- Filtros por Chip (Now outside the dark area) -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
-                android:layout_marginBottom="4dp">
+                android:paddingHorizontal="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp">
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroupFiltros"
@@ -144,9 +200,9 @@
                         android:checked="true"
                         android:textColor="@color/chip_text_states"
                         app:chipBackgroundColor="@color/chip_states"
-                        app:chipStrokeColor="?attr/colorOutline"
-                        app:chipStrokeWidth="1dp"
-                        app:checkedIconVisible="false" />
+                        app:chipStrokeWidth="0dp"
+                        app:checkedIconVisible="false"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipPermitidos"
@@ -156,8 +212,7 @@
                         android:text="Permitido"
                         android:textColor="@color/chip_text_states"
                         app:chipBackgroundColor="@color/chip_states"
-                        app:chipStrokeColor="?attr/colorOutline"
-                        app:chipStrokeWidth="1dp"
+                        app:chipStrokeWidth="0dp"
                         app:checkedIconVisible="false" />
 
                     <com.google.android.material.chip.Chip
@@ -168,8 +223,7 @@
                         android:text="Negado"
                         android:textColor="@color/chip_text_states"
                         app:chipBackgroundColor="@color/chip_states"
-                        app:chipStrokeColor="?attr/colorOutline"
-                        app:chipStrokeWidth="1dp"
+                        app:chipStrokeWidth="0dp"
                         app:checkedIconVisible="false" />
 
                     <com.google.android.material.chip.Chip
@@ -180,8 +234,7 @@
                         android:text="Saiu"
                         android:textColor="@color/chip_text_states"
                         app:chipBackgroundColor="@color/chip_states"
-                        app:chipStrokeColor="?attr/colorOutline"
-                        app:chipStrokeWidth="1dp"
+                        app:chipStrokeWidth="0dp"
                         app:checkedIconVisible="false" />
 
                     <com.google.android.material.chip.Chip
@@ -192,98 +245,106 @@
                         android:text="Na fábrica"
                         android:textColor="@color/chip_text_states"
                         app:chipBackgroundColor="@color/chip_states"
-                        app:chipStrokeColor="?attr/colorOutline"
-                        app:chipStrokeWidth="1dp"
+                        app:chipStrokeWidth="0dp"
                         app:checkedIconVisible="false" />
 
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
-        </LinearLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EEEEEE"
+                android:layout_marginBottom="16dp"/>
 
-    <!-- ===== CONTEÚDO SCROLLÁVEL ===== -->
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="24dp">
-
-            <!-- Campo de Busca -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputBusca"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                app:boxBackgroundColor="?android:attr/windowBackground"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxStrokeColor="@color/input_stroke"
-                app:hintEnabled="false"
-                app:startIconDrawable="@drawable/outline_person_24"
-                app:startIconTint="@color/InputLoginHint">
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etBusca"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:hint="Buscar visitante ou setor..."
-                    android:textColor="?attr/colorPrimary"
-                    android:textColorHint="@color/InputLoginHint"
-                    android:inputType="text"
-                    android:imeOptions="actionSearch" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!-- Lista de Acessos -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerHistorico"
+                <!-- Campo de Busca -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputBusca"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    android:layout_marginBottom="24dp"
+                    app:boxBackgroundColor="#F1F3F5"
+                    app:boxCornerRadiusBottomEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:hintEnabled="false"
+                    app:startIconDrawable="@drawable/outline_person_24"
+                    app:startIconTint="#6C757D">
 
-                <!-- Estado Vazio -->
-                <LinearLayout
-                    android:id="@+id/layoutVazio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:paddingVertical="48dp"
-                    android:visibility="gone">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etBusca"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Buscar visitante ou setor..."
+                        android:textColor="#212529"
+                        android:textColorHint="#ADB5BD"
+                        android:inputType="text"
+                        android:paddingVertical="0dp"
+                        android:textSize="15sp"
+                        android:imeOptions="actionSearch" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Nenhum acesso encontrado"
-                        android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="16sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                </LinearLayout>
-
-                <!-- ProgressBar -->
-                <ProgressBar
-                    android:id="@+id/progressBarHistorico"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:visibility="gone" />
-            </FrameLayout>
+                    android:text="HOJE — 31 MAR 2025"
+                    android:textColor="#0D243F"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Lista de Acessos -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerHistorico"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/item_historico" />
+
+                    <!-- Estado Vazio -->
+                    <LinearLayout
+                        android:id="@+id/layoutVazio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:paddingVertical="48dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nenhum acesso encontrado"
+                            android:textColor="#6C757D"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <!-- ProgressBar -->
+                    <ProgressBar
+                        android:id="@+id/progressBarHistorico"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
