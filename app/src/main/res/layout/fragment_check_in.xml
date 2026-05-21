@@ -62,6 +62,7 @@
                 android:letterSpacing="0.1"
                 android:layout_marginBottom="16dp" />
 
+            <!-- Botão de Foto: ImageView com clipToOutline para corte correto -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/btnAdicionarFoto"
                 android:layout_width="match_parent"
@@ -74,9 +75,14 @@
 
                 <ImageView
                     android:id="@+id/iv_icone_perfil"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
                     android:src="@drawable/outline_person_24"
+                    android:scaleType="centerCrop"
+                    android:clipToOutline="true"
+                    android:background="@drawable/bg_tag_status"
+                    android:backgroundTint="#F0F4F8"
+                    android:padding="8dp"
                     app:tint="@color/primary"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -93,7 +99,8 @@
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iv_icone_perfil"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_subtitulo_foto" />
 
                 <TextView
                     android:id="@+id/tv_subtitulo_foto"
@@ -102,9 +109,11 @@
                     android:text="Clique para capturar ou selecionar"
                     android:textColor="#6C757D"
                     android:textSize="13sp"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_titulo_foto"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/iv_icone_perfil"
                     app:layout_constraintStart_toStartOf="@+id/tv_titulo_foto"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_titulo_foto" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_titulo_foto"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -248,7 +257,8 @@
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iv_icone_cracha"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_subtitulo_cracha" />
 
                 <TextView
                     android:id="@+id/tv_subtitulo_cracha"
@@ -257,9 +267,10 @@
                     android:text="Aproxime o crachá do leitor RFID"
                     android:textColor="#B0C4DE"
                     android:textSize="13sp"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_titulo_cracha"
-                    app:layout_constraintStart_toStartOf="@+id/tv_titulo_cracha"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_titulo_cracha" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/iv_icone_cracha"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_titulo_cracha"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -271,67 +282,16 @@
                 android:textSize="14sp"
                 android:layout_marginBottom="8dp" />
 
+            <!-- ChipGroup VAZIO: chips são criados dinamicamente pela API em preencherChipsSetores() -->
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroupSetores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="40dp"
-                app:chipSpacingVertical="0dp">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipManutencao"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Manutenção"
-                    app:chipBackgroundColor="@color/chip_states"
-                    android:textColor="@color/chip_text_states"
-                    app:checkedIconVisible="false" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipAlmoxarifado"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Almoxarifado"
-                    app:chipBackgroundColor="@color/chip_states"
-                    android:textColor="@color/chip_text_states"
-                    app:checkedIconVisible="false" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipProducao"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Produção"
-                    app:chipBackgroundColor="@color/chip_states"
-                    android:textColor="@color/chip_text_states"
-                    app:checkedIconVisible="false" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipLaboratorio"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Laboratório"
-                    app:chipBackgroundColor="@color/chip_states"
-                    android:textColor="@color/chip_text_states"
-                    app:checkedIconVisible="false" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipAdministracao"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Administração"
-                    app:chipBackgroundColor="@color/chip_states"
-                    android:textColor="@color/chip_text_states"
-                    app:checkedIconVisible="false" />
-
-            </com.google.android.material.chip.ChipGroup>
+                app:chipSpacingVertical="4dp"
+                app:chipSpacingHorizontal="4dp" />
 
             <FrameLayout
-                android:id="@+id/frameBtnFinalizar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginBottom="24dp">

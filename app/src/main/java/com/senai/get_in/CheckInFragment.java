@@ -126,16 +126,15 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
-        // Aplica animação de entrada
+
         Animation slideUp = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
         containerCheckIn.startAnimation(slideUp);
-        
+
         configurarMascaras();
         configurarFoto();
         configurarCracha();
         configurarBotaoFinalizar();
-        
+
         carregarSetores();
     }
 
@@ -197,22 +196,23 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
 
     private void preencherChipsSetores(List<Setor> setores) {
         if (chipGroupSetores == null) return;
+
+        // Remove tudo antes de adicionar para evitar duplicatas em recarregamentos
         chipGroupSetores.removeAllViews();
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         for (Setor setor : setores) {
             Chip chip = (Chip) inflater.inflate(R.layout.layout_chip_filtro, chipGroupSetores, false);
             chip.setText(setor.getNome());
-            chip.setTag(setor.getId());
+            chip.setTag(setor.getId());       // tag = Integer do ID do setor
             chip.setCheckable(true);
             chipGroupSetores.addView(chip);
         }
     }
 
     private void configurarCracha() {
-        btnAdicionarCracha.setOnClickListener(v -> {
-            ToastUtils.showInfo(getContext(), "Aproxime o crachá para vincular");
-        });
+        btnAdicionarCracha.setOnClickListener(v ->
+                ToastUtils.showInfo(getContext(), "Aproxime o crachá para vincular"));
     }
 
     private void setProgressBar(boolean loading) {
@@ -233,11 +233,14 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         String empresa = etEmpresa.getText().toString().trim();
         String motivo = etMotivo.getText().toString().trim();
 
-        int selectedChipId = chipGroupSetores.getCheckedChipId();
+        // Lê o chip selecionado e obtém o ID do setor a partir da tag
         Integer idSetor = null;
+        int selectedChipId = chipGroupSetores.getCheckedChipId();
         if (selectedChipId != View.NO_ID) {
             Chip selectedChip = chipGroupSetores.findViewById(selectedChipId);
-            idSetor = (Integer) selectedChip.getTag();
+            if (selectedChip != null && selectedChip.getTag() instanceof Integer) {
+                idSetor = (Integer) selectedChip.getTag();
+            }
         }
 
         Requisicao req = new Requisicao();
@@ -247,7 +250,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         req.setMotivo(motivo);
         req.setIdSetor(idSetor);
         req.setCodigoTag(codigoTagVinculada);
-        
+
         setProgressBar(true);
 
         RetrofitClient.getApiService(requireContext()).criarRequisicaoVisitante(req).enqueue(new Callback<Requisicao>() {
@@ -280,18 +283,24 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         if (etNome.getText().toString().trim().isEmpty()) {
             inputNome.setError("Informe o nome completo");
             valido = false;
-        } else inputNome.setError(null);
+        } else {
+            inputNome.setError(null);
+        }
 
         String cpfLimpo = etCPF.getText().toString().replaceAll("[^\\d]", "");
-        if (cpfLimpo.length() < 11) { 
+        if (cpfLimpo.length() < 11) {
             inputCPF.setError("CPF incompleto");
             valido = false;
-        } else inputCPF.setError(null);
+        } else {
+            inputCPF.setError(null);
+        }
 
         if (etEmpresa.getText().toString().trim().isEmpty()) {
             inputEmpresa.setError("Informe a empresa");
             valido = false;
-        } else inputEmpresa.setError(null);
+        } else {
+            inputEmpresa.setError(null);
+        }
 
         if (chipGroupSetores.getCheckedChipId() == View.NO_ID) {
             ToastUtils.showInfo(getContext(), "Selecione um setor.");
@@ -327,20 +336,33 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     }
 
     private void verificarPermissaoCamera() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) abrirCamera();
-        else permissaoCameraLauncher.launch(Manifest.permission.CAMERA);
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            abrirCamera();
+        } else {
+            permissaoCameraLauncher.launch(Manifest.permission.CAMERA);
+        }
     }
 
     private void verificarPermissaoGaleria() {
-        String permissao = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU ? Manifest.permission.READ_MEDIA_IMAGES : Manifest.permission.READ_EXTERNAL_STORAGE;
-        if (ContextCompat.checkSelfPermission(requireContext(), permissao) == PackageManager.PERMISSION_GRANTED) abrirGaleria();
-        else permissaoArmazenamentoLauncher.launch(permissao);
+        String permissao = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU
+                ? Manifest.permission.READ_MEDIA_IMAGES
+                : Manifest.permission.READ_EXTERNAL_STORAGE;
+        if (ContextCompat.checkSelfPermission(requireContext(), permissao)
+                == PackageManager.PERMISSION_GRANTED) {
+            abrirGaleria();
+        } else {
+            permissaoArmazenamentoLauncher.launch(permissao);
+        }
     }
 
     private void abrirCamera() {
         try {
             File fotoFile = criarArquivoTemporario();
-            cameraImageUri = FileProvider.getUriForFile(requireContext(), requireContext().getPackageName() + ".provider", fotoFile);
+            cameraImageUri = FileProvider.getUriForFile(
+                    requireContext(),
+                    requireContext().getPackageName() + ".provider",
+                    fotoFile);
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
             cameraLauncher.launch(intent);
@@ -361,6 +383,8 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
 
     private void definirFoto(Uri uri) {
         fotoUri = uri;
+        // Remove o tint do ícone padrão para mostrar a foto real
+        ivIconePerfil.clearColorFilter();
         ivIconePerfil.setImageURI(uri);
         ivIconePerfil.setScaleType(ImageView.ScaleType.CENTER_CROP);
         tvTituloFoto.setText("Foto adicionada");
@@ -383,21 +407,35 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         fotoUri = null;
         ivIconePerfil.setImageResource(R.drawable.outline_person_24);
         ivIconePerfil.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        tvTituloFoto.setText("Adicionar foto do visitante");
-        tvSubtituloFoto.setText("Toque para abrir a câmera");
+        // Restaura o tint azul do ícone padrão
+        ivIconePerfil.setColorFilter(
+                ContextCompat.getColor(requireContext(), R.color.primary),
+                android.graphics.PorterDuff.Mode.SRC_IN);
+        tvTituloFoto.setText("Foto do Visitante");
+        tvSubtituloFoto.setText("Clique para capturar ou selecionar");
         codigoTagVinculada = null;
-        tvTituloCracha.setText("Vincular crachá");
-        tvSubtituloCracha.setText("Toque e aproxime o cracha");
+        tvTituloCracha.setText("Vincular Crachá");
+        tvSubtituloCracha.setText("Aproxime o crachá do leitor RFID");
     }
 
+    // -------------------------------------------------------------------------
+    // Máscara de texto reutilizável
+    // -------------------------------------------------------------------------
     private static class MascaraTextWatcher implements TextWatcher {
         private final TextInputEditText campo;
         private final String mascara;
         private boolean editando = false;
-        MascaraTextWatcher(TextInputEditText campo, String mascara) { this.campo = campo; this.mascara = mascara; }
+
+        MascaraTextWatcher(TextInputEditText campo, String mascara) {
+            this.campo = campo;
+            this.mascara = mascara;
+        }
+
         @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
         @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-        @Override public void afterTextChanged(Editable s) {
+
+        @Override
+        public void afterTextChanged(Editable s) {
             if (editando) return;
             editando = true;
             String digits = s.toString().replaceAll("[^\\d]", "");
