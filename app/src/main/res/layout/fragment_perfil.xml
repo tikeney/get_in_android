@@ -147,7 +147,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
@@ -159,6 +160,26 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:text="(00) 00000-0000"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="15sp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/outline_group_24"
+                            app:tint="@color/secundary"/>
+                        <TextView
+                            android:id="@+id/tvPerfilDepartamento"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="Departamento"
                             android:textColor="?android:attr/textColorPrimary"
                             android:textSize="15sp"/>
                     </LinearLayout>

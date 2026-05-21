@@ -37,8 +37,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.senai.get_in.api.RetrofitClient;
-import com.senai.get_in.model.AvatarResponse;
 import com.senai.get_in.model.UsuarioDetalhado;
+import com.senai.get_in.model.UsuarioDetalhadoResponse;
 import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
 
@@ -89,6 +89,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setupUI();
         setupNavigation();
+        
+        // Sincroniza dados da View ao iniciar
+        sincronizarDadosUsuario();
+    }
+
+    private void sincronizarDadosUsuario() {
+        UsuarioDetalhado user = tokenManager.getUserData();
+        if (user == null) return;
+
+        RetrofitClient.getApiService(this).getUsuarioDetalhadoPorId(user.getId()).enqueue(new Callback<UsuarioDetalhadoResponse>() {
+            @Override
+            public void onResponse(Call<UsuarioDetalhadoResponse> call, Response<UsuarioDetalhadoResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    UsuarioDetalhado userAtualizado = response.body().getData();
+                    tokenManager.saveUserData(userAtualizado);
+                    updateNavHeader(userAtualizado);
+                    
+                    // Se o cargo mudou, podemos precisar atualizar o menu
+                    String novoCargo = (userAtualizado.getCargo() != null) ? userAtualizado.getCargo().trim().toLowerCase() : "";
+                    if (!novoCargo.equals(cargo)) {
+                        cargo = novoCargo;
+                        restrictMenu(navigationView.getMenu());
+                        restrictMenu(bottomNav.getMenu());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UsuarioDetalhadoResponse> call, Throwable t) {
+                Log.e(TAG, "Falha ao sincronizar dados da View: " + t.getMessage());
+            }
+        });
     }
 
     @Override
@@ -307,27 +339,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Glide.with(this)
                         .load(user.getFotoPerfil())
                         .placeholder(R.drawable.outline_person_24)
+                        .circleCrop()
                         .into(ivFoto);
             } else {
-                RetrofitClient.getApiService(this).getAvatar(user.getId()).enqueue(new Callback<AvatarResponse>() {
-                    @Override
-                    public void onResponse(Call<AvatarResponse> call, Response<AvatarResponse> response) {
-                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                            String url = response.body().getData().getUrl();
-                            if (url != null && !url.isEmpty() && !isDestroyed()) {
-                                Glide.with(MainActivity.this)
-                                        .load(url)
-                                        .placeholder(R.drawable.outline_person_24)
-                                        .into(ivFoto);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<AvatarResponse> call, Throwable t) {
-                        Log.e(TAG, "Erro ao buscar avatar via rota: " + t.getMessage());
-                    }
-                });
+                ivFoto.setImageResource(R.drawable.outline_person_24);
             }
         }
     }

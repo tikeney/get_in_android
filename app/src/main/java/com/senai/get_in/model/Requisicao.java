@@ -3,41 +3,56 @@ package com.senai.get_in.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Requisicao {
+    @SerializedName(value = "id", alternate = {"requisicao_id"})
     private int id;
+
+    @SerializedName(value = "idUsuario", alternate = {"usuario_id", "user_id"})
     private Integer idUsuario;
+
+    @SerializedName(value = "idSetor", alternate = {"setor_id", "id_setor"})
     private Integer idSetor;
+
+    @SerializedName("status")
     private String status;
+
+    @SerializedName("motivo")
     private String motivo;
+
+    @SerializedName("validade")
     private String validade;
     
-    @SerializedName("dataDaRequisicao")
+    @SerializedName(value = "dataDaRequisicao", alternate = {"data_requisicao", "created_at"})
     private String dataRequisicao;
     
+    @SerializedName("descricao")
     private String descricao;
+
+    @SerializedName("empresa")
     private String empresa;
 
-    @SerializedName("tipo_requisicao")
+    @SerializedName(value = "tipo_requisicao", alternate = {"tipoRequisicao", "tipo"})
     private String tipoRequisicao;
 
-    @SerializedName("empresa_visitante")
+    @SerializedName(value = "empresa_visitante", alternate = {"empresaVisitante"})
     private String empresaVisitante;
 
-    @SerializedName("validade_visita")
+    @SerializedName(value = "validade_visita", alternate = {"validadeVisita"})
     private String validadeVisita;
 
-    // Campos extras de visualização (da view)
-    @SerializedName(value = "usuario_nome", alternate = {"nome", "visitante"})
+    // Campos extras de visualização (da view consolidada)
+    @SerializedName(value = "usuario_nome", alternate = {"nome", "visitante", "user_nome"})
     private String usuarioNome;
     
-    @SerializedName(value = "usuario_cpf", alternate = {"cpf"})
+    @SerializedName(value = "usuario_cpf", alternate = {"cpf", "user_cpf"})
     private String usuarioCpf;
     
-    @SerializedName(value = "departamento_nome", alternate = {"setor"})
+    @SerializedName(value = "departamento_nome", alternate = {"setor", "dep_nome", "departamento"})
     private String departamentoNome;
 
-    @SerializedName("codigo_tag")
+    @SerializedName(value = "codigo_tag", alternate = {"tag_id", "rfid"})
     private String codigoTag;
 
+    // Getters e Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

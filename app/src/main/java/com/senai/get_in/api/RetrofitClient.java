@@ -1,6 +1,8 @@
 package com.senai.get_in.api;
 
 import android.content.Context;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.senai.get_in.utils.TokenManager;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -15,13 +17,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
     private static final String BASE_URL = "https://get-in-ilp5.onrender.com/";
     private static Retrofit retrofit = null;
+    private static ApiService apiService = null;
 
-    public static ApiService getApiService(Context context) {
+    public static synchronized ApiService getApiService(Context context) {
         if (retrofit == null) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-            // Usamos o ApplicationContext para evitar memory leaks com o singleton do Retrofit
             final TokenManager tokenManager = new TokenManager(context.getApplicationContext());
 
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -32,14 +34,15 @@ public class RetrofitClient {
                             Request original = chain.request();
                             String token = tokenManager.getToken();
 
-                            // Se houver um token, adicionamos automaticamente ao Header de todas as requisições
+                            Request.Builder requestBuilder = original.newBuilder()
+                                    .header("Accept", "application/json")
+                                    .header("Content-Type", "application/json");
+
                             if (token != null && !token.isEmpty()) {
-                                Request.Builder builder = original.newBuilder()
-                                        .header("Authorization", "Bearer " + token);
-                                return chain.proceed(builder.build());
+                                requestBuilder.header("Authorization", "Bearer " + token);
                             }
                             
-                            return chain.proceed(original);
+                            return chain.proceed(requestBuilder.build());
                         }
                     })
                     .connectTimeout(60, TimeUnit.SECONDS)
@@ -47,12 +50,19 @@ public class RetrofitClient {
                     .writeTimeout(60, TimeUnit.SECONDS)
                     .build();
 
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                    .create();
+
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(okHttpClient)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
+            
+            apiService = retrofit.create(ApiService.class);
         }
-        return retrofit.create(ApiService.class);
+        return apiService;
     }
 }

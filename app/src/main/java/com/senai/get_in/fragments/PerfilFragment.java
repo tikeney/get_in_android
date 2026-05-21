@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,8 +16,8 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.senai.get_in.R;
 import com.senai.get_in.api.RetrofitClient;
-import com.senai.get_in.model.AvatarResponse;
 import com.senai.get_in.model.UsuarioDetalhado;
+import com.senai.get_in.model.UsuarioDetalhadoResponse;
 import com.senai.get_in.utils.TokenManager;
 
 import retrofit2.Call;
@@ -26,7 +27,7 @@ import retrofit2.Response;
 public class PerfilFragment extends Fragment {
 
     private static final String TAG = "PerfilFragment";
-    private TextView tvNome, tvCargo, tvEmail, tvCpf, tvCelular, tvStatusLabel, tvStatusValue, tvDepartamento;
+    private TextView tvNome, tvCargo, tvEmail, tvCpf, tvCelular, tvDepartamento;
     private ImageView ivPerfilFoto;
     private TokenManager tokenManager;
 
@@ -43,7 +44,6 @@ public class PerfilFragment extends Fragment {
         tvDepartamento = view.findViewById(R.id.tvPerfilDepartamento);
         ivPerfilFoto = view.findViewById(R.id.ivPerfilFoto);
 
-
         tokenManager = new TokenManager(requireContext());
         
         carregarDadosLocais();
@@ -55,61 +55,83 @@ public class PerfilFragment extends Fragment {
     private void carregarDadosLocais() {
         UsuarioDetalhado user = tokenManager.getUserData();
         if (user != null) {
+            Log.d(TAG, "Carregando dados locais para: " + user.getNome());
             exibirUsuario(user);
+        } else {
+            Log.w(TAG, "Nenhum dado de usuário encontrado no TokenManager");
         }
     }
 
     private void carregarDadosRemotos() {
-        UsuarioDetalhado user = tokenManager.getUserData();
-        if (user == null) return;
+        UsuarioDetalhado userLocal = tokenManager.getUserData();
+        if (userLocal == null) {
+            Log.e(TAG, "Impossível carregar remoto: ID do usuário local é nulo");
+            return;
+        }
 
-        // Chamada para a rota de avatar (agora usando o interceptor automático)
-        RetrofitClient.getApiService(requireContext()).getAvatar(user.getId()).enqueue(new Callback<AvatarResponse>() {
+        Log.d(TAG, "Buscando dados remotos para ID: " + userLocal.getId());
+
+        RetrofitClient.getApiService(requireContext()).getUsuarioDetalhadoPorId(userLocal.getId()).enqueue(new Callback<UsuarioDetalhadoResponse>() {
             @Override
-            public void onResponse(@NonNull Call<AvatarResponse> call, @NonNull Response<AvatarResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                    String url = response.body().getData().getUrl();
-                    if (url != null && !url.isEmpty()) {
-                        carregarFoto(url);
-                        
-                        // Atualiza o cache local do usuário com a nova URL da foto
-                        user.setFotoPerfil(url);
-                        tokenManager.saveUserData(user);
+            public void onResponse(@NonNull Call<UsuarioDetalhadoResponse> call, @NonNull Response<UsuarioDetalhadoResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    UsuarioDetalhado userRemoto = response.body().getData();
+                    if (userRemoto != null) {
+                        Log.d(TAG, "Dados remotos recebidos com sucesso: " + userRemoto.getNome());
+                        exibirUsuario(userRemoto);
+                        tokenManager.saveUserData(userRemoto);
+                    } else {
+                        Log.e(TAG, "Resposta sucesso, mas 'data' veio nulo");
+                    }
+                } else {
+                    Log.e(TAG, "Erro na resposta API: " + response.code() + " - " + response.message());
+                    try {
+                        if (response.errorBody() != null) {
+                            Log.e(TAG, "Corpo do erro: " + response.errorBody().string());
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Erro ao ler errorBody", e);
                     }
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<AvatarResponse> call, @NonNull Throwable t) {
-                Log.e(TAG, "Erro ao carregar avatar remoto", t);
+            public void onFailure(@NonNull Call<UsuarioDetalhadoResponse> call, @NonNull Throwable t) {
+                Log.e(TAG, "Falha crítica na requisição: " + t.getMessage(), t);
+                if (isAdded()) {
+                    Toast.makeText(getContext(), "Erro de conexão com o servidor", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     private void exibirUsuario(UsuarioDetalhado user) {
-        tvNome.setText(user.getNome());
-        Object cargo;
-        if (user.getCargo().equals("sup")) {
-            cargo = "Suporte";
-        } else if (user.getCargo().equals("port")) {
-            cargo = "Portaria";
-        } else if (user.getCargo().equals("func")) {
-            cargo = "Funcionario";
-        } else if (user.getCargo().equals("ger")) {
-            cargo = "Gerente";
-        } else if (user.getCargo().equals("adm")) {
-            cargo = "Administrador";
-        }else {
-            cargo = "Usuário";
+        if (user == null) return;
+
+        tvNome.setText(user.getNome() != null ? user.getNome() : "Sem nome");
+        
+        String cargoDisplay = "Usuário";
+        if (user.getCargo() != null) {
+            switch (user.getCargo().toLowerCase()) {
+                case "sup": cargoDisplay = "Supervisor"; break;
+                case "port": cargoDisplay = "Portaria"; break;
+                case "func": cargoDisplay = "Funcionário"; break;
+                case "ger": cargoDisplay = "Gerente"; break;
+                case "adm": cargoDisplay = "Administrador"; break;
+                default: cargoDisplay = user.getCargo(); break;
+            }
         }
-        tvCargo.setText(cargo.toString());
-        tvEmail.setText(user.getEmail());
-        tvCpf.setText(user.getCpf());
-        tvDepartamento.setText(user.getDepartamentoNome() != null ? user.getDepartamentoNome() : "Departamento");
-        tvCelular.setText(user.getCelular());
+        tvCargo.setText(cargoDisplay);
+        
+        tvEmail.setText(user.getEmail() != null ? user.getEmail() : "---");
+        tvCpf.setText(user.getCpf() != null ? user.getCpf() : "---");
+        tvDepartamento.setText(user.getDepartamentoNome() != null ? user.getDepartamentoNome() : "Geral");
+        tvCelular.setText(user.getCelular() != null ? user.getCelular() : "---");
         
         if (user.getFotoPerfil() != null && !user.getFotoPerfil().isEmpty()) {
             carregarFoto(user.getFotoPerfil());
+        } else {
+            ivPerfilFoto.setImageResource(R.drawable.outline_person_24);
         }
     }
 
@@ -118,6 +140,7 @@ public class PerfilFragment extends Fragment {
             Glide.with(this)
                     .load(url)
                     .placeholder(R.drawable.outline_person_24)
+                    .error(R.drawable.outline_person_24)
                     .circleCrop()
                     .into(ivPerfilFoto);
         }

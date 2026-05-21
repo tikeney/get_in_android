@@ -24,13 +24,12 @@ public interface ApiService {
     @POST("auth/")
     Call<LoginResponse> register(@Body UsuarioDetalhado usuario);
 
-    // --- Avatar ---
-    @GET("avatar/{funcId}")
-    Call<AvatarResponse> getAvatar(@Path("funcId") int funcId);
-
-    // --- Views Consolidadas (Leitura) ---
+    // --- Views Consolidadas (Leitura Principal) ---
     @GET("views/usuarios")
     Call<UsuarioResponse> getUsuarios();
+
+    @GET("views/usuarios/{id}")
+    Call<UsuarioDetalhadoResponse> getUsuarioDetalhadoPorId(@Path("id") int id);
 
     @GET("views/requisicoes")
     Call<RequisicaoResponse> getRequisicoes();
@@ -40,6 +39,13 @@ public interface ApiService {
 
     @GET("views/tags")
     Call<TagResponse> getTags();
+
+    // --- Operações de Escrita (Usuários) ---
+    @PUT("user/{id}")
+    Call<UsuarioResponse> atualizarUsuario(@Path("id") int id, @Body UsuarioDetalhado usuario);
+
+    @DELETE("user/{id}")
+    Call<Void> deletarUsuario(@Path("id") int id);
 
     // --- Requisições ---
     @PUT("requisicao/{id}")
@@ -55,25 +61,14 @@ public interface ApiService {
     @GET("portaria/vlocal")
     Call<VisitanteLocalResponse> getVisitantesLocal();
 
-    // --- Usuários ---
-    @GET("user/{id}")
-    Call<UsuarioResponse> getUsuarioPorId(@Path("id") int id);
-
-    @PUT("user/{id}")
-    Call<UsuarioResponse> atualizarUsuario(@Path("id") int id, @Body UsuarioDetalhado usuario);
-
-    @DELETE("user/{id}")
-    Call<Void> deletarUsuario(@Path("id") int id);
-
-    // --- Departamentos ---
+    // --- Tabelas de Apoio ---
     @GET("dep/")
     Call<List<Departamento>> getDepartamentos();
 
-    // --- Setores ---
     @GET("setores/")
     Call<List<Setor>> getSetores();
 
-    // --- Requisições Específicas ---
+    // --- Filtros Específicos ---
     @GET("requisicao/func/{id}")
     Call<RequisicaoResponse> getRequisicoesPorFuncionario(@Path("id") int id);
 
