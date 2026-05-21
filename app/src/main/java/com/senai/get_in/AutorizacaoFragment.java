@@ -81,41 +81,54 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
     }
 
     private void carregarRequisicoes() {
-        progressBar.setVisibility(View.VISIBLE);
-        
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        Log.d(TAG, "Iniciando busca de requisições...");
+
         RetrofitClient.getApiService(requireContext()).getRequisicoes().enqueue(new Callback<RequisicaoResponse>() {
             @Override
             public void onResponse(@NonNull Call<RequisicaoResponse> call, @NonNull Response<RequisicaoResponse> response) {
                 if (!isAdded()) return;
-                progressBar.setVisibility(View.GONE);
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
                 
                 if (response.isSuccessful() && response.body() != null) {
                     List<Requisicao> todas = response.body().getData();
-                    List<Requisicao> pendentes = new ArrayList<>();
+                    Log.d(TAG, "Resposta recebida. Total de itens: " + (todas != null ? todas.size() : "null"));
                     
+                    List<Requisicao> pendentes = new ArrayList<>();
                     if (todas != null) {
                         for (Requisicao r : todas) {
-                            if ("pendente".equalsIgnoreCase(r.getStatus())) {
+                            Log.d(TAG, "Item: ID=" + r.getId() + " Status=" + r.getStatus() + " Nome=" + r.getUsuarioNome());
+                            if (r.getStatus() != null && "pendente".equalsIgnoreCase(r.getStatus())) {
                                 pendentes.add(r);
                             }
                         }
                     }
                     
+                    Log.d(TAG, "Total pendentes filtrados: " + pendentes.size());
+                    
                     listaRequisicoes.clear();
                     listaRequisicoes.addAll(pendentes);
                     adapter.notifyDataSetChanged();
-                    recyclerView.scheduleLayoutAnimation();
+                    
+                    if (recyclerView != null) {
+                        recyclerView.scheduleLayoutAnimation();
+                    }
+
+                    if (pendentes.isEmpty()) {
+                        Log.w(TAG, "Lista de pendentes vazia.");
+                    }
                 } else {
-                    ToastUtils.showError(getContext(), "Erro ao carregar requisições");
+                    Log.e(TAG, "Erro na resposta: " + response.code() + " - " + response.message());
+                    ToastUtils.showError(getContext(), "Erro ao carregar dados (" + response.code() + ")");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<RequisicaoResponse> call, @NonNull Throwable t) {
                 if (!isAdded()) return;
-                progressBar.setVisibility(View.GONE);
-                Log.e(TAG, "Erro: " + t.getMessage());
-                ToastUtils.showError(getContext(), "Falha na conexão com o servidor");
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
+                Log.e(TAG, "Falha na conexão: " + t.getMessage(), t);
+                ToastUtils.showError(getContext(), "Sem conexão com o servidor");
             }
         });
     }
@@ -131,7 +144,7 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
     }
 
     private void atualizarStatus(Requisicao requisicao, String novoStatus) {
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         
         Requisicao update = new Requisicao();
         update.setStatus(novoStatus);
@@ -142,19 +155,19 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
             public void onResponse(@NonNull Call<Requisicao> call, @NonNull Response<Requisicao> response) {
                 if (!isAdded()) return;
                 if (response.isSuccessful()) {
-                    ToastUtils.showSuccess(getContext(), "Requisição " + novoStatus);
+                    ToastUtils.showSuccess(getContext(), "Sucesso!");
                     carregarRequisicoes();
                 } else {
-                    progressBar.setVisibility(View.GONE);
-                    ToastUtils.showError(getContext(), "Erro ao atualizar status");
+                    if (progressBar != null) progressBar.setVisibility(View.GONE);
+                    ToastUtils.showError(getContext(), "Erro ao atualizar");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Requisicao> call, @NonNull Throwable t) {
                 if (!isAdded()) return;
-                progressBar.setVisibility(View.GONE);
-                ToastUtils.showError(getContext(), "Falha na conexão");
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
+                ToastUtils.showError(getContext(), "Falha na rede");
             }
         });
     }

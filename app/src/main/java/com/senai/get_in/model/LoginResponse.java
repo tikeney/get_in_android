@@ -3,51 +3,56 @@ package com.senai.get_in.model;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginResponse {
-    private String token;
-    private boolean sucesso;
-    private String mensagem;
-    private UserData data;
+    @SerializedName("token")
+    public String token;
+    
+    @SerializedName("sucesso")
+    public boolean sucesso;
+    
+    @SerializedName("mensagem")
+    public String mensagem;
+    
+    @SerializedName("data")
+    public LoginData data;
 
     public String getToken() { return token; }
-    public void setToken(String token) { this.token = token; }
-
     public boolean isSucesso() { return sucesso; }
-    public void setSucesso(boolean sucesso) { this.sucesso = sucesso; }
-
     public String getMensagem() { return mensagem; }
-    public void setMensagem(String mensagem) { this.mensagem = mensagem; }
+    public LoginData getData() { return data; }
 
-    public UserData getData() { return data; }
-    public void setData(UserData data) { this.data = data; }
-
-    public static class UserData {
-        @SerializedName(value = "id", alternate = {"usuario_id", "userId"})
-        private int id;
+    public static class LoginData {
+        @SerializedName("usuario")
+        public UsuarioInterno usuario;
         
-        @SerializedName(value = "nome", alternate = {"usuario_nome", "userName"})
-        private String nome;
+        @SerializedName("funcionario")
+        public FuncionarioInterno funcionario;
+    }
 
-        @SerializedName("cpf")
-        private String cpf;
-
-        @SerializedName("celular")
-        private String celular;
-
+    public static class UsuarioInterno {
+        @SerializedName(value = "id", alternate = {"usuario_id", "userId"})
+        public int id;
+        
+        @SerializedName(value = "nome", alternate = {"usuario_nome", "name"})
+        public String nome;
+        
         @SerializedName("email")
-        private String email;
+        public String email;
+        
+        @SerializedName("cpf")
+        public String cpf;
+        
+        @SerializedName("celular")
+        public String celular;
 
-        @SerializedName("cargo")
-        private String cargo;
+        @SerializedName(value = "dataDeCriacao", alternate = {"data_criacao", "createdAt"})
+        public String dataDeCriacao;
+    }
 
-        @SerializedName(value = "data_criacao", alternate = {"dataDeCriacao", "createdAt"})
-        private String dataDeCriacao;
-
-        public int getId() { return id; }
-        public String getNome() { return nome; }
-        public String getCpf() { return cpf; }
-        public String getCelular() { return celular; }
-        public String getEmail() { return email; }
-        public String getCargo() { return cargo; }
-        public String getDataDeCriacao() { return dataDeCriacao; }
+    public static class FuncionarioInterno {
+        @SerializedName(value = "tipo", alternate = {"cargo", "role"})
+        public String tipo;
+        
+        @SerializedName("id")
+        public int id;
     }
 }

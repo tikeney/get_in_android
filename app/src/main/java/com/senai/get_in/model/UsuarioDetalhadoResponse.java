@@ -1,19 +1,18 @@
 package com.senai.get_in.model;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.List;
 
-public class RequisicaoResponse {
+public class UsuarioDetalhadoResponse {
     @SerializedName(value = "sucesso", alternate = {"success", "ok"})
     private boolean sucesso;
     
     @SerializedName("mensagem")
     private String mensagem;
     
-    @SerializedName(value = "data", alternate = {"requisicoes", "dados"})
-    private List<Requisicao> data;
+    @SerializedName(value = "data", alternate = {"usuario", "user", "dados"})
+    private UsuarioDetalhado data;
 
     public boolean isSucesso() { return sucesso; }
-    public List<Requisicao> getData() { return data; }
     public String getMensagem() { return mensagem; }
+    public UsuarioDetalhado getData() { return data; }
 }

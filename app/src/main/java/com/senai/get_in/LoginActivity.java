@@ -27,11 +27,9 @@ import com.senai.get_in.model.LoginRequest;
 import com.senai.get_in.model.LoginResponse;
 import com.senai.get_in.model.TagLoginRequest;
 import com.senai.get_in.model.UsuarioDetalhado;
-import com.senai.get_in.model.UsuarioResponse;
+import com.senai.get_in.model.UsuarioDetalhadoResponse;
 import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -210,21 +208,23 @@ public class LoginActivity extends AppCompatActivity {
 
         RetrofitClient.getApiService(this).login(loginRequest).enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
                     
-                    if (loginResponse.isSucesso()) {
+                    if (loginResponse.isSucesso() && loginResponse.getData() != null) {
                         String token = loginResponse.getToken();
                         UsuarioDetalhado user = converterParaUsuarioDetalhado(loginResponse.getData());
                         
-                        Log.d(TAG, "Login bem-sucedido. Validando perfil...");
+                        Log.d(TAG, "Login OK. ID Extraído: " + user.getId());
 
-                        if (user.getCargo() != null && !user.getCargo().isEmpty() && !user.getCargo().equalsIgnoreCase("null")) {
-                            finalizarLogin(token, user);
+                        if (user.getId() > 0) {
+                            // Busca dados completos da View imediatamente após o login
+                            buscarDadosCompletosView(token, user);
                         } else {
-                            Log.d(TAG, "Cargo ausente no login, buscando dados em /usuarios...");
-                            buscarDadosCargo(token, user);
+                            Log.e(TAG, "ID do usuário é 0. Erro no parsing do JSON.");
+                            setProgressBar(false);
+                            ToastUtils.showError(LoginActivity.this, "Erro ao processar dados da conta.");
                         }
                     } else {
                         setProgressBar(false);
@@ -235,9 +235,8 @@ public class LoginActivity extends AppCompatActivity {
                     setProgressBar(false);
                     try {
                         String errorJson = response.errorBody().string();
-                        LoginResponse errorResp = new Gson().fromJson(errorJson, LoginResponse.class);
-                        String msg = (errorResp != null && errorResp.getMensagem() != null) ? errorResp.getMensagem() : "E-mail ou senha incorretos.";
-                        ToastUtils.showError(LoginActivity.this, msg);
+                        Log.e(TAG, "Erro login: " + errorJson);
+                        ToastUtils.showError(LoginActivity.this, "E-mail ou senha incorretos.");
                     } catch (Exception e) {
                         Log.e(TAG, "Erro no servidor: " + response.code());
                         ToastUtils.showError(LoginActivity.this, "Erro de servidor: " + response.code());
@@ -246,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
                 setProgressBar(false);
                 Log.e(TAG, "Falha na conexão: " + t.getMessage());
                 ToastUtils.showError(LoginActivity.this, "Falha na conexão com o servidor.");
@@ -254,48 +253,47 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private UsuarioDetalhado converterParaUsuarioDetalhado(LoginResponse.UserData data) {
+    private UsuarioDetalhado converterParaUsuarioDetalhado(LoginResponse.LoginData data) {
         UsuarioDetalhado user = new UsuarioDetalhado();
-        if (data != null) {
-            user.setId(data.getId());
-            user.setNome(data.getNome());
-            user.setEmail(data.getEmail());
-            user.setCargo(data.getCargo());
-            user.setCpf(data.getCpf());
-            user.setCelular(data.getCelular());
-            user.setDataDeCriacao(data.getDataDeCriacao());
+        if (data != null && data.usuario != null) {
+            user.setId(data.usuario.id);
+            user.setNome(data.usuario.nome);
+            user.setEmail(data.usuario.email);
+            user.setCpf(data.usuario.cpf);
+            user.setCelular(data.usuario.celular);
+            user.setDataDeCriacao(data.usuario.dataDeCriacao);
+            
+            if (data.funcionario != null) {
+                user.setCargo(data.funcionario.tipo);
+            }
         }
         return user;
     }
 
-    private void buscarDadosCargo(String token, UsuarioDetalhado userIncompleto) {
-        // Agora o interceptor cuidará do header se o token já estiver salvo, 
-        // mas aqui acabamos de receber o token, então podemos salvá-lo antes de chamar
+    private void buscarDadosCompletosView(String token, UsuarioDetalhado userIncompleto) {
+        // Salva o token temporariamente para permitir a chamada autenticada à View
         tokenManager.saveToken(token);
         
-        RetrofitClient.getApiService(this).getUsuarios().enqueue(new Callback<UsuarioResponse>() {
+        Log.d(TAG, "Buscando View para ID: " + userIncompleto.getId());
+
+        RetrofitClient.getApiService(this).getUsuarioDetalhadoPorId(userIncompleto.getId()).enqueue(new Callback<UsuarioDetalhadoResponse>() {
             @Override
-            public void onResponse(Call<UsuarioResponse> call, Response<UsuarioResponse> response) {
+            public void onResponse(@NonNull Call<UsuarioDetalhadoResponse> call, @NonNull Response<UsuarioDetalhadoResponse> response) {
                 setProgressBar(false);
                 UsuarioDetalhado userFinal = userIncompleto;
-                if (response.isSuccessful() && response.body() != null) {
-                    List<UsuarioDetalhado> lista = response.body().getData();
-                    if (lista != null) {
-                        for (UsuarioDetalhado u : lista) {
-                            if (u.getEmail() != null && userIncompleto.getEmail() != null &&
-                                userIncompleto.getEmail().equalsIgnoreCase(u.getEmail().trim())) {
-                                userFinal = u;
-                                break;
-                            }
-                        }
-                    }
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    userFinal = response.body().getData();
+                    Log.d(TAG, "Dados da View obtidos com sucesso.");
+                } else {
+                    Log.w(TAG, "Falha ao obter dados da View (HTTP " + response.code() + "). Usando dados básicos.");
                 }
                 finalizarLogin(token, userFinal);
             }
 
             @Override
-            public void onFailure(Call<UsuarioResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<UsuarioDetalhadoResponse> call, @NonNull Throwable t) {
                 setProgressBar(false);
+                Log.e(TAG, "Erro ao buscar View: " + t.getMessage());
                 finalizarLogin(token, userIncompleto);
             }
         });

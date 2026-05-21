@@ -3,10 +3,10 @@ package com.senai.get_in.model;
 import com.google.gson.annotations.SerializedName;
 
 public class UsuarioDetalhado {
-    @SerializedName("usuario_id")
+    @SerializedName(value = "id", alternate = {"usuario_id", "userId"})
     private int id;
     
-    @SerializedName("usuario_nome")
+    @SerializedName(value = "nome", alternate = {"usuario_nome", "userName", "name"})
     private String nome;
     
     @SerializedName("email")
@@ -21,16 +21,16 @@ public class UsuarioDetalhado {
     @SerializedName("cargo")
     private String cargo;
     
-    @SerializedName("dataDeNascimento")
+    @SerializedName(value = "dataDeNascimento", alternate = {"data_nascimento"})
     private String dataDeNascimento;
     
-    @SerializedName("foto_perfil")
+    @SerializedName(value = "foto_perfil", alternate = {"fotoPerfil", "foto"})
     private String fotoPerfil;
     
-    @SerializedName("departamento_nome")
+    @SerializedName(value = "departamento_nome", alternate = {"departamento", "dep_nome"})
     private String departamentoNome;
     
-    @SerializedName("dataDeCriacao")
+    @SerializedName(value = "dataDeCriacao", alternate = {"data_criacao", "createdAt"})
     private String dataDeCriacao;
 
     public UsuarioDetalhado() {}
