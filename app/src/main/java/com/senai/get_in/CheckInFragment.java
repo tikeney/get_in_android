@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +34,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.senai.get_in.api.RetrofitClient;
 import com.senai.get_in.model.Requisicao;
 import com.senai.get_in.model.Setor;
+import com.senai.get_in.model.SetorResponse;
+import com.senai.get_in.utils.MascaraUtils;
 import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
 
@@ -175,19 +175,19 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     }
 
     private void carregarSetores() {
-        RetrofitClient.getApiService(requireContext()).getSetores().enqueue(new Callback<List<Setor>>() {
+        RetrofitClient.getApiService(requireContext()).getSetores().enqueue(new Callback<SetorResponse>() {
             @Override
-            public void onResponse(@NonNull Call<List<Setor>> call, @NonNull Response<List<Setor>> response) {
+            public void onResponse(@NonNull Call<SetorResponse> call, @NonNull Response<SetorResponse> response) {
                 if (!isAdded()) return;
                 if (response.isSuccessful() && response.body() != null) {
-                    preencherChipsSetores(response.body());
+                    preencherChipsSetores(response.body().getData());
                 } else {
                     Log.e(TAG, "Erro ao carregar setores: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Setor>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<SetorResponse> call, @NonNull Throwable t) {
                 if (!isAdded()) return;
                 Log.e(TAG, "Falha ao carregar setores: " + t.getMessage());
             }
@@ -316,8 +316,8 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     }
 
     private void configurarMascaras() {
-        etCPF.addTextChangedListener(new MascaraTextWatcher(etCPF, "###.###.###-##"));
-        etTelefone.addTextChangedListener(new MascaraTextWatcher(etTelefone, "(##) #####-####"));
+        etCPF.addTextChangedListener(MascaraUtils.aplicar(etCPF, "###.###.###-##"));
+        etTelefone.addTextChangedListener(MascaraUtils.aplicar(etTelefone, "(##) #####-####"));
     }
 
     private void configurarFoto() {
@@ -416,39 +416,5 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         codigoTagVinculada = null;
         tvTituloCracha.setText("Vincular Crachá");
         tvSubtituloCracha.setText("Aproxime o crachá do leitor RFID");
-    }
-
-    // -------------------------------------------------------------------------
-    // Máscara de texto reutilizável
-    // -------------------------------------------------------------------------
-    private static class MascaraTextWatcher implements TextWatcher {
-        private final TextInputEditText campo;
-        private final String mascara;
-        private boolean editando = false;
-
-        MascaraTextWatcher(TextInputEditText campo, String mascara) {
-            this.campo = campo;
-            this.mascara = mascara;
-        }
-
-        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-        @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (editando) return;
-            editando = true;
-            String digits = s.toString().replaceAll("[^\\d]", "");
-            StringBuilder sb = new StringBuilder();
-            int di = 0;
-            for (int i = 0; i < mascara.length() && di < digits.length(); i++) {
-                char mc = mascara.charAt(i);
-                if (mc == '#') sb.append(digits.charAt(di++));
-                else sb.append(mc);
-            }
-            campo.setText(sb.toString());
-            if (sb.length() > 0) campo.setSelection(sb.length());
-            editando = false;
-        }
     }
 }
