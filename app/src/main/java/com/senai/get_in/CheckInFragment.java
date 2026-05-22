@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -66,7 +67,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     private ConstraintLayout btnAdicionarCracha;
     private TextView tvTituloCracha, tvSubtituloCracha;
 
-    private ChipGroup chipGroupSetores;
+    private GridLayout chipGroupSetores; // Mude de ChipGroup para GridLayout
     private Button btnFinalizar;
     private ProgressBar progressBar;
     private View containerCheckIn;
@@ -198,18 +199,40 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
 
 
     private void preencherChipsSetores(List<Setor> setores) {
-        if (chipGroupSetores == null) return;
+        if (chipGroupSetores == null || setores == null) return;
 
-        // Remove tudo antes de adicionar para evitar duplicatas em recarregamentos
+        // Limpa os chips existentes para evitar duplicatas
         chipGroupSetores.removeAllViews();
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
+
         for (Setor setor : setores) {
+            // Infla o chip usando o layout customizado
             Chip chip = (Chip) inflater.inflate(R.layout.layout_chip_filtro, chipGroupSetores, false);
+
+            // Configura os dados básicos
             chip.setText(setor.getNome());
-            chip.setTag(setor.getId());       // tag = Integer do ID do setor
-            chip.setId(View.generateViewId());
+            chip.setTag(setor.getId());
             chip.setCheckable(true);
+
+            // Listener para mudar a aparência quando selecionado (igual à imagem)
+            chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    // Estado Selecionado: Azul e ícone preenchido (ou apenas muda a cor)
+                    chip.setChipIconResource(R.drawable.outline_check_24); // Muda para check se quiser
+                    chip.setChipIconTintResource(R.color.primary);
+                    chip.setChipStrokeColorResource(R.color.primary);
+                    chip.setTextColor(getResources().getColor(R.color.primary));
+                } else {
+                    // Estado Normal: Cinza e círculo vazio
+                    chip.setChipIconResource(R.drawable.outline_circle_24);
+                    chip.setChipIconTintResource(R.color.divider_color);
+                    chip.setChipStrokeColorResource(R.color.divider_color);
+                    chip.setTextColor(getResources().getColor(R.color.gray_text));
+                }
+            });
+
+            // Adiciona o chip ao grupo
             chipGroupSetores.addView(chip);
         }
     }
@@ -239,11 +262,14 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
 
         // Lê o chip selecionado e obtém o ID do setor a partir da tag
         Integer idSetor = null;
-        int selectedChipId = chipGroupSetores.getCheckedChipId();
-        if (selectedChipId != View.NO_ID) {
-            Chip selectedChip = chipGroupSetores.findViewById(selectedChipId);
-            if (selectedChip != null && selectedChip.getTag() instanceof Integer) {
-                idSetor = (Integer) selectedChip.getTag();
+        for (int i = 0; i < chipGroupSetores.getChildCount(); i++) {
+            View child = chipGroupSetores.getChildAt(i);
+            if (child instanceof Chip) {
+                Chip chip = (Chip) child;
+                if (chip.isChecked()) {
+                    idSetor = (Integer) chip.getTag();
+                    break;
+                }
             }
         }
 
@@ -306,7 +332,16 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
             inputEmpresa.setError(null);
         }
 
-        if (chipGroupSetores.getCheckedChipId() == View.NO_ID) {
+        boolean setorSelecionado = false;
+        for (int i = 0; i < chipGroupSetores.getChildCount(); i++) {
+            View child = chipGroupSetores.getChildAt(i);
+            if (child instanceof Chip && ((Chip) child).isChecked()) {
+                setorSelecionado = true;
+                break;
+            }
+        }
+
+        if (!setorSelecionado) {
             ToastUtils.showInfo(getContext(), "Selecione um setor.");
             valido = false;
         }
@@ -407,7 +442,12 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         etTelefone.setText("");
         etEmpresa.setText("");
         etMotivo.setText("");
-        chipGroupSetores.clearCheck();
+        for (int i = 0; i < chipGroupSetores.getChildCount(); i++) {
+            View child = chipGroupSetores.getChildAt(i);
+            if (child instanceof Chip) {
+                ((Chip) child).setChecked(false);
+            }
+        }
         fotoUri = null;
         ivIconePerfil.setImageResource(R.drawable.outline_person_24);
         ivIconePerfil.setScaleType(ImageView.ScaleType.FIT_CENTER);

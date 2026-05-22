@@ -289,14 +289,15 @@
                 android:textSize="14sp"
                 android:layout_marginBottom="8dp" />
 
-            <!-- ChipGroup VAZIO -->
-            <com.google.android.material.chip.ChipGroup
+            <GridLayout
                 android:id="@+id/chipGroupSetores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
-                app:chipSpacingVertical="4dp"
-                app:chipSpacingHorizontal="4dp" />
+                android:columnCount="2"
+                android:orientation="horizontal"
+                android:alignmentMode="alignMargins"
+                android:layout_marginBottom="40dp" />
+
 
             <FrameLayout
                 android:layout_width="match_parent"
