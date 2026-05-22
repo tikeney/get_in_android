@@ -61,7 +61,7 @@ public class ParticlesView extends View {
 
                 if (distance < MAX_DISTANCE) {
                     // Efeito de opacidade baseado na distância
-                    int alpha = (int) (255 * (1 - distance / MAX_DISTANCE) * 0.8);
+                    int alpha = (int) (255 * (1 - distance / MAX_DISTANCE) * 1);
                     linePaint.setAlpha(alpha);
                     canvas.drawLine(p1.x, p1.y, p2.x, p2.y, linePaint);
                 }
@@ -79,7 +79,7 @@ public class ParticlesView extends View {
             y = random.nextFloat() * height;
             vx = (random.nextFloat() - 0.5f) * 2f;
             vy = (random.nextFloat() - 0.5f) * 2f;
-            radius = random.nextFloat() * 5f + 6f;
+            radius = random.nextFloat() * 6f + 7f;
         }
 
         void update(int width, int height) {
