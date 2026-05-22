@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="?android:attr/windowBackground">
 
     <!-- ===== CABEÇALHO FIXO COM ESTATÍSTICAS ===== -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarHistorico"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
+        android:background="?attr/colorPrimary"
         app:elevation="0dp">
 
         <LinearLayout
@@ -37,7 +37,7 @@
                     android:layout_height="40dp"
                     android:background="@drawable/bg_circle_translucent"
                     android:src="@drawable/outline_arrow_back_24"
-                    app:tint="@color/white"
+                    app:tint="?attr/colorOnPrimary"
                     android:contentDescription="Voltar" />
 
                 <LinearLayout
@@ -50,7 +50,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Histórico de Acessos"
-                        android:textColor="@color/white"
+                        android:textColor="?attr/colorOnPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -58,7 +58,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="VisitaTrack · Segurança Patrimonial"
-                        android:textColor="#B0C4DE"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:alpha="0.7"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -87,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="12"
-                        android:textColor="@color/white"
+                        android:textColor="?attr/colorOnPrimary"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
@@ -95,7 +96,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hoje"
-                        android:textColor="#A0B0C0"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:alpha="0.6"
                         android:textSize="11sp" />
                 </LinearLayout>
 
@@ -116,7 +118,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2"
-                        android:textColor="@color/white"
+                        android:textColor="?attr/colorOnPrimary"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
@@ -124,7 +126,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Na fábrica"
-                        android:textColor="#A0B0C0"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:alpha="0.6"
                         android:textSize="11sp" />
                 </LinearLayout>
 
@@ -145,7 +148,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
-                        android:textColor="@color/white"
+                        android:textColor="?attr/colorOnPrimary"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
@@ -153,7 +156,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Negados"
-                        android:textColor="#A0B0C0"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:alpha="0.6"
                         android:textSize="11sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -165,7 +169,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="?attr/colorSurface"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -174,7 +178,7 @@
             android:orientation="vertical"
             android:paddingBottom="24dp">
 
-            <!-- Filtros por Chip (Now outside the dark area) -->
+            <!-- Filtros por Chip -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -198,8 +202,8 @@
                         android:layout_height="wrap_content"
                         android:text="Todos"
                         android:checked="true"
-                        android:textColor="@color/chip_text_states"
-                        app:chipBackgroundColor="@color/chip_states"
+                        android:textColor="?attr/colorOnSurface"
+                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
                         app:chipStrokeWidth="0dp"
                         app:checkedIconVisible="false"
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent" />
@@ -210,8 +214,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Permitido"
-                        android:textColor="@color/chip_text_states"
-                        app:chipBackgroundColor="@color/chip_states"
+                        android:textColor="?attr/colorOnSurface"
+                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
                         app:chipStrokeWidth="0dp"
                         app:checkedIconVisible="false" />
 
@@ -221,8 +225,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Negado"
-                        android:textColor="@color/chip_text_states"
-                        app:chipBackgroundColor="@color/chip_states"
+                        android:textColor="?attr/colorOnSurface"
+                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
                         app:chipStrokeWidth="0dp"
                         app:checkedIconVisible="false" />
 
@@ -232,8 +236,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Saiu"
-                        android:textColor="@color/chip_text_states"
-                        app:chipBackgroundColor="@color/chip_states"
+                        android:textColor="?attr/colorOnSurface"
+                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
                         app:chipStrokeWidth="0dp"
                         app:checkedIconVisible="false" />
 
@@ -243,8 +247,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Na fábrica"
-                        android:textColor="@color/chip_text_states"
-                        app:chipBackgroundColor="@color/chip_states"
+                        android:textColor="?attr/colorOnSurface"
+                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
                         app:chipStrokeWidth="0dp"
                         app:checkedIconVisible="false" />
 
@@ -254,7 +258,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#EEEEEE"
+                android:background="?attr/colorOutlineVariant"
                 android:layout_marginBottom="16dp"/>
 
             <LinearLayout
@@ -269,7 +273,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    app:boxBackgroundColor="#F1F3F5"
+                    app:boxBackgroundColor="?attr/colorSurfaceVariant"
                     app:boxCornerRadiusBottomEnd="25dp"
                     app:boxCornerRadiusBottomStart="25dp"
                     app:boxCornerRadiusTopEnd="25dp"
@@ -278,15 +282,15 @@
                     app:boxStrokeWidthFocused="0dp"
                     app:hintEnabled="false"
                     app:startIconDrawable="@drawable/outline_person_24"
-                    app:startIconTint="#6C757D">
+                    app:startIconTint="?attr/colorOnSurfaceVariant">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etBusca"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:hint="Buscar visitante ou setor..."
-                        android:textColor="#212529"
-                        android:textColorHint="#ADB5BD"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textColorHint="?attr/colorOnSurfaceVariant"
                         android:inputType="text"
                         android:paddingVertical="0dp"
                         android:textSize="15sp"
@@ -298,7 +302,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="HOJE — 31 MAR 2025"
-                    android:textColor="#0D243F"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
@@ -330,7 +334,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Nenhum acesso encontrado"
-                            android:textColor="#6C757D"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:textSize="16sp" />
 
                     </LinearLayout>
@@ -342,7 +346,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="20dp"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:indeterminateTint="?attr/colorPrimary" />
                 </FrameLayout>
             </LinearLayout>
 

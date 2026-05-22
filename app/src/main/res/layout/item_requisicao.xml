@@ -5,10 +5,10 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="?attr/colorSurface"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
-    app:strokeColor="#F1F3F5"
+    app:strokeColor="?attr/colorOutline"
     app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +22,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/bg_tag_status"
-            android:backgroundTint="#F0F4F8"
+            android:backgroundTint="?attr/colorSurfaceVariant"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -32,7 +32,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:src="@drawable/outline_person_24"
-                app:tint="@color/primary" />
+                app:tint="?attr/colorPrimary" />
         </FrameLayout>
 
         <!-- Nome e Documento -->
@@ -45,7 +45,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Nome do Usuário"
-            android:textColor="@color/primary"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/txtDia"
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="000.000.000-00"
-            android:textColor="#6C757D"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="@id/txtNome"
             app:layout_constraintStart_toStartOf="@id/txtNome"
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="02/05"
-            android:textColor="@color/primary"
+            android:textColor="?attr/colorPrimary"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00:00"
-            android:textColor="#ADB5BD"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txtDia" />
@@ -103,9 +103,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Motivo"
-                app:chipBackgroundColor="#F1F3F5"
+                app:chipBackgroundColor="?attr/colorSurfaceVariant"
                 app:chipStrokeWidth="0dp"
-                android:textColor="#495057"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="11sp" />
 
             <com.google.android.material.chip.Chip
@@ -114,9 +114,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Empresa"
-                app:chipBackgroundColor="#F1F3F5"
+                app:chipBackgroundColor="?attr/colorSurfaceVariant"
                 app:chipStrokeWidth="0dp"
-                android:textColor="#495057"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="11sp" />
 
             <com.google.android.material.chip.Chip
@@ -125,9 +125,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Setor"
-                app:chipBackgroundColor="#F1F3F5"
+                app:chipBackgroundColor="?attr/colorSurfaceVariant"
                 app:chipStrokeWidth="0dp"
-                android:textColor="#495057"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="11sp" />
 
         </com.google.android.material.chip.ChipGroup>
@@ -138,10 +138,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:background="#F8F9FA"
+            android:background="?attr/colorSurfaceVariant"
             android:padding="12dp"
             android:text="Descrição detalhada da solicitação de acesso para este visitante."
-            android:textColor="#495057"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -163,8 +163,8 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="Negar"
-                android:textColor="#C62828"
-                app:backgroundTint="#FFEBEE"
+                android:textColor="?attr/colorError"
+                app:backgroundTint="?attr/colorErrorContainer"
                 app:cornerRadius="8dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -174,8 +174,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="Aprovar"
-                android:backgroundTint="@color/primary"
-                android:textColor="@color/white"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="?attr/colorOnPrimary"
                 app:cornerRadius="8dp" />
         </LinearLayout>
 

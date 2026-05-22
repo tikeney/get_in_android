@@ -8,8 +8,9 @@
     <color name="secondary">#254366</color>
     <color name="on_secondary">#FFFFFF</color>
 
-    <!-- Variações de tons da cor primária para design monocromático -->
+    <!-- Variações de tons da cor primária -->
     <color name="primary_light">#E7EDF4</color>
+    <color name="blue_shade_50">#F8FAFC</color>
     <color name="blue_shade_100">#F0F4F8</color>
     <color name="blue_shade_200">#D1DFED</color>
     <color name="blue_shade_300">#B0C4DE</color>
@@ -24,57 +25,52 @@
     <color name="gray_text">#6C757D</color>
     <color name="gray_light">#ADB5BD</color>
 
-    <!-- Material Theme Colors (Light) -->
+    <!-- Cores de Navegação -->
+    <color name="nav_item_selected">#5DA6E5</color>
+    <color name="nav_item_unselected">#6C757D</color>
+    <color name="drawer_bg">#FFFFFF</color>
+    <color name="bottom_nav_bg">#FFFFFF</color>
+
+    <!-- Mapeamentos Semânticos -->
+    <color name="brand_blue">@color/primary</color>
+    <color name="secundary">@color/primary</color>
+    <color name="accent">@color/blue_shade_400</color>
+    <color name="header_subtitle">@color/blue_shade_300</color>
+
+    <!-- Status Tags -->
+    <color name="status_permitido_bg">#E8F5E9</color>
+    <color name="status_permitido_text">#2E7D32</color>
+    <color name="status_negado_bg">#FFEBEE</color>
+    <color name="status_negado_text">#C62828</color>
+    <color name="pending_border">#FFC107</color> <!-- Yellow for Pending -->
+
+    <!-- UI Elements -->
+    <color name="InputLoginBackground">#F1F3F4</color>
+
+    <!-- Material Theme Light (Required by themes.xml) -->
     <color name="md_theme_light_primary">@color/primary</color>
     <color name="md_theme_light_onPrimary">@color/on_primary</color>
-    <color name="md_theme_light_primaryContainer">@color/primary_variant</color>
-    <color name="md_theme_light_onPrimaryContainer">@color/white</color>
+    <color name="md_theme_light_primaryContainer">@color/primary_light</color>
+    <color name="md_theme_light_onPrimaryContainer">@color/primary</color>
     <color name="md_theme_light_primaryVariant_compat">@color/primary_variant</color>
     <color name="md_theme_light_background">@color/background_light</color>
+    <color name="md_theme_light_onBackground">@color/on_background_light</color>
     <color name="md_theme_light_surface">@color/white</color>
     <color name="md_theme_light_onSurface">@color/on_background_light</color>
     <color name="md_theme_light_surfaceVariant">@color/blue_shade_100</color>
     <color name="md_theme_light_onSurfaceVariant">@color/gray_text</color>
     <color name="md_theme_light_outline">@color/gray_light</color>
 
-    <!-- Material Theme Colors (Dark) - Simplificado para o modo escuro -->
-    <color name="md_theme_dark_primary">#D0BCFF</color>
-    <color name="md_theme_dark_onPrimary">#381E72</color>
-    <color name="md_theme_dark_primaryContainer">#4F378B</color>
-    <color name="md_theme_dark_onPrimaryContainer">#EADDFF</color>
-    <color name="md_theme_dark_background">#1C1B1F</color>
-    <color name="md_theme_dark_surface">#1C1B1F</color>
-    <color name="md_theme_dark_onSurface">#E6E1E5</color>
-    <color name="md_theme_dark_surfaceVariant">#49454F</color>
-    <color name="md_theme_dark_onSurfaceVariant">#CAC4D0</color>
-    <color name="md_theme_dark_outline">#938F99</color>
-
-    <!-- Mapeamentos Semânticos -->
-    <color name="brand_blue">@color/primary</color>
-    <color name="secundary">@color/primary</color>
-    <color name="accent">@color/blue_shade_400</color>
-    <color name="InputLoginBackground">@color/blue_shade_100</color>
-    <color name="InputLoginHint">@color/gray_light</color>
-
-    <!-- Status Tags (Suaves) -->
-    <color name="status_permitido_bg">#E8F5E9</color>
-    <color name="status_permitido_text">#2E7D32</color>
-    <color name="status_negado_bg">#FFEBEE</color>
-    <color name="status_negado_text">#C62828</color>
-    <color name="status_pendente_bg">#FFF8E1</color>
-    <color name="status_pendente_text">#F57F17</color>
-    <color name="status_fabrica_bg">#E3F2FD</color>
-    <color name="status_fabrica_text">#1565C0</color>
-    <color name="setor_tag_bg">#FFF3E0</color>
-    <color name="setor_tag_text">#E65100</color>
-
-    <!-- Bordas -->
-    <color name="pending_border">#F57F17</color>
-
-    <!-- Cores para componentes específicos -->
-    <color name="stat_card_bg">@color/primary_variant</color>
-    <color name="stat_label">@color/blue_shade_300</color>
-    <color name="header_subtitle">@color/blue_shade_300</color>
-    <color name="pill_bg_blue">@color/blue_shade_100</color>
-    <color name="icon_bg_light">@color/blue_shade_100</color>
+    <!-- Material Theme Dark (Required by themes.xml) -->
+    <color name="md_theme_dark_primary">#A0C9FF</color>
+    <color name="md_theme_dark_onPrimary">#003258</color>
+    <color name="md_theme_dark_primaryContainer">#00497D</color>
+    <color name="md_theme_dark_onPrimaryContainer">#D1E4FF</color>
+    <color name="md_theme_dark_background">#1A1C1E</color>
+    <color name="md_theme_dark_onBackground">#E2E2E6</color>
+    <color name="md_theme_dark_surface">#1A1C1E</color>
+    <color name="md_theme_dark_onSurface">#E2E2E6</color>
+    <color name="md_theme_dark_surfaceVariant">#42474E</color>
+    <color name="md_theme_dark_onSurfaceVariant">#C2C7CF</color>
+    <color name="md_theme_dark_outline">#8C9199</color>
 </resources>

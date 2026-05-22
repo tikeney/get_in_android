@@ -18,6 +18,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private BottomNavigationView bottomNav;
+    private MaterialToolbar toolbar;
     private String cargo;
     
     private NfcAdapter nfcAdapter;
@@ -65,11 +67,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        tokenManager = new TokenManager(this);
+        
+        if (tokenManager.isDarkMode()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        tokenManager = new TokenManager(this);
         UsuarioDetalhado user = tokenManager.getUserData();
 
         if (user == null) {
@@ -78,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         cargo = (user.getCargo() != null) ? user.getCargo().trim().toLowerCase() : "";
-        Log.d(TAG, "Sessão iniciada - Usuário: " + user.getNome() + " | Cargo: [" + cargo + "]");
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter != null) {
@@ -89,90 +97,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setupUI();
         setupNavigation();
-        
-        // Sincroniza dados da View ao iniciar
         sincronizarDadosUsuario();
-    }
-
-    private void sincronizarDadosUsuario() {
-        UsuarioDetalhado user = tokenManager.getUserData();
-        if (user == null) return;
-
-        RetrofitClient.getApiService(this).getUsuarioDetalhadoPorId(user.getId()).enqueue(new Callback<UsuarioDetalhadoResponse>() {
-            @Override
-            public void onResponse(Call<UsuarioDetalhadoResponse> call, Response<UsuarioDetalhadoResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                    UsuarioDetalhado userAtualizado = response.body().getData();
-                    tokenManager.saveUserData(userAtualizado);
-                    updateNavHeader(userAtualizado);
-                    
-                    // Se o cargo mudou, podemos precisar atualizar o menu
-                    String novoCargo = (userAtualizado.getCargo() != null) ? userAtualizado.getCargo().trim().toLowerCase() : "";
-                    if (!novoCargo.equals(cargo)) {
-                        cargo = novoCargo;
-                        restrictMenu(navigationView.getMenu());
-                        restrictMenu(bottomNav.getMenu());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UsuarioDetalhadoResponse> call, Throwable t) {
-                Log.e(TAG, "Falha ao sincronizar dados da View: " + t.getMessage());
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (nfcAdapter != null) {
-            nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (nfcAdapter != null) {
-            nfcAdapter.disableForegroundDispatch(this);
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction()) ||
-            NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            if (tag != null) {
-                String tagId = bytesToHexString(tag.getId());
-                dispatchTagToFragments(tagId);
-            }
-        }
-    }
-
-    private void dispatchTagToFragments(String tagId) {
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        if (navHostFragment != null) {
-            Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
-            if (currentFragment instanceof NfcTagListener) {
-                ((NfcTagListener) currentFragment).onTagRead(tagId);
-            }
-        }
-    }
-
-    private String bytesToHexString(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            sb.append(String.format("%02X", b));
-        }
-        return sb.toString();
     }
 
     private void setupUI() {
         AppBarLayout appBarLayout = findViewById(R.id.app_bar);
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         bottomNav = findViewById(R.id.bottom_navigation);
@@ -191,8 +121,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         
-        toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.white));
-
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -208,8 +136,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             int id = destination.getId();
-            
-            // Sincroniza a seleção nos menus (BottomNav e Drawer)
+            configurarToolbar(id);
+
             Menu navMenu = navigationView.getMenu();
             MenuItem navItem = navMenu.findItem(id);
             if (navItem != null) navItem.setChecked(true);
@@ -219,16 +147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (bottomItem != null) bottomItem.setChecked(true);
 
             if (!isAllowedDestination(id)) {
-                Log.w(TAG, "Acesso bloqueado para tela: " + id + ". Redirecionando.");
-                if (id != startId) {
-                    controller.navigate(startId);
-                } else if (id != R.id.nav_perfil) {
-                    controller.navigate(R.id.nav_perfil);
-                }
-            }
-            
-            if (getSupportActionBar() != null && destination.getLabel() != null) {
-                getSupportActionBar().setTitle(destination.getLabel());
+                controller.navigate(id != startId ? startId : R.id.nav_perfil);
             }
         });
 
@@ -236,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navGraph.setStartDestination(startId);
         navController.setGraph(navGraph);
 
-        // Configuração do BottomNav com animações suaves
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() == id) {
@@ -244,10 +162,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             
             NavOptions options = new NavOptions.Builder()
-                    .setEnterAnim(R.anim.fade_in)
-                    .setExitAnim(R.anim.fade_out)
-                    .setPopEnterAnim(R.anim.fade_in)
-                    .setPopExitAnim(R.anim.fade_out)
+                    .setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)
+                    .setPopEnterAnim(R.anim.fade_in).setPopExitAnim(R.anim.fade_out)
                     .build();
             
             navController.navigate(id, null, options);
@@ -256,8 +172,89 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         
         restrictMenu(navigationView.getMenu());
         restrictMenu(bottomNav.getMenu());
-        
         bottomNav.setVisibility(isFuncionario() ? View.GONE : View.VISIBLE);
+    }
+
+    private void configurarToolbar(int destinationId) {
+        if (toolbar == null) return;
+
+        toolbar.setTitle(null);
+        toolbar.setSubtitle(null);
+
+        if (destinationId == R.id.menu_configuracoes) {
+            toolbar.setTitle("Configurações");
+        } else if (destinationId == R.id.nav_autorizacao) {
+            toolbar.setTitle("Autorizações");
+        } else if (destinationId == R.id.nav_notificacoes) {
+            toolbar.setTitle("Notificações");
+        } else if (destinationId == R.id.nav_checkIn) {
+            toolbar.setTitle("Portaria");
+        } else if (destinationId == R.id.nav_perfil) {
+            toolbar.setTitle("Meu Perfil");
+        } else if (destinationId == R.id.nav_historico) {
+            toolbar.setTitle("Histórico");
+        } else if (destinationId == R.id.nav_visitantes) {
+            toolbar.setTitle("Visitantes");
+        }
+    }
+
+    private void sincronizarDadosUsuario() {
+        UsuarioDetalhado user = tokenManager.getUserData();
+        if (user == null) return;
+
+        RetrofitClient.getApiService(this).getUsuarioDetalhadoPorId(user.getId()).enqueue(new Callback<UsuarioDetalhadoResponse>() {
+            @Override
+            public void onResponse(Call<UsuarioDetalhadoResponse> call, Response<UsuarioDetalhadoResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    UsuarioDetalhado userAtualizado = response.body().getData();
+                    tokenManager.saveUserData(userAtualizado);
+                    updateNavHeader(userAtualizado);
+                }
+            }
+            @Override
+            public void onFailure(Call<UsuarioDetalhadoResponse> call, Throwable t) {}
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (nfcAdapter != null) nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (nfcAdapter != null) nfcAdapter.disableForegroundDispatch(this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction()) ||
+            NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            if (tag != null) {
+                String tagId = bytesToHexString(tag.getId());
+                dispatchTagToFragments(tagId);
+            }
+        }
+    }
+
+    private void dispatchTagToFragments(String tagId) {
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null && !navHostFragment.getChildFragmentManager().getFragments().isEmpty()) {
+            Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
+            if (currentFragment instanceof NfcTagListener) {
+                ((NfcTagListener) currentFragment).onTagRead(tagId);
+            }
+        }
+    }
+
+    private String bytesToHexString(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) sb.append(String.format("%02X", b));
+        return sb.toString();
     }
 
     private boolean isAdmin() { return cargo.equals("adm") || cargo.equals("administrador"); }
@@ -273,19 +270,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private boolean isAllowedDestination(int id) {
-        if (id == R.id.nav_perfil || id == R.id.menu_configuracoes || id == R.id.menu_sair) {
-            return true;
-        }
-
+        if (id == R.id.nav_perfil || id == R.id.menu_configuracoes || id == R.id.menu_sair) return true;
         if (isAdmin()) return true;
         if (isGerente()) return id != R.id.nav_checkIn;
-        if (isSupervisor()) {
-            return id == R.id.nav_notificacoes || id == R.id.nav_autorizacao || 
-                   id == R.id.nav_historico || id == R.id.nav_visitantes;
-        }
-        if (isPortaria()) {
-            return id == R.id.nav_checkIn || id == R.id.nav_visitantes || id == R.id.nav_notificacoes;
-        }
+        if (isSupervisor()) return id == R.id.nav_notificacoes || id == R.id.nav_autorizacao || id == R.id.nav_historico || id == R.id.nav_visitantes;
+        if (isPortaria()) return id == R.id.nav_checkIn || id == R.id.nav_visitantes || id == R.id.nav_notificacoes;
         return false;
     }
 
@@ -331,16 +320,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             TextView tvNome = headerView.findViewById(R.id.tvHeaderNome);
             TextView tvEmail = headerView.findViewById(R.id.tvHeaderEmail);
             ImageView ivFoto = headerView.findViewById(R.id.ivHeaderFoto);
-
             tvNome.setText(user.getNome());
             tvEmail.setText(user.getEmail());
-
             if (user.getFotoPerfil() != null && !user.getFotoPerfil().isEmpty()) {
-                Glide.with(this)
-                        .load(user.getFotoPerfil())
-                        .placeholder(R.drawable.outline_person_24)
-                        .circleCrop()
-                        .into(ivFoto);
+                Glide.with(this).load(user.getFotoPerfil()).placeholder(R.drawable.outline_person_24).circleCrop().into(ivFoto);
             } else {
                 ivFoto.setImageResource(R.drawable.outline_person_24);
             }
@@ -351,42 +334,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         drawerLayout.closeDrawer(GravityCompat.START);
-
         if (id == R.id.menu_sair) {
             new Handler(Looper.getMainLooper()).postDelayed(this::logout, 250);
             return true;
         }
-
         if (!isAllowedDestination(id)) {
-            ToastUtils.showInfo(this, "Seu acesso é restrito para esta funcionalidade.");
+            ToastUtils.showInfo(this, "Seu acesso é restrito.");
             return true;
         }
-
-        // Navega após um pequeno delay para suavizar a transição enquanto o Drawer fecha
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() != id) {
                 NavOptions options = new NavOptions.Builder()
-                        .setEnterAnim(R.anim.slide_in_right)
-                        .setExitAnim(R.anim.slide_out_left)
-                        .setPopEnterAnim(R.anim.slide_in_left)
-                        .setPopExitAnim(R.anim.slide_out_right)
-                        .setLaunchSingleTop(true)
-                        .setRestoreState(true)
-                        .build();
+                        .setEnterAnim(R.anim.slide_in_right).setExitAnim(R.anim.slide_out_left)
+                        .setPopEnterAnim(R.anim.slide_in_left).setPopExitAnim(R.anim.slide_out_right)
+                        .setLaunchSingleTop(true).setRestoreState(true).build();
                 navController.navigate(id, null, options);
             }
         }, 280);
-
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.closeDrawer(GravityCompat.START);
+        else super.onBackPressed();
     }
 
     private void logout() {
@@ -394,7 +365,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
 }

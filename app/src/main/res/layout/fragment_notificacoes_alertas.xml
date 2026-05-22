@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="?attr/colorSurface">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerHistorico"
@@ -32,7 +32,7 @@
             android:layout_height="64dp"
             android:alpha="0.2"
             android:src="@drawable/outline_notifications_24"
-            app:tint="@color/primary" />
+            app:tint="?attr/colorPrimary" />
 
         <TextView
             android:id="@+id/txtSemNotificacoes"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Não há alertas no momento"
-            android:textColor="#6C757D"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -49,6 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:indeterminateTint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

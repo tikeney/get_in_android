@@ -1,7 +1,6 @@
 package com.senai.get_in.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,35 +14,31 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.senai.get_in.R;
 import com.senai.get_in.utils.ToastUtils;
+import com.senai.get_in.utils.TokenManager;
 
 public class ConfiguracoesFragment extends Fragment {
 
-    private static final String PREFS_NAME = "GetInSettings";
-    private static final String KEY_DARK_MODE = "dark_mode";
-    private static final String KEY_NOTIFICATIONS = "notifications";
-    private static final String KEY_SOUND = "notification_sound";
-
-    private SharedPreferences sharedPreferences;
+    private TokenManager tokenManager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_configuracoes, container, false);
 
-        sharedPreferences = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        tokenManager = new TokenManager(requireContext());
 
         SwitchMaterial switchDarkMode = view.findViewById(R.id.switchDarkMode);
         SwitchMaterial switchNotificacoes = view.findViewById(R.id.switchNotificacoes);
         SwitchMaterial switchSomNotificacao = view.findViewById(R.id.switchSomNotificacao);
 
         // Carregar estados salvos
-        switchDarkMode.setChecked(sharedPreferences.getBoolean(KEY_DARK_MODE, false));
-        switchNotificacoes.setChecked(sharedPreferences.getBoolean(KEY_NOTIFICATIONS, true));
-        switchSomNotificacao.setChecked(sharedPreferences.getBoolean(KEY_SOUND, true));
+        switchDarkMode.setChecked(tokenManager.isDarkMode());
+        // Aqui você pode adicionar outros campos no TokenManager se quiser persistir notificações também
+        // Por enquanto mantendo a lógica local se necessário, ou expandindo o TokenManager
 
         // Listeners
         switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sharedPreferences.edit().putBoolean(KEY_DARK_MODE, isChecked).apply();
+            tokenManager.setDarkMode(isChecked);
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             } else {
@@ -52,12 +47,7 @@ public class ConfiguracoesFragment extends Fragment {
         });
 
         switchNotificacoes.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sharedPreferences.edit().putBoolean(KEY_NOTIFICATIONS, isChecked).apply();
             ToastUtils.showInfo(getContext(), isChecked ? "Notificações ativadas" : "Notificações desativadas");
-        });
-
-        switchSomNotificacao.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sharedPreferences.edit().putBoolean(KEY_SOUND, isChecked).apply();
         });
 
         view.findViewById(R.id.btnAlterarSenha).setOnClickListener(v -> {

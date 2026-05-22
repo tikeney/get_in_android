@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="?android:attr/windowBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
+        android:background="?attr/colorPrimary"
         app:elevation="0dp">
 
         <LinearLayout
@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Visitantes no Local"
-                android:textColor="@color/white"
+                android:textColor="?attr/colorOnPrimary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -34,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Monitoramento de acessos ativos"
-                android:textColor="#B0C4DE"
+                android:textColor="?attr/colorOnPrimary"
+                android:alpha="0.7"
                 android:textSize="14sp" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -42,7 +43,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="?attr/colorSurface"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -57,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:boxBackgroundColor="#F1F3F5"
+                app:boxBackgroundColor="?attr/colorSurfaceVariant"
                 app:boxCornerRadiusBottomEnd="25dp"
                 app:boxCornerRadiusBottomStart="25dp"
                 app:boxCornerRadiusTopEnd="25dp"
@@ -66,15 +67,15 @@
                 app:boxStrokeWidthFocused="0dp"
                 app:hintEnabled="false"
                 app:startIconDrawable="@drawable/outline_person_24"
-                app:startIconTint="#6C757D">
+                app:startIconTint="?attr/colorOnSurfaceVariant">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBuscaVisitantes"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="Pesquisar visitante..."
-                    android:textColor="#212529"
-                    android:textColorHint="#ADB5BD"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textColorHint="?attr/colorOnSurfaceVariant"
                     android:inputType="text"
                     android:paddingVertical="0dp"
                     android:textSize="15sp" />
@@ -94,7 +95,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:indeterminateTint="?attr/colorPrimary" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

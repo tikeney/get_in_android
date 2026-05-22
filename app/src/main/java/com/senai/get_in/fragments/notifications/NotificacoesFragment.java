@@ -43,9 +43,8 @@ public class NotificacoesFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
                 case 0: tab.setText("Todas"); break;
-                case 1: tab.setText("Aprovações"); break;
-                case 2: tab.setText("Alertas"); break;
-                case 3: tab.setText("Sistema"); break;
+                case 1: tab.setText("Alertas"); break;
+                case 2: tab.setText("Sistema"); break;
             }
         }).attach();
 
@@ -58,9 +57,8 @@ public class NotificacoesFragment extends Fragment {
                     String title = "Notificações";
                     switch (position) {
                         case 0: title = "Todas as Notificações"; break;
-                        case 1: title = "Aprovações Pendentes"; break;
-                        case 2: title = "Alertas de Segurança"; break;
-                        case 3: title = "Notificações de Sistema"; break;
+                        case 1: title = "Alertas de Segurança"; break;
+                        case 2: title = "Notificações de Sistema"; break;
                     }
                     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
                 }

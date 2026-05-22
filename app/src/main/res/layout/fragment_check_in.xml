@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="?android:attr/windowBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
+        android:background="?attr/colorPrimary"
         app:elevation="0dp">
 
         <LinearLayout
@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Novo Check-in"
-                android:textColor="@color/white"
+                android:textColor="?attr/colorOnPrimary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -33,7 +33,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Registre a entrada de um novo visitante"
-                android:textColor="#B0C4DE"
+                android:textColor="?attr/colorOnPrimary"
+                android:alpha="0.7"
                 android:textSize="14sp" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -41,7 +42,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="?attr/colorSurface"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -56,13 +57,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="IDENTIFICAÇÃO"
-                android:textColor="@color/primary"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.1"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Botão de Foto: ImageView com clipToOutline para corte correto -->
+            <!-- Botão de Foto -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/btnAdicionarFoto"
                 android:layout_width="match_parent"
@@ -81,9 +82,9 @@
                     android:scaleType="centerCrop"
                     android:clipToOutline="true"
                     android:background="@drawable/bg_tag_status"
-                    android:backgroundTint="#F0F4F8"
+                    android:backgroundTint="?attr/colorSurfaceVariant"
                     android:padding="8dp"
-                    app:tint="@color/primary"
+                    app:tint="?attr/colorPrimary"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" />
@@ -95,7 +96,7 @@
                     android:layout_marginStart="16dp"
                     android:text="Foto do Visitante"
                     android:textStyle="bold"
-                    android:textColor="@color/primary"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iv_icone_perfil"
@@ -107,7 +108,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Clique para capturar ou selecionar"
-                    android:textColor="#6C757D"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:textSize="13sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iv_icone_perfil"
@@ -124,15 +125,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:hint="Nome Completo"
-                app:boxStrokeColor="@color/primary"
-                app:hintTextColor="@color/primary"
+                app:boxStrokeColor="?attr/colorPrimary"
+                app:hintTextColor="?attr/colorPrimary"
                 app:startIconDrawable="@drawable/outline_person_24"
-                app:startIconTint="#6C757D">
+                app:startIconTint="?attr/colorOnSurfaceVariant">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnSurface"
                     android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -151,13 +153,14 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="16dp"
                     android:hint="CPF"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary">
+                    app:boxStrokeColor="?attr/colorPrimary"
+                    app:hintTextColor="?attr/colorPrimary">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etCPF"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurface"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -170,13 +173,14 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="16dp"
                     android:hint="Telefone"
-                    app:boxStrokeColor="@color/primary"
-                    app:hintTextColor="@color/primary">
+                    app:boxStrokeColor="?attr/colorPrimary"
+                    app:hintTextColor="?attr/colorPrimary">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etTelefone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurface"
                         android:inputType="phone" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -188,13 +192,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:hint="Empresa"
-                app:boxStrokeColor="@color/primary"
-                app:hintTextColor="@color/primary">
+                app:boxStrokeColor="?attr/colorPrimary"
+                app:hintTextColor="?attr/colorPrimary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmpresa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnSurface"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -205,13 +210,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
                 android:hint="Motivo da Visita"
-                app:boxStrokeColor="@color/primary"
-                app:hintTextColor="@color/primary">
+                app:boxStrokeColor="?attr/colorPrimary"
+                app:hintTextColor="?attr/colorPrimary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etMotivo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnSurface"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -220,7 +226,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ACESSO E SEGURANÇA"
-                android:textColor="@color/primary"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.1"
@@ -241,7 +247,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/outline_badge_24"
-                    app:tint="@color/white"
+                    app:tint="?attr/colorOnPrimary"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" />
@@ -253,7 +259,7 @@
                     android:layout_marginStart="16dp"
                     android:text="Vincular Crachá"
                     android:textStyle="bold"
-                    android:textColor="@color/white"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iv_icone_cracha"
@@ -265,7 +271,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Aproxime o crachá do leitor RFID"
-                    android:textColor="#B0C4DE"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:alpha="0.7"
                     android:textSize="13sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iv_icone_cracha"
@@ -278,11 +285,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Setores Permitidos"
-                android:textColor="#6C757D"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:textSize="14sp"
                 android:layout_marginBottom="8dp" />
 
-            <!-- ChipGroup VAZIO: chips são criados dinamicamente pela API em preencherChipsSetores() -->
+            <!-- ChipGroup VAZIO -->
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroupSetores"
                 android:layout_width="match_parent"
@@ -304,8 +311,8 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    android:backgroundTint="@color/primary"
-                    android:textColor="@color/white" />
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:textColor="?attr/colorOnPrimary" />
 
                 <ProgressBar
                     android:id="@+id/progressBarCheckIn"
@@ -313,7 +320,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:visibility="gone"
-                    android:indeterminateTint="@color/white" />
+                    android:indeterminateTint="?attr/colorOnPrimary" />
             </FrameLayout>
 
         </LinearLayout>

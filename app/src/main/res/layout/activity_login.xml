@@ -5,14 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?android:attr/windowBackground"
     tools:context=".LoginActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstHeader"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/primary"
+        android:background="?attr/colorPrimary"
         android:paddingHorizontal="32dp"
         app:layout_constraintHeight_percent="0.35"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,7 +23,7 @@
             android:layout_height="64dp"
             android:layout_marginTop="48dp"
             android:src="@drawable/ic_launcher_foreground"
-            app:tint="@color/white"
+            app:tint="?attr/colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Get In"
-            android:textColor="@color/white"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="32sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +45,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Acesse o painel de controle"
-            android:textColor="#B0C4DE"
+            android:textColor="?attr/colorOnPrimary"
+            android:alpha="0.7"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtTituloHeader" />
@@ -57,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/bg_stat_card"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="?attr/colorSurface"
         android:layout_marginTop="-24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ConstHeader">
@@ -77,15 +78,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:hint="E-mail"
-                app:boxStrokeColor="@color/primary"
-                app:hintTextColor="@color/primary"
+                app:boxStrokeColor="?attr/colorPrimary"
+                app:hintTextColor="?attr/colorPrimary"
                 app:startIconDrawable="@drawable/outline_person_24"
-                app:startIconTint="#6C757D">
+                app:startIconTint="?attr/colorOnSurfaceVariant">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etUsuario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnSurface"
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,17 +98,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
                 android:hint="Senha"
-                app:boxStrokeColor="@color/primary"
-                app:hintTextColor="@color/primary"
+                app:boxStrokeColor="?attr/colorPrimary"
+                app:hintTextColor="?attr/colorPrimary"
                 app:endIconMode="password_toggle"
-                app:endIconTint="#6C757D"
+                app:endIconTint="?attr/colorOnSurfaceVariant"
                 app:startIconDrawable="@drawable/outline_lock_24"
-                app:startIconTint="#6C757D">
+                app:startIconTint="?attr/colorOnSurfaceVariant">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSenha"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnSurface"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,8 +126,8 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    android:backgroundTint="@color/primary"
-                    android:textColor="@color/white" />
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:textColor="?attr/colorOnPrimary" />
 
                 <ProgressBar
                     android:id="@+id/progressBarLogin"
@@ -132,7 +135,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:visibility="gone"
-                    android:indeterminateTint="@color/white" />
+                    android:indeterminateTint="?attr/colorOnPrimary" />
             </FrameLayout>
 
             <LinearLayout
@@ -146,21 +149,21 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight="1"
-                    android:background="#E9ECEF" />
+                    android:background="?attr/colorOutlineVariant" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="16dp"
                     android:text="ou entre com"
-                    android:textColor="#6C757D"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:textSize="14sp" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight="1"
-                    android:background="#E9ECEF" />
+                    android:background="?attr/colorOutlineVariant" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -169,11 +172,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:text="Acesso por Crachá"
-                android:textColor="@color/primary"
+                android:textColor="?attr/colorPrimary"
                 app:cornerRadius="12dp"
                 app:icon="@drawable/outline_badge_24"
                 app:iconGravity="textStart"
-                app:iconTint="@color/primary" />
+                app:iconTint="?attr/colorPrimary" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

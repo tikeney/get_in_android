@@ -9,6 +9,7 @@ public class TokenManager {
     private static final String PREF_NAME = "GetInPrefs";
     private static final String KEY_TOKEN = "auth_token";
     private static final String KEY_USER_DATA = "user_data";
+    private static final String KEY_DARK_MODE = "dark_mode";
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
     private Gson gson;
@@ -40,6 +41,15 @@ public class TokenManager {
             return gson.fromJson(json, UsuarioDetalhado.class);
         }
         return null;
+    }
+
+    public void setDarkMode(boolean isEnabled) {
+        editor.putBoolean(KEY_DARK_MODE, isEnabled);
+        editor.apply();
+    }
+
+    public boolean isDarkMode() {
+        return prefs.getBoolean(KEY_DARK_MODE, false);
     }
 
     public void clear() {
