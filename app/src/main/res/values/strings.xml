@@ -2,4 +2,19 @@
     <string name="app_name">Get_In</string>
     <string name="navigation_drawer_open">Abrir gaveta de navegação</string>
     <string name="navigation_drawer_close">Fechar gaveta de navegação</string>
+    <string name="menu_title_navegacao">Navegação</string>
+    <string name="visitantes_titulo">Visitantes no Local</string>
+    <string name="visitantes_subtitulo">Monitoramento de acessos ativos</string>
+    <string name="visitantes_vazio">Nenhum visitante no local</string>
+    <string name="historico_vazio">Nenhum acesso encontrado</string>
+    <string name="menu_fluxo_portaria">FLUXO DE PORTARIA</string>
+    <string name="menu_operacao">Operação</string>
+    <string name="menu_pendencias">Pendências</string>
+    <string name="menu_historico">Histórico</string>
+    <string name="menu_configuracoes">Configurações</string>
+    <string name="menu_perfil">Perfil</string>
+    <string name="menu_portaria">Portaria</string>
+    <string name="menu_notificacoes">Notificações</string>
+    <string name="brand_get">GET</string>
+    <string name="brand_in">IN</string>
 </resources>

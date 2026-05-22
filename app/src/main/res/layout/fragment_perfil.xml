@@ -10,24 +10,25 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="32dp">
 
-            <!-- Cabeçalho de Perfil -->
             <View
-                android:id="@+id/viewHeaderBg"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:background="?attr/colorPrimary"
+                android:layout_height="83dp"
+android:background="@color/primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAvatar"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="24dp"
                 app:cardCornerRadius="60dp"
                 app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -35,6 +36,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:strokeColor="?attr/colorSurface"
                 app:strokeWidth="4dp">
+
+
 
                 <ImageView
                     android:id="@+id/ivPerfilFoto"
@@ -65,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Cargo do Usuário"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/secundary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -83,8 +86,7 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:layout_constraintTop_toBottomOf="@id/tvPerfilCargo"
-                app:strokeColor="?attr/colorOutline"
-                app:strokeWidth="1dp">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -96,7 +98,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Informações Pessoais"
-                        android:textColor="?attr/colorPrimary"
+                        android:textColor="@color/secundary"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="20dp"/>
@@ -112,7 +114,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/outline_person_24"
-                            app:tint="?attr/colorPrimary"/>
+                            app:tint="@color/secundary"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -146,7 +148,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/outline_badge_24"
-                        app:tint="?attr/colorPrimary"/>
+                        app:tint="@color/secundary"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -180,7 +182,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/outline_list_alt_24"
-                    app:tint="?attr/colorPrimary"/>
+                    app:tint="@color/secundary"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -214,7 +216,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/outline_calendar_today_24"
-                    app:tint="?attr/colorPrimary"/>
+                    app:tint="@color/secundary"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -248,7 +250,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/outline_check_24"
-                    app:tint="?attr/colorPrimary"/>
+                    app:tint="@color/secundary"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -286,8 +288,7 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
         app:layout_constraintTop_toBottomOf="@id/cardInfo"
-        app:strokeColor="?attr/colorOutline"
-        app:strokeWidth="1dp">
+        app:strokeWidth="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -299,7 +300,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Departamento"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="@color/secundary"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginBottom="20dp"/>
@@ -313,7 +314,7 @@
             android:id="@+id/viewDot"
             android:layout_width="8dp"
             android:layout_height="8dp"
-            app:cardBackgroundColor="?attr/colorPrimary"
+            app:cardBackgroundColor="@color/secundary"
             app:cardCornerRadius="4dp"
             app:cardElevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

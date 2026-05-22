@@ -1,48 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group android:id="@+id/group_perfil" android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_perfil"
-            android:icon="@drawable/outline_person_24"
-            android:title="Perfil" />
-    </group>
+    <item android:title="@string/menu_fluxo_portaria">
+        <menu>
+            <item
+                android:id="@+id/nav_checkIn"
+                android:icon="@drawable/outline_home_24"
+                android:title="@string/menu_operacao"
+                app:actionLayout="@layout/menu_action_arrow" />
+            <item
+                android:id="@+id/nav_autorizacao"
+                android:icon="@drawable/outline_checklist_rtl_24"
+                android:title="@string/menu_pendencias"
+                app:actionLayout="@layout/menu_action_arrow" />
+            <item
+                android:id="@+id/nav_historico"
+                android:icon="@drawable/outline_list_alt_24"
+                android:title="@string/menu_historico"
+                app:actionLayout="@layout/menu_action_arrow" />
+        </menu>
+    </item>
 
-    <group android:id="@+id/group_settings" android:checkableBehavior="single">
-        <item
-            android:id="@+id/menu_configuracoes"
-            android:icon="@drawable/outline_lock_24"
-            android:title="Configurações" />
-    </group>
-
-    <group android:id="@+id/group_main" android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_notificacoes"
-            android:icon="@drawable/outline_notifications_24"
-            android:title="Notificações" />
-        <item
-            android:id="@+id/nav_checkIn"
-            android:icon="@drawable/outline_add_24"
-            android:title="Check-in" />
-        <item
-            android:id="@+id/nav_visitantes"
-            android:icon="@drawable/outline_group_24"
-            android:title="Visitantes" />
-        <item
-            android:id="@+id/nav_historico"
-            android:icon="@drawable/outline_list_alt_24"
-            android:title="Histórico" />
-        <item
-            android:id="@+id/nav_autorizacao"
-            android:icon="@drawable/outline_checklist_rtl_24"
-            android:title="Autorização" />
-    </group>
-
-    <group android:id="@+id/group_exit">
-        <item
-            android:id="@+id/menu_sair"
-            android:icon="@drawable/outline_logout_24"
-            android:title="Sair" />
-    </group>
+  
 
 </menu>

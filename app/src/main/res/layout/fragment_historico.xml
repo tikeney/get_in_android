@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="?android:attr/windowBackground">
 
-    <!-- ===== CABEÇALHO FIXO COM ESTATÍSTICAS ===== -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarHistorico"
         android:layout_width="match_parent"
@@ -20,51 +19,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="20dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="24dp">
+            android:paddingTop="8dp"
+            android:paddingBottom="20dp">
 
-            <!-- Top Header with Back Button and Title -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="24dp"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/btnBack"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/bg_circle_translucent"
-                    android:src="@drawable/outline_arrow_back_24"
-                    app:tint="?attr/colorOnPrimary"
-                    android:contentDescription="Voltar" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Histórico de Acessos"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="VisitaTrack · Segurança Patrimonial"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:alpha="0.7"
-                        android:textSize="14sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Cards de estatísticas -->
+            <!-- Cards de estatísticas (Mantive pois são funcionais) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,7 +46,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="12"
-                        android:textColor="?attr/colorOnPrimary"
+                        android:textColor="?attr/colorOnPrimaryContainer"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
@@ -96,8 +54,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hoje"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:alpha="0.6"
+                        android:textColor="?attr/colorOnPrimaryContainer"
+                        android:alpha="0.8"
                         android:textSize="11sp" />
                 </LinearLayout>
 
@@ -118,7 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2"
-                        android:textColor="?attr/colorOnPrimary"
+                        android:textColor="?attr/colorOnPrimaryContainer"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
@@ -126,8 +84,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Na fábrica"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:alpha="0.6"
+                        android:textColor="?attr/colorOnPrimaryContainer"
+                        android:alpha="0.8"
                         android:textSize="11sp" />
                 </LinearLayout>
 
@@ -148,7 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
-                        android:textColor="?attr/colorOnPrimary"
+                        android:textColor="?attr/colorOnPrimaryContainer"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
@@ -156,8 +114,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Negados"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:alpha="0.6"
+                        android:textColor="?attr/colorOnPrimaryContainer"
+                        android:alpha="0.8"
                         android:textSize="11sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -166,17 +124,22 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- ===== CONTEÚDO SCROLLÁVEL ===== -->
-    <androidx.core.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeHistorico"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorSurface"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="24dp">
+            android:layout_height="match_parent"
+            android:background="?android:attr/windowBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="24dp">
 
             <!-- Filtros por Chip -->
             <HorizontalScrollView
@@ -333,25 +296,33 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Nenhum acesso encontrado"
+                            android:text="@string/historico_vazio"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:textSize="16sp" />
 
                     </LinearLayout>
 
-                    <!-- ProgressBar -->
-                    <ProgressBar
-                        android:id="@+id/progressBarHistorico"
-                        android:layout_width="wrap_content"
+                    <!-- Shimmer Loading -->
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/shimmerHistorico"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:visibility="gone"
-                        android:indeterminateTint="?attr/colorPrimary" />
+                        android:visibility="gone">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <include layout="@layout/shimmer_item_historico" />
+                            <include layout="@layout/shimmer_item_historico" />
+                            <include layout="@layout/shimmer_item_historico" />
+                            <include layout="@layout/shimmer_item_historico" />
+                        </LinearLayout>
+                    </com.facebook.shimmer.ShimmerFrameLayout>
                 </FrameLayout>
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

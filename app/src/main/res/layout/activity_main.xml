@@ -5,6 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,11 +25,38 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
                 app:navigationIconTint="?attr/colorOnPrimary"
-                app:titleTextColor="?attr/colorOnPrimary"
-                app:subtitleTextColor="?attr/colorOnPrimary"
-                app:title="" />
+                app:title="">
+
+                <LinearLayout
+                    android:id="@+id/layout_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:id="@+id/tv_toolbar_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Título"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_toolbar_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="VisitaTrack · Segurança Patrimonial"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:alpha="0.7"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+            </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.fragment.app.FragmentContainerView
@@ -46,12 +74,14 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorSurface"
-            app:elevation="16dp"
-            app:itemIconTint="?attr/colorPrimary"
-            app:itemTextColor="?attr/colorPrimary"
-            app:itemRippleColor="?attr/colorPrimaryContainer"
-            app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView.ActiveIndicator"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_bottom_nav"
+            app:elevation="8dp"
+            app:itemIconTint="@color/bottom_nav_item_color"
+            app:itemTextColor="@color/bottom_nav_item_color"
+            app:itemRippleColor="#153498DB"
+            app:itemActiveIndicatorStyle="@style/Widget.App.BottomNavigationView.ActiveIndicator"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_nav_menu"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -60,23 +90,42 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
+    <!-- Menu Lateral Customizado -->
+    <LinearLayout
+        android:id="@+id/nav_container"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        android:background="?attr/colorSurface"
-        app:headerLayout="@layout/nav_header_main"
-        app:itemIconTint="?attr/colorPrimary"
-        app:itemTextColor="?attr/colorOnSurface"
-        app:itemShapeFillColor="?attr/colorPrimaryContainer"
-        app:itemShapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Large"
-        app:itemVerticalPadding="16dp"
-        app:itemIconPadding="24dp"
-        app:itemHorizontalPadding="20dp"
-        app:itemShapeInsetStart="12dp"
-        app:itemShapeInsetEnd="12dp"
-        app:menu="@menu/drawer_menu" />
+        android:background="@color/primary"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true">
+
+        <include
+            android:id="@+id/nav_header"
+            layout="@layout/nav_header_main" />
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/primary"
+            app:itemIconTint="@color/nav_item_text_selector"
+            app:itemTextColor="@color/nav_item_text_selector"
+            app:itemShapeFillColor="@color/nav_item_bg_color_selector"
+            app:itemShapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+            app:itemVerticalPadding="12dp"
+            app:itemIconPadding="24dp"
+            app:itemHorizontalPadding="20dp"
+            app:itemShapeInsetStart="16dp"
+            app:itemShapeInsetEnd="16dp"
+            app:menu="@menu/drawer_menu"
+            app:subheaderColor="#B0C4DE" />
+
+        <include
+            android:id="@+id/nav_footer"
+            layout="@layout/nav_footer_main" />
+
+    </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

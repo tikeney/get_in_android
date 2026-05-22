@@ -8,25 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.textfield.TextInputEditText;
 import com.senai.get_in.adapter.LogAdapter;
-import com.senai.get_in.api.RetrofitClient;
+import com.senai.get_in.api.LogRepository;
+import com.senai.get_in.databinding.FragmentHistoricoBinding;
 import com.senai.get_in.model.LogAcesso;
 import com.senai.get_in.model.LogResponse;
+import com.senai.get_in.utils.NetworkUtils;
 import com.senai.get_in.utils.ToastUtils;
-import com.senai.get_in.utils.TokenManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,56 +34,55 @@ import retrofit2.Response;
 public class HistoricoFragment extends Fragment {
 
     private static final String TAG = "HistoricoFragment";
-    private RecyclerView recyclerHistorico;
+    private FragmentHistoricoBinding binding;
     private LogAdapter adapter;
+    private LogRepository repository;
     private List<LogAcesso> listaCompleta = new ArrayList<>();
     private List<LogAcesso> listaFiltrada = new ArrayList<>();
-    private TextInputEditText etBusca;
-    private ChipGroup chipGroupFiltros;
-    private LinearLayout layoutVazio;
-    private TextView tvContadorHoje, tvContadorNaFabrica, tvContadorNegados;
-    private ProgressBar progressBar;
-    private TokenManager tokenManager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_historico, container, false);
+        binding = FragmentHistoricoBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-        initViews(view);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        
+        repository = new LogRepository(requireContext());
         setupRecyclerView();
         setupFilters();
         setupSearch();
+        setupSwipeRefresh();
         
-        tokenManager = new TokenManager(requireContext());
-        loadData();
-
-        return view;
+        loadData(false);
     }
 
-    private void initViews(View view) {
-        recyclerHistorico = view.findViewById(R.id.recyclerHistorico);
-        etBusca = view.findViewById(R.id.etBusca);
-        chipGroupFiltros = view.findViewById(R.id.chipGroupFiltros);
-        layoutVazio = view.findViewById(R.id.layoutVazio);
-        tvContadorHoje = view.findViewById(R.id.tvContadorHoje);
-        tvContadorNaFabrica = view.findViewById(R.id.tvContadorNaFabrica);
-        tvContadorNegados = view.findViewById(R.id.tvContadorNegados);
-        progressBar = view.findViewById(R.id.progressBarHistorico);
+    private void setupSwipeRefresh() {
+        binding.swipeHistorico.setOnRefreshListener(() -> loadData(true));
+        binding.swipeHistorico.setColorSchemeResources(R.color.primary);
     }
 
-    private void loadData() {
-        progressBar.setVisibility(View.VISIBLE);
-        recyclerHistorico.setVisibility(View.GONE);
-        layoutVazio.setVisibility(View.GONE);
+    private void loadData(boolean isRefreshing) {
+        if (!NetworkUtils.isOnline(getContext())) {
+            binding.swipeHistorico.setRefreshing(false);
+            ToastUtils.showError(getContext(), "Sem conexão com a internet.");
+            return;
+        }
 
-        RetrofitClient.getApiService(requireContext()).getLogs().enqueue(new Callback<LogResponse>() {
+        if (!isRefreshing) setLoading(true);
+        binding.layoutVazio.setVisibility(View.GONE);
+
+        repository.getLogs(new Callback<LogResponse>() {
             @Override
             public void onResponse(@NonNull Call<LogResponse> call, @NonNull Response<LogResponse> response) {
-                if (!isAdded()) return;
-                progressBar.setVisibility(View.GONE);
+                if (!isAdded() || binding == null) return;
+                setLoading(false);
+                binding.swipeHistorico.setRefreshing(false);
                 
                 if (response.isSuccessful() && response.body() != null) {
                     listaCompleta = response.body().getData();
@@ -97,8 +91,7 @@ public class HistoricoFragment extends Fragment {
                     updateCounters();
                     filterList();
                     
-                    recyclerHistorico.setVisibility(View.VISIBLE);
-                    recyclerHistorico.scheduleLayoutAnimation();
+                    binding.recyclerHistorico.scheduleLayoutAnimation();
                 } else {
                     ToastUtils.showError(getContext(), "Erro ao carregar histórico");
                 }
@@ -106,31 +99,44 @@ public class HistoricoFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<LogResponse> call, @NonNull Throwable t) {
-                if (!isAdded()) return;
-                progressBar.setVisibility(View.GONE);
+                if (!isAdded() || binding == null) return;
+                setLoading(false);
+                binding.swipeHistorico.setRefreshing(false);
                 Log.e(TAG, "Erro: " + t.getMessage());
                 ToastUtils.showError(getContext(), "Falha na conexão");
             }
         });
     }
 
+    private void setLoading(boolean loading) {
+        if (loading) {
+            binding.shimmerHistorico.setVisibility(View.VISIBLE);
+            binding.shimmerHistorico.startShimmer();
+            binding.recyclerHistorico.setVisibility(View.GONE);
+        } else {
+            binding.shimmerHistorico.stopShimmer();
+            binding.shimmerHistorico.setVisibility(View.GONE);
+            binding.recyclerHistorico.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void setupRecyclerView() {
         adapter = new LogAdapter(new ArrayList<>());
-        recyclerHistorico.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerHistorico.setAdapter(adapter);
+        binding.recyclerHistorico.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recyclerHistorico.setAdapter(adapter);
         
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
-        recyclerHistorico.setLayoutAnimation(animation);
+        binding.recyclerHistorico.setLayoutAnimation(animation);
     }
 
     private void setupFilters() {
-        chipGroupFiltros.setOnCheckedStateChangeListener((group, checkedIds) -> {
+        binding.chipGroupFiltros.setOnCheckedStateChangeListener((group, checkedIds) -> {
             filterList();
         });
     }
 
     private void setupSearch() {
-        etBusca.addTextChangedListener(new TextWatcher() {
+        binding.etBusca.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
@@ -143,10 +149,10 @@ public class HistoricoFragment extends Fragment {
     }
 
     private void filterList() {
-        if (listaCompleta == null) return;
+        if (listaCompleta == null || binding == null) return;
         
-        String query = etBusca.getText().toString().toLowerCase().trim();
-        int checkedChipId = chipGroupFiltros.getCheckedChipId();
+        String query = binding.etBusca.getText().toString().toLowerCase().trim();
+        int checkedChipId = binding.chipGroupFiltros.getCheckedChipId();
 
         listaFiltrada = listaCompleta.stream()
                 .filter(l -> (l.getUsuarioNome() != null && l.getUsuarioNome().toLowerCase().contains(query)) || 
@@ -165,25 +171,30 @@ public class HistoricoFragment extends Fragment {
         adapter.updateList(listaFiltrada);
 
         if (listaFiltrada.isEmpty()) {
-            layoutVazio.setVisibility(View.VISIBLE);
-            recyclerHistorico.setVisibility(View.GONE);
+            binding.layoutVazio.setVisibility(View.VISIBLE);
+            binding.recyclerHistorico.setVisibility(View.GONE);
         } else {
-            layoutVazio.setVisibility(View.GONE);
-            recyclerHistorico.setVisibility(View.VISIBLE);
+            binding.layoutVazio.setVisibility(View.GONE);
+            binding.recyclerHistorico.setVisibility(View.VISIBLE);
         }
     }
 
     private void updateCounters() {
-        if (listaCompleta == null) return;
+        if (listaCompleta == null || binding == null) return;
 
         int total = listaCompleta.size();
         long naFabrica = listaCompleta.stream()
                 .filter(l -> l.getDataSaida() == null || l.getDataSaida().isEmpty())
                 .count();
 
-        tvContadorHoje.setText(String.valueOf(total));
-        tvContadorNaFabrica.setText(String.valueOf(naFabrica));
-        // Nota: O contador de negados não existe diretamente nos Logs de Acesso da View
-        tvContadorNegados.setText("0"); 
+        binding.tvContadorHoje.setText(String.valueOf(total));
+        binding.tvContadorNaFabrica.setText(String.valueOf(naFabrica));
+        binding.tvContadorNegados.setText("0"); 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

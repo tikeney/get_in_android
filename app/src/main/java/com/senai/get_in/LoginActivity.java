@@ -10,8 +10,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ProgressBar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -21,9 +19,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.gson.Gson;
 import com.senai.get_in.api.RetrofitClient;
+import com.senai.get_in.databinding.ActivityLoginBinding;
 import com.senai.get_in.model.LoginRequest;
 import com.senai.get_in.model.LoginResponse;
 import com.senai.get_in.model.TagLoginRequest;
@@ -38,19 +35,15 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private TextInputEditText etUsuario, etSenha;
-    private Button btnLogin, btnLoginRFID;
-    private ProgressBar progressBarLogin;
+    private ActivityLoginBinding binding;
     private TokenManager tokenManager;
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
-    private View constHeader, constForm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         tokenManager = new TokenManager(this);
         
-        // Aplicar o tema antes de carregar a UI
         if (tokenManager.isDarkMode()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
@@ -61,36 +54,26 @@ public class LoginActivity extends AppCompatActivity {
         
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        if (nfcAdapter == null) {
-            Log.w(TAG, "NFC não suportado neste dispositivo.");
-        } else {
+        if (nfcAdapter != null) {
             pendingIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
                     PendingIntent.FLAG_MUTABLE);
         }
 
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login);
-        
-        constHeader = findViewById(R.id.ConstHeader);
-        constForm = findViewById(R.id.ConstForm);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         
         applyEntryAnimations();
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        etUsuario = findViewById(R.id.etUsuario);
-        etSenha = findViewById(R.id.etSenha);
-        btnLogin = findViewById(R.id.btnLogin);
-        btnLoginRFID = findViewById(R.id.btnLoginRFID);
-        progressBarLogin = findViewById(R.id.progressBarLogin);
-
-        btnLogin.setOnClickListener(v -> validarLogin());
-        btnLoginRFID.setOnClickListener(v -> {
+        binding.btnLogin.setOnClickListener(v -> validarLogin());
+        binding.btnLoginRFID.setOnClickListener(v -> {
             if (nfcAdapter == null) {
                 ToastUtils.showInfo(this, "NFC não disponível");
             } else if (!nfcAdapter.isEnabled()) {
@@ -105,8 +88,8 @@ public class LoginActivity extends AppCompatActivity {
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
         
-        constHeader.startAnimation(fadeIn);
-        constForm.startAnimation(slideUp);
+        binding.ConstHeader.startAnimation(fadeIn);
+        binding.ConstForm.startAnimation(slideUp);
     }
 
     @Override
@@ -179,34 +162,34 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setProgressBar(boolean loading) {
         if (loading) {
-            btnLogin.setEnabled(false);
-            btnLoginRFID.setEnabled(false);
-            btnLogin.setText("");
-            progressBarLogin.setVisibility(View.VISIBLE);
+            binding.btnLogin.setEnabled(false);
+            binding.btnLoginRFID.setEnabled(false);
+            binding.btnLogin.setText("");
+            binding.progressBarLogin.setVisibility(View.VISIBLE);
         } else {
-            btnLogin.setEnabled(true);
-            btnLoginRFID.setEnabled(true);
-            btnLogin.setText("Entrar");
-            progressBarLogin.setVisibility(View.GONE);
+            binding.btnLogin.setEnabled(true);
+            binding.btnLoginRFID.setEnabled(true);
+            binding.btnLogin.setText("Entrar");
+            binding.progressBarLogin.setVisibility(View.GONE);
         }
     }
 
     private void validarLogin() {
-        String email = etUsuario.getText().toString().trim();
-        String senha = etSenha.getText().toString().trim();
+        String email = binding.etUsuario.getText().toString().trim();
+        String senha = binding.etSenha.getText().toString().trim();
 
         if (email.isEmpty()) {
-            etUsuario.setError("Digite o e-mail!");
+            binding.etUsuario.setError("Digite o e-mail!");
             return;
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etUsuario.setError("Digite um e-mail válido!");
+            binding.etUsuario.setError("Digite um e-mail válido!");
             return;
         }
 
         if (senha.isEmpty()) {
-            etSenha.setError("Digite a senha!");
+            binding.etSenha.setError("Digite a senha!");
             return;
         }
 
@@ -225,13 +208,9 @@ public class LoginActivity extends AppCompatActivity {
                         String token = loginResponse.getToken();
                         UsuarioDetalhado user = converterParaUsuarioDetalhado(loginResponse.getData());
                         
-                        Log.d(TAG, "Login OK. ID Extraído: " + user.getId());
-
                         if (user.getId() > 0) {
-                            // Busca dados completos da View imediatamente após o login
                             buscarDadosCompletosView(token, user);
                         } else {
-                            Log.e(TAG, "ID do usuário é 0. Erro no parsing do JSON.");
                             setProgressBar(false);
                             ToastUtils.showError(LoginActivity.this, "Erro ao processar dados da conta.");
                         }
@@ -242,14 +221,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 } else {
                     setProgressBar(false);
-                    try {
-                        String errorJson = response.errorBody().string();
-                        Log.e(TAG, "Erro login: " + errorJson);
-                        ToastUtils.showError(LoginActivity.this, "E-mail ou senha incorretos.");
-                    } catch (Exception e) {
-                        Log.e(TAG, "Erro no servidor: " + response.code());
-                        ToastUtils.showError(LoginActivity.this, "Erro de servidor: " + response.code());
-                    }
+                    ToastUtils.showError(LoginActivity.this, "E-mail ou senha incorretos.");
                 }
             }
 
@@ -280,11 +252,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void buscarDadosCompletosView(String token, UsuarioDetalhado userIncompleto) {
-        // Salva o token temporariamente para permitir a chamada autenticada à View
         tokenManager.saveToken(token);
         
-        Log.d(TAG, "Buscando View para ID: " + userIncompleto.getId());
-
         RetrofitClient.getApiService(this).getUsuarioDetalhadoPorId(userIncompleto.getId()).enqueue(new Callback<UsuarioDetalhadoResponse>() {
             @Override
             public void onResponse(@NonNull Call<UsuarioDetalhadoResponse> call, @NonNull Response<UsuarioDetalhadoResponse> response) {
@@ -292,9 +261,6 @@ public class LoginActivity extends AppCompatActivity {
                 UsuarioDetalhado userFinal = userIncompleto;
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     userFinal = response.body().getData();
-                    Log.d(TAG, "Dados da View obtidos com sucesso.");
-                } else {
-                    Log.w(TAG, "Falha ao obter dados da View (HTTP " + response.code() + "). Usando dados básicos.");
                 }
                 finalizarLogin(token, userFinal);
             }
@@ -302,7 +268,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<UsuarioDetalhadoResponse> call, @NonNull Throwable t) {
                 setProgressBar(false);
-                Log.e(TAG, "Erro ao buscar View: " + t.getMessage());
                 finalizarLogin(token, userIncompleto);
             }
         });

@@ -24,7 +24,7 @@
                 android:id="@+id/tvTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Visitantes no Local"
+                android:text="@string/visitantes_titulo"
                 android:textColor="?attr/colorOnPrimary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -33,71 +33,102 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Monitoramento de acessos ativos"
+                android:text="@string/visitantes_subtitulo"
                 android:textColor="?attr/colorOnPrimary"
                 android:alpha="0.7"
                 android:textSize="14sp" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeVisitantes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorSurface"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="match_parent">
 
-            <!-- Campo de Busca similar ao Histórico -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputBuscaVisitantes"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                app:boxCornerRadiusBottomEnd="25dp"
-                app:boxCornerRadiusBottomStart="25dp"
-                app:boxCornerRadiusTopEnd="25dp"
-                app:boxCornerRadiusTopStart="25dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:hintEnabled="false"
-                app:startIconDrawable="@drawable/outline_person_24"
-                app:startIconTint="?attr/colorOnSurfaceVariant">
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etBuscaVisitantes"
+                <!-- Campo de Busca similar ao Histórico -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputBuscaVisitantes"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:hint="Pesquisar visitante..."
-                    android:textColor="?attr/colorOnSurface"
-                    android:textColorHint="?attr/colorOnSurfaceVariant"
-                    android:inputType="text"
-                    android:paddingVertical="0dp"
-                    android:textSize="15sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                    app:boxCornerRadiusBottomEnd="25dp"
+                    app:boxCornerRadiusBottomStart="25dp"
+                    app:boxCornerRadiusTopEnd="25dp"
+                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:hintEnabled="false"
+                    app:startIconDrawable="@drawable/outline_person_24"
+                    app:startIconTint="?attr/colorOnSurfaceVariant">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerVisitantes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@android:layout/simple_list_item_1" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etBuscaVisitantes"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="Pesquisar visitante..."
+                        android:textColor="?attr/colorOnSurface"
+                        android:textColorHint="?attr/colorOnSurfaceVariant"
+                        android:inputType="text"
+                        android:paddingVertical="0dp"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <ProgressBar
-                android:id="@+id/progressBarVisitantes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:visibility="gone"
-                android:indeterminateTint="?attr/colorPrimary" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+                <!-- Shimmer Loading -->
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerVisitantes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <include layout="@layout/shimmer_item_historico" />
+                        <include layout="@layout/shimmer_item_historico" />
+                        <include layout="@layout/shimmer_item_historico" />
+                        <include layout="@layout/shimmer_item_historico" />
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerVisitantes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_historico" />
+
+                <LinearLayout
+                    android:id="@+id/layoutVazioVisitantes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingVertical="48dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/visitantes_vazio"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

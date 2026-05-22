@@ -73,13 +73,14 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputUsuario"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:hint="E-mail"
-                app:boxStrokeColor="?attr/colorPrimary"
-                app:hintTextColor="?attr/colorPrimary"
+                app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 app:startIconDrawable="@drawable/outline_person_24"
                 app:startIconTint="?attr/colorOnSurfaceVariant">
 
@@ -93,13 +94,14 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputSenha"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
                 android:hint="Senha"
-                app:boxStrokeColor="?attr/colorPrimary"
-                app:hintTextColor="?attr/colorPrimary"
+                app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 app:endIconMode="password_toggle"
                 app:endIconTint="?attr/colorOnSurfaceVariant"
                 app:startIconDrawable="@drawable/outline_lock_24"
