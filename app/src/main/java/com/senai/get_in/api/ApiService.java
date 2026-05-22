@@ -66,7 +66,7 @@ public interface ApiService {
     Call<List<Departamento>> getDepartamentos();
 
     @GET("setores/")
-    Call<List<Setor>> getSetores();
+    Call<SetorResponse> getSetores(); // Agora espera um objeto SetorResponse
 
     // --- Filtros Específicos ---
     @GET("requisicao/func/{id}")

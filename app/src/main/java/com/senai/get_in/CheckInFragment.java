@@ -36,6 +36,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.senai.get_in.api.RetrofitClient;
 import com.senai.get_in.model.Requisicao;
 import com.senai.get_in.model.Setor;
+import com.senai.get_in.model.SetorResponse;
 import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
 
@@ -175,24 +176,26 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     }
 
     private void carregarSetores() {
-        RetrofitClient.getApiService(requireContext()).getSetores().enqueue(new Callback<List<Setor>>() {
+        RetrofitClient.getApiService(requireContext()).getSetores().enqueue(new Callback<SetorResponse>() {
             @Override
-            public void onResponse(@NonNull Call<List<Setor>> call, @NonNull Response<List<Setor>> response) {
+            public void onResponse(@NonNull Call<SetorResponse> call, @NonNull Response<SetorResponse> response) {
                 if (!isAdded()) return;
-                if (response.isSuccessful() && response.body() != null) {
-                    preencherChipsSetores(response.body());
+                if (response.isSuccessful() && response.body() != null && response.body().isSucesso()) {
+                    // Extrai a lista do campo 'data' do objeto de resposta
+                    preencherChipsSetores(response.body().getData());
                 } else {
                     Log.e(TAG, "Erro ao carregar setores: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Setor>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<SetorResponse> call, @NonNull Throwable t) {
                 if (!isAdded()) return;
                 Log.e(TAG, "Falha ao carregar setores: " + t.getMessage());
             }
         });
     }
+
 
     private void preencherChipsSetores(List<Setor> setores) {
         if (chipGroupSetores == null) return;
@@ -205,6 +208,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
             Chip chip = (Chip) inflater.inflate(R.layout.layout_chip_filtro, chipGroupSetores, false);
             chip.setText(setor.getNome());
             chip.setTag(setor.getId());       // tag = Integer do ID do setor
+            chip.setId(View.generateViewId());
             chip.setCheckable(true);
             chipGroupSetores.addView(chip);
         }
