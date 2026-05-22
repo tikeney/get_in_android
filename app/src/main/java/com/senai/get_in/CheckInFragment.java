@@ -7,30 +7,35 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.chip.Chip;
-import com.senai.get_in.api.RequisicaoRepository;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.senai.get_in.api.RetrofitClient;
-import com.senai.get_in.databinding.FragmentCheckInBinding;
 import com.senai.get_in.model.Requisicao;
 import com.senai.get_in.model.Setor;
-import com.senai.get_in.utils.MascaraUtils;
-import com.senai.get_in.utils.NetworkUtils;
 import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
 
@@ -48,8 +53,22 @@ import retrofit2.Response;
 public class CheckInFragment extends Fragment implements MainActivity.NfcTagListener {
 
     private static final String TAG = "CheckInFragment";
-    private FragmentCheckInBinding binding;
-    private RequisicaoRepository repository;
+
+    // Views
+    private ConstraintLayout btnAdicionarFoto;
+    private ImageView ivIconePerfil;
+    private TextView tvTituloFoto, tvSubtituloFoto;
+
+    private TextInputEditText etNome, etCPF, etTelefone, etEmpresa, etMotivo;
+    private TextInputLayout inputNome, inputCPF, inputTelefone, inputEmpresa, inputMotivo;
+
+    private ConstraintLayout btnAdicionarCracha;
+    private TextView tvTituloCracha, tvSubtituloCracha;
+
+    private ChipGroup chipGroupSetores;
+    private Button btnFinalizar;
+    private ProgressBar progressBar;
+    private View containerCheckIn;
 
     // Utilitários e Estado
     private TokenManager tokenManager;
@@ -69,7 +88,6 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         super.onCreate(savedInstanceState);
 
         tokenManager = new TokenManager(requireContext());
-        repository = new RequisicaoRepository(requireContext());
 
         cameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK && cameraImageUri != null) {
@@ -100,8 +118,9 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentCheckInBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        View view = inflater.inflate(R.layout.fragment_check_in, container, false);
+        inicializarViews(view);
+        return view;
     }
 
     @Override
@@ -109,7 +128,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         super.onViewCreated(view, savedInstanceState);
 
         Animation slideUp = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
-        binding.containerCheckIn.startAnimation(slideUp);
+        containerCheckIn.startAnimation(slideUp);
 
         configurarMascaras();
         configurarFoto();
@@ -121,22 +140,45 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
 
     @Override
     public void onTagRead(String tagId) {
-        if (binding == null) return;
         codigoTagVinculada = tagId;
-        binding.tvTituloCracha.setText("Crachá Vinculado");
-        binding.tvSubtituloCracha.setText("Código: " + tagId);
+        tvTituloCracha.setText("Crachá Vinculado");
+        tvSubtituloCracha.setText("Código: " + tagId);
         ToastUtils.showSuccess(getContext(), "Crachá lido com sucesso!");
     }
 
-    private void carregarSetores() {
-        if (!NetworkUtils.isOnline(getContext())) {
-            return;
-        }
+    private void inicializarViews(View view) {
+        containerCheckIn = view.findViewById(R.id.containerCheckIn);
+        btnAdicionarFoto = view.findViewById(R.id.btnAdicionarFoto);
+        ivIconePerfil = view.findViewById(R.id.iv_icone_perfil);
+        tvTituloFoto = view.findViewById(R.id.tv_titulo_foto);
+        tvSubtituloFoto = view.findViewById(R.id.tv_subtitulo_foto);
 
+        inputNome = view.findViewById(R.id.inputNome);
+        inputCPF = view.findViewById(R.id.inputCPF);
+        inputTelefone = view.findViewById(R.id.inputTelefone);
+        inputEmpresa = view.findViewById(R.id.inputEmpresa);
+        inputMotivo = view.findViewById(R.id.inputMotivo);
+
+        etNome = view.findViewById(R.id.etNome);
+        etCPF = view.findViewById(R.id.etCPF);
+        etTelefone = view.findViewById(R.id.etTelefone);
+        etEmpresa = view.findViewById(R.id.etEmpresa);
+        etMotivo = view.findViewById(R.id.etMotivo);
+
+        btnAdicionarCracha = view.findViewById(R.id.btnAdicionarCracha);
+        tvTituloCracha = view.findViewById(R.id.tv_titulo_cracha);
+        tvSubtituloCracha = view.findViewById(R.id.tv_subtitulo_cracha);
+
+        chipGroupSetores = view.findViewById(R.id.chipGroupSetores);
+        btnFinalizar = view.findViewById(R.id.btnFinalizarCheckIn);
+        progressBar = view.findViewById(R.id.progressBarCheckIn);
+    }
+
+    private void carregarSetores() {
         RetrofitClient.getApiService(requireContext()).getSetores().enqueue(new Callback<List<Setor>>() {
             @Override
             public void onResponse(@NonNull Call<List<Setor>> call, @NonNull Response<List<Setor>> response) {
-                if (!isAdded() || binding == null) return;
+                if (!isAdded()) return;
                 if (response.isSuccessful() && response.body() != null) {
                     preencherChipsSetores(response.body());
                 } else {
@@ -153,54 +195,49 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     }
 
     private void preencherChipsSetores(List<Setor> setores) {
-        if (binding == null) return;
+        if (chipGroupSetores == null) return;
 
-        binding.chipGroupSetores.removeAllViews();
+        // Remove tudo antes de adicionar para evitar duplicatas em recarregamentos
+        chipGroupSetores.removeAllViews();
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         for (Setor setor : setores) {
-            Chip chip = (Chip) inflater.inflate(R.layout.layout_chip_filtro, binding.chipGroupSetores, false);
+            Chip chip = (Chip) inflater.inflate(R.layout.layout_chip_filtro, chipGroupSetores, false);
             chip.setText(setor.getNome());
-            chip.setTag(setor.getId());
+            chip.setTag(setor.getId());       // tag = Integer do ID do setor
             chip.setCheckable(true);
-            binding.chipGroupSetores.addView(chip);
+            chipGroupSetores.addView(chip);
         }
     }
 
     private void configurarCracha() {
-        binding.btnAdicionarCracha.setOnClickListener(v ->
+        btnAdicionarCracha.setOnClickListener(v ->
                 ToastUtils.showInfo(getContext(), "Aproxime o crachá para vincular"));
     }
 
     private void setProgressBar(boolean loading) {
-        if (binding == null) return;
         if (loading) {
-            binding.btnFinalizarCheckIn.setEnabled(false);
-            binding.btnFinalizarCheckIn.setAlpha(0.5f);
-            binding.progressBarCheckIn.setVisibility(View.VISIBLE);
+            btnFinalizar.setEnabled(false);
+            btnFinalizar.setAlpha(0.5f);
+            progressBar.setVisibility(View.VISIBLE);
         } else {
-            binding.btnFinalizarCheckIn.setEnabled(true);
-            binding.btnFinalizarCheckIn.setAlpha(1.0f);
-            binding.progressBarCheckIn.setVisibility(View.GONE);
+            btnFinalizar.setEnabled(true);
+            btnFinalizar.setAlpha(1.0f);
+            progressBar.setVisibility(View.GONE);
         }
     }
 
     private void realizarCheckIn() {
-        if (!NetworkUtils.isOnline(getContext())) {
-            ToastUtils.showError(getContext(), "Sem conexão para realizar o check-in.");
-            return;
-        }
+        String nome = etNome.getText().toString().trim();
+        String cpf = etCPF.getText().toString().trim();
+        String empresa = etEmpresa.getText().toString().trim();
+        String motivo = etMotivo.getText().toString().trim();
 
-        if (binding == null) return;
-        String nome = binding.etNome.getText().toString().trim();
-        String cpf = binding.etCPF.getText().toString().trim();
-        String empresa = binding.etEmpresa.getText().toString().trim();
-        String motivo = binding.etMotivo.getText().toString().trim();
-
+        // Lê o chip selecionado e obtém o ID do setor a partir da tag
         Integer idSetor = null;
-        int selectedChipId = binding.chipGroupSetores.getCheckedChipId();
+        int selectedChipId = chipGroupSetores.getCheckedChipId();
         if (selectedChipId != View.NO_ID) {
-            Chip selectedChip = binding.chipGroupSetores.findViewById(selectedChipId);
+            Chip selectedChip = chipGroupSetores.findViewById(selectedChipId);
             if (selectedChip != null && selectedChip.getTag() instanceof Integer) {
                 idSetor = (Integer) selectedChip.getTag();
             }
@@ -216,22 +253,23 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
 
         setProgressBar(true);
 
-        repository.criarRequisicaoVisitante(req, new Callback<Requisicao>() {
+        RetrofitClient.getApiService(requireContext()).criarRequisicaoVisitante(req).enqueue(new Callback<Requisicao>() {
             @Override
             public void onResponse(@NonNull Call<Requisicao> call, @NonNull Response<Requisicao> response) {
-                if (!isAdded() || binding == null) return;
+                if (!isAdded()) return;
                 setProgressBar(false);
                 if (response.isSuccessful()) {
                     ToastUtils.showSuccess(getContext(), "Check-in realizado com sucesso!");
                     limparFormulario();
                 } else {
                     ToastUtils.showError(getContext(), "Erro ao realizar check-in: " + response.code());
+                    Log.e(TAG, "Erro response: " + response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Requisicao> call, @NonNull Throwable t) {
-                if (!isAdded() || binding == null) return;
+                if (!isAdded()) return;
                 setProgressBar(false);
                 Log.e(TAG, "Falha: " + t.getMessage());
                 ToastUtils.showError(getContext(), "Falha na conexão");
@@ -240,32 +278,31 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     }
 
     private boolean validarFormulario() {
-        if (binding == null) return false;
         boolean valido = true;
 
-        if (binding.etNome.getText().toString().trim().isEmpty()) {
-            binding.inputNome.setError("Informe o nome completo");
+        if (etNome.getText().toString().trim().isEmpty()) {
+            inputNome.setError("Informe o nome completo");
             valido = false;
         } else {
-            binding.inputNome.setError(null);
+            inputNome.setError(null);
         }
 
-        String cpfLimpo = binding.etCPF.getText().toString().replaceAll("[^\\d]", "");
+        String cpfLimpo = etCPF.getText().toString().replaceAll("[^\\d]", "");
         if (cpfLimpo.length() < 11) {
-            binding.inputCPF.setError("CPF incompleto");
+            inputCPF.setError("CPF incompleto");
             valido = false;
         } else {
-            binding.inputCPF.setError(null);
+            inputCPF.setError(null);
         }
 
-        if (binding.etEmpresa.getText().toString().trim().isEmpty()) {
-            binding.inputEmpresa.setError("Informe a empresa");
+        if (etEmpresa.getText().toString().trim().isEmpty()) {
+            inputEmpresa.setError("Informe a empresa");
             valido = false;
         } else {
-            binding.inputEmpresa.setError(null);
+            inputEmpresa.setError(null);
         }
 
-        if (binding.chipGroupSetores.getCheckedChipId() == View.NO_ID) {
+        if (chipGroupSetores.getCheckedChipId() == View.NO_ID) {
             ToastUtils.showInfo(getContext(), "Selecione um setor.");
             valido = false;
         }
@@ -279,12 +316,12 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     }
 
     private void configurarMascaras() {
-        binding.etCPF.addTextChangedListener(MascaraUtils.aplicar(binding.etCPF, "###.###.###-##"));
-        binding.etTelefone.addTextChangedListener(MascaraUtils.aplicar(binding.etTelefone, "(##) #####-####"));
+        etCPF.addTextChangedListener(new MascaraTextWatcher(etCPF, "###.###.###-##"));
+        etTelefone.addTextChangedListener(new MascaraTextWatcher(etTelefone, "(##) #####-####"));
     }
 
     private void configurarFoto() {
-        binding.btnAdicionarFoto.setOnClickListener(v -> mostrarOpcoesFoto());
+        btnAdicionarFoto.setOnClickListener(v -> mostrarOpcoesFoto());
     }
 
     private void mostrarOpcoesFoto() {
@@ -345,45 +382,73 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     }
 
     private void definirFoto(Uri uri) {
-        if (binding == null) return;
         fotoUri = uri;
-        binding.ivIconePerfil.clearColorFilter();
-        binding.ivIconePerfil.setImageURI(uri);
-        binding.ivIconePerfil.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        binding.tvTituloFoto.setText("Foto adicionada");
-        binding.tvSubtituloFoto.setText("Toque para trocar");
+        // Remove o tint do ícone padrão para mostrar a foto real
+        ivIconePerfil.clearColorFilter();
+        ivIconePerfil.setImageURI(uri);
+        ivIconePerfil.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        tvTituloFoto.setText("Foto adicionada");
+        tvSubtituloFoto.setText("Toque para trocar");
     }
 
     private void configurarBotaoFinalizar() {
-        binding.btnFinalizarCheckIn.setOnClickListener(v -> {
+        btnFinalizar.setOnClickListener(v -> {
             if (validarFormulario()) realizarCheckIn();
         });
     }
 
     private void limparFormulario() {
-        if (binding == null) return;
-        binding.etNome.setText("");
-        binding.etCPF.setText("");
-        binding.etTelefone.setText("");
-        binding.etEmpresa.setText("");
-        binding.etMotivo.setText("");
-        binding.chipGroupSetores.clearCheck();
+        etNome.setText("");
+        etCPF.setText("");
+        etTelefone.setText("");
+        etEmpresa.setText("");
+        etMotivo.setText("");
+        chipGroupSetores.clearCheck();
         fotoUri = null;
-        binding.ivIconePerfil.setImageResource(R.drawable.outline_person_24);
-        binding.ivIconePerfil.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        binding.ivIconePerfil.setColorFilter(
+        ivIconePerfil.setImageResource(R.drawable.outline_person_24);
+        ivIconePerfil.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        // Restaura o tint azul do ícone padrão
+        ivIconePerfil.setColorFilter(
                 ContextCompat.getColor(requireContext(), R.color.primary),
                 android.graphics.PorterDuff.Mode.SRC_IN);
-        binding.tvTituloFoto.setText("Foto do Visitante");
-        binding.tvSubtituloFoto.setText("Clique para capturar ou selecionar");
+        tvTituloFoto.setText("Foto do Visitante");
+        tvSubtituloFoto.setText("Clique para capturar ou selecionar");
         codigoTagVinculada = null;
-        binding.tvTituloCracha.setText("Vincular Crachá");
-        binding.tvSubtituloCracha.setText("Aproxime o crachá do leitor RFID");
+        tvTituloCracha.setText("Vincular Crachá");
+        tvSubtituloCracha.setText("Aproxime o crachá do leitor RFID");
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    // -------------------------------------------------------------------------
+    // Máscara de texto reutilizável
+    // -------------------------------------------------------------------------
+    private static class MascaraTextWatcher implements TextWatcher {
+        private final TextInputEditText campo;
+        private final String mascara;
+        private boolean editando = false;
+
+        MascaraTextWatcher(TextInputEditText campo, String mascara) {
+            this.campo = campo;
+            this.mascara = mascara;
+        }
+
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (editando) return;
+            editando = true;
+            String digits = s.toString().replaceAll("[^\\d]", "");
+            StringBuilder sb = new StringBuilder();
+            int di = 0;
+            for (int i = 0; i < mascara.length() && di < digits.length(); i++) {
+                char mc = mascara.charAt(i);
+                if (mc == '#') sb.append(digits.charAt(di++));
+                else sb.append(mc);
+            }
+            campo.setText(sb.toString());
+            if (sb.length() > 0) campo.setSelection(sb.length());
+            editando = false;
+        }
     }
 }
