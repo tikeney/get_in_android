@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="?attr/colorSurface"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardElevation="4dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -49,6 +49,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Modo Escuro"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
+                        app:thumbTint="?attr/colorPrimary"
+                        app:trackTint="?attr/colorPrimaryContainer" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="8dp"
+                        android:background="?attr/colorOutlineVariant"
+                        android:alpha="0.2" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchShowLabels"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Legendas no Menu"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="16sp"
                         app:thumbTint="?attr/colorPrimary"
@@ -74,7 +91,7 @@
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="?attr/colorSurface"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardElevation="4dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -128,7 +145,7 @@
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="?attr/colorSurface"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardElevation="4dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout

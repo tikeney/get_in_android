@@ -37,14 +37,15 @@ public class AccessManager {
 
     public static int getStartDestinationId(UsuarioDetalhado user) {
         if (isPortaria(user)) return R.id.nav_checkIn;
-        if (isAdmin(user) || isGerente(user)) return R.id.nav_historico;
+        if (isAdmin(user) || isGerente(user)) return R.id.nav_monitoramento;
         return R.id.nav_perfil;
     }
 
     public static boolean isAllowedDestination(UsuarioDetalhado user, int destinationId) {
         if (destinationId == R.id.nav_perfil || 
             destinationId == R.id.nav_notificacoes ||
-            destinationId == R.id.menu_configuracoes) return true;
+            destinationId == R.id.menu_configuracoes ||
+            destinationId == R.id.nav_usuario_detalhado) return true;
 
         if (isAdmin(user)) return true;
         
@@ -53,13 +54,12 @@ public class AccessManager {
         }
         
         if (isSupervisor(user)) {
-            return destinationId == R.id.nav_autorizacao || 
-                   destinationId == R.id.nav_historico;
+            return destinationId == R.id.nav_monitoramento;
         }
         
         if (isPortaria(user)) {
             return destinationId == R.id.nav_checkIn || 
-                   destinationId == R.id.nav_historico;
+                   destinationId == R.id.nav_monitoramento;
         }
         
         return false;

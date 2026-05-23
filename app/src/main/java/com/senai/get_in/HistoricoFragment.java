@@ -1,8 +1,6 @@
 package com.senai.get_in;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +19,7 @@ import com.senai.get_in.databinding.FragmentHistoricoBinding;
 import com.senai.get_in.model.LogAcesso;
 import com.senai.get_in.model.LogResponse;
 import com.senai.get_in.utils.NetworkUtils;
+import com.senai.get_in.utils.SearchableFragment;
 import com.senai.get_in.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HistoricoFragment extends Fragment {
+public class HistoricoFragment extends Fragment implements SearchableFragment {
 
     private static final String TAG = "HistoricoFragment";
     private FragmentHistoricoBinding binding;
@@ -39,6 +38,7 @@ public class HistoricoFragment extends Fragment {
     private LogRepository repository;
     private List<LogAcesso> listaCompleta = new ArrayList<>();
     private List<LogAcesso> listaFiltrada = new ArrayList<>();
+    private String currentQuery = "";
 
     @Nullable
     @Override
@@ -56,7 +56,6 @@ public class HistoricoFragment extends Fragment {
         repository = new LogRepository(requireContext());
         setupRecyclerView();
         setupFilters();
-        setupSearch();
         setupSwipeRefresh();
         
         loadData(false);
@@ -88,9 +87,7 @@ public class HistoricoFragment extends Fragment {
                     listaCompleta = response.body().getData();
                     if (listaCompleta == null) listaCompleta = new ArrayList<>();
                     
-                    updateCounters();
                     filterList();
-                    
                     binding.recyclerHistorico.scheduleLayoutAnimation();
                 } else {
                     ToastUtils.showError(getContext(), "Erro ao carregar histórico");
@@ -135,28 +132,20 @@ public class HistoricoFragment extends Fragment {
         });
     }
 
-    private void setupSearch() {
-        binding.etBusca.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterList();
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+    @Override
+    public void onSearch(String query) {
+        this.currentQuery = query.toLowerCase().trim();
+        filterList();
     }
 
     private void filterList() {
         if (listaCompleta == null || binding == null) return;
         
-        String query = binding.etBusca.getText().toString().toLowerCase().trim();
         int checkedChipId = binding.chipGroupFiltros.getCheckedChipId();
 
         listaFiltrada = listaCompleta.stream()
-                .filter(l -> (l.getUsuarioNome() != null && l.getUsuarioNome().toLowerCase().contains(query)) || 
-                             (l.getDepartamentoUsuario() != null && l.getDepartamentoUsuario().toLowerCase().contains(query)))
+                .filter(l -> (l.getUsuarioNome() != null && l.getUsuarioNome().toLowerCase().contains(currentQuery)) || 
+                             (l.getDepartamentoUsuario() != null && l.getDepartamentoUsuario().toLowerCase().contains(currentQuery)))
                 .filter(l -> {
                     boolean isNaFabrica = l.getDataSaida() == null || l.getDataSaida().isEmpty();
                     if (checkedChipId == R.id.chipNaFabrica) {
@@ -177,19 +166,6 @@ public class HistoricoFragment extends Fragment {
             binding.layoutVazio.setVisibility(View.GONE);
             binding.recyclerHistorico.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void updateCounters() {
-        if (listaCompleta == null || binding == null) return;
-
-        int total = listaCompleta.size();
-        long naFabrica = listaCompleta.stream()
-                .filter(l -> l.getDataSaida() == null || l.getDataSaida().isEmpty())
-                .count();
-
-        binding.tvContadorHoje.setText(String.valueOf(total));
-        binding.tvContadorNaFabrica.setText(String.valueOf(naFabrica));
-        binding.tvContadorNegados.setText("0"); 
     }
 
     @Override

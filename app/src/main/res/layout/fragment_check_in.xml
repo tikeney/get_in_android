@@ -9,7 +9,6 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorSurface"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -17,7 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:paddingBottom="100dp"
+            android:clipToPadding="false">
 
             <!-- Seção Identificação -->
             <TextView
@@ -28,170 +29,188 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.1"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="12dp"
+                android:layout_marginStart="4dp"/>
 
-            <!-- Botão de Foto -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/btnAdicionarFoto"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/fundo_tracejado_foto"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
 
-                <ImageView
-                    android:id="@+id/iv_icone_perfil"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:src="@drawable/outline_person_24"
-                    android:scaleType="centerCrop"
-                    android:clipToOutline="true"
-                    android:background="@drawable/bg_tag_status"
-                    android:backgroundTint="?attr/colorSurfaceVariant"
-                    android:padding="8dp"
-                    app:tint="?attr/colorPrimary"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_titulo_foto"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Foto do Visitante"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/iv_icone_perfil"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/tv_subtitulo_foto" />
-
-                <TextView
-                    android:id="@+id/tv_subtitulo_foto"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Clique para capturar ou selecionar"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:textSize="13sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/iv_icone_perfil"
-                    app:layout_constraintStart_toStartOf="@+id/tv_titulo_foto"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_titulo_foto"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputNome"
-                style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Nome Completo"
-                app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:startIconDrawable="@drawable/outline_person_24"
-                app:startIconTint="?attr/colorOnSurfaceVariant">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNome"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/colorOnSurface"
-                    android:inputType="textPersonName" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/inputCPF"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="16dp"
-                    android:hint="CPF"
-                    app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                    app:boxStrokeWidth="0dp"
-                    app:boxStrokeWidthFocused="0dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etCPF"
+                    <!-- Botão de Foto -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/btnAdicionarFoto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/colorOnSurface"
-                        android:inputType="number" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:padding="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="@drawable/fundo_tracejado_foto"
+                        android:layout_marginBottom="16dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/inputTelefone"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="16dp"
-                    android:hint="Telefone"
-                    app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                    app:boxStrokeWidth="0dp"
-                    app:boxStrokeWidthFocused="0dp">
+                        <ImageView
+                            android:id="@+id/iv_icone_perfil"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:src="@drawable/outline_person_24"
+                            android:scaleType="centerCrop"
+                            android:clipToOutline="true"
+                            android:background="@drawable/bg_tag_status"
+                            android:backgroundTint="?attr/colorSurfaceVariant"
+                            android:padding="8dp"
+                            app:tint="?attr/colorPrimary"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etTelefone"
+                        <TextView
+                            android:id="@+id/tv_titulo_foto"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="Foto do Visitante"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/iv_icone_perfil"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toTopOf="@+id/tv_subtitulo_foto" />
+
+                        <TextView
+                            android:id="@+id/tv_subtitulo_foto"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Clique para capturar ou selecionar"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="13sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/iv_icone_perfil"
+                            app:layout_constraintStart_toStartOf="@+id/tv_titulo_foto"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_titulo_foto"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/inputNome"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/colorOnSurface"
-                        android:inputType="phone" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                        android:layout_marginBottom="12dp"
+                        android:hint="Nome Completo"
+                        app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
+                        app:startIconDrawable="@drawable/outline_person_24"
+                        app:startIconTint="?attr/colorOnSurfaceVariant">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputEmpresa"
-                style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="Empresa"
-                app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNome"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnSurface"
+                            android:inputType="textPersonName" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etEmpresa"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/colorOnSurface"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputMotivo"
-                style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                android:hint="Motivo da Visita"
-                app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp">
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputCPF"
+                            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="12dp"
+                            android:hint="CPF"
+                            app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etMotivo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/colorOnSurface"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etCPF"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorOnSurface"
+                                android:inputType="number" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputTelefone"
+                            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Telefone"
+                            app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etTelefone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorOnSurface"
+                                android:inputType="phone" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/inputEmpresa"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="Empresa"
+                        app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEmpresa"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnSurface"
+                            android:inputType="text" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/inputMotivo"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Motivo da Visita"
+                        app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etMotivo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnSurface"
+                            android:inputType="text" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Seção Crachá -->
             <TextView
@@ -202,74 +221,92 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.1"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="12dp"
+                android:layout_marginStart="4dp" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/btnAdicionarCracha"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/fundo_cracha"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="32dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
 
-                <ImageView
-                    android:id="@+id/iv_icone_cracha"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/outline_badge_24"
-                    app:tint="?attr/colorOnPrimary"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_titulo_cracha"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Vincular Crachá"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/iv_icone_cracha"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/tv_subtitulo_cracha" />
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/tv_subtitulo_cracha"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Aproxime o crachá do leitor RFID"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:alpha="0.7"
-                    android:textSize="13sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/iv_icone_cracha"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_titulo_cracha"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/btnAdicionarCracha"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="@drawable/fundo_cracha"
+                        android:layout_marginBottom="20dp">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <ImageView
+                            android:id="@+id/iv_icone_cracha"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/outline_badge_24"
+                            app:tint="?attr/colorOnPrimary"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Setores Permitidos"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textSize="14sp"
-                android:layout_marginBottom="8dp" />
+                        <TextView
+                            android:id="@+id/tv_titulo_cracha"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="Vincular Crachá"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorOnPrimary"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/iv_icone_cracha"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toTopOf="@+id/tv_subtitulo_cracha" />
 
-            <GridLayout
-                android:id="@+id/chipGroupSetores"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:orientation="horizontal"
-                android:alignmentMode="alignMargins"
-                android:layout_marginBottom="40dp" />
+                        <TextView
+                            android:id="@+id/tv_subtitulo_cracha"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Aproxime o crachá do leitor RFID"
+                            android:textColor="?attr/colorOnPrimary"
+                            android:alpha="0.7"
+                            android:textSize="13sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/iv_icone_cracha"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_titulo_cracha"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Setores Permitidos"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="12dp" />
+
+                    <GridLayout
+                        android:id="@+id/chipGroupSetores"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnCount="2"
+                        android:orientation="horizontal"
+                        android:alignmentMode="alignMargins"
+                        android:layout_marginBottom="8dp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -285,7 +322,8 @@
                     android:textStyle="bold"
                     app:cornerRadius="12dp"
                     android:backgroundTint="?attr/colorPrimary"
-                    android:textColor="?attr/colorOnPrimary" />
+                    android:textColor="?attr/colorOnPrimary"
+                    app:elevation="4dp" />
 
                 <ProgressBar
                     android:id="@+id/progressBarCheckIn"
@@ -295,6 +333,11 @@
                     android:visibility="gone"
                     android:indeterminateTint="?attr/colorOnPrimary" />
             </FrameLayout>
+
+            <!-- Spacer para não esconder conteúdo atrás do BottomNav flutuante -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

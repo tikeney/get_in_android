@@ -1,174 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeHistorico"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/windowBackground">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarHistorico"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        app:elevation="0dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="20dp">
-
-            <!-- Cards de estatísticas (Mantive pois são funcionais) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <!-- Card: Hoje -->
-                <LinearLayout
-                    android:id="@+id/cardHoje"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@drawable/bg_stat_card"
-                    android:paddingVertical="12dp">
-
-                    <TextView
-                        android:id="@+id/tvContadorHoje"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="12"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hoje"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        android:alpha="0.8"
-                        android:textSize="11sp" />
-                </LinearLayout>
-
-                <!-- Card: Na fábrica -->
-                <LinearLayout
-                    android:id="@+id/cardNaFabrica"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginHorizontal="4dp"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@drawable/bg_stat_card"
-                    android:paddingVertical="12dp">
-
-                    <TextView
-                        android:id="@+id/tvContadorNaFabrica"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Na fábrica"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        android:alpha="0.8"
-                        android:textSize="11sp" />
-                </LinearLayout>
-
-                <!-- Card: Negados -->
-                <LinearLayout
-                    android:id="@+id/cardNegados"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@drawable/bg_stat_card"
-                    android:paddingVertical="12dp">
-
-                    <TextView
-                        android:id="@+id/tvContadorNegados"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Negados"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        android:alpha="0.8"
-                        android:textSize="11sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-        </LinearLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- ===== CONTEÚDO SCROLLÁVEL ===== -->
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeHistorico"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/windowBackground">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="24dp">
+            android:paddingBottom="24dp">
 
             <!-- Filtros por Chip -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"
                 android:paddingHorizontal="20dp"
                 android:paddingTop="16dp"
-                android:paddingBottom="8dp">
+                android:paddingBottom="8dp"
+                android:scrollbars="none">
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroupFiltros"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:singleSelection="true"
+                    app:chipSpacingHorizontal="8dp"
                     app:selectionRequired="true"
-                    app:chipSpacingHorizontal="8dp">
+                    app:singleSelection="true">
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipTodos"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Todos"
                         android:checked="true"
+                        android:text="Todos"
                         android:textColor="?attr/colorOnSurface"
+                        app:checkedIconVisible="false"
                         app:chipBackgroundColor="?attr/colorSurfaceVariant"
                         app:chipStrokeWidth="0dp"
-                        app:checkedIconVisible="false"
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent" />
 
                     <com.google.android.material.chip.Chip
@@ -178,9 +55,9 @@
                         android:layout_height="wrap_content"
                         android:text="Permitido"
                         android:textColor="?attr/colorOnSurface"
+                        app:checkedIconVisible="false"
                         app:chipBackgroundColor="?attr/colorSurfaceVariant"
-                        app:chipStrokeWidth="0dp"
-                        app:checkedIconVisible="false" />
+                        app:chipStrokeWidth="0dp" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipNegado"
@@ -189,9 +66,9 @@
                         android:layout_height="wrap_content"
                         android:text="Negado"
                         android:textColor="?attr/colorOnSurface"
+                        app:checkedIconVisible="false"
                         app:chipBackgroundColor="?attr/colorSurfaceVariant"
-                        app:chipStrokeWidth="0dp"
-                        app:checkedIconVisible="false" />
+                        app:chipStrokeWidth="0dp" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipSaiu"
@@ -200,9 +77,9 @@
                         android:layout_height="wrap_content"
                         android:text="Saiu"
                         android:textColor="?attr/colorOnSurface"
+                        app:checkedIconVisible="false"
                         app:chipBackgroundColor="?attr/colorSurfaceVariant"
-                        app:chipStrokeWidth="0dp"
-                        app:checkedIconVisible="false" />
+                        app:chipStrokeWidth="0dp" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipNaFabrica"
@@ -211,9 +88,9 @@
                         android:layout_height="wrap_content"
                         android:text="Na fábrica"
                         android:textColor="?attr/colorOnSurface"
+                        app:checkedIconVisible="false"
                         app:chipBackgroundColor="?attr/colorSurfaceVariant"
-                        app:chipStrokeWidth="0dp"
-                        app:checkedIconVisible="false" />
+                        app:chipStrokeWidth="0dp" />
 
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
@@ -221,8 +98,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="?attr/colorOutlineVariant"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp"
+                android:background="?attr/colorOutlineVariant" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -230,45 +107,15 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="20dp">
 
-                <!-- Campo de Busca -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/inputBusca"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                    app:boxCornerRadiusBottomEnd="25dp"
-                    app:boxCornerRadiusBottomStart="25dp"
-                    app:boxCornerRadiusTopEnd="25dp"
-                    app:boxCornerRadiusTopStart="25dp"
-                    app:boxStrokeWidth="0dp"
-                    app:boxStrokeWidthFocused="0dp"
-                    app:hintEnabled="false"
-                    app:startIconDrawable="@drawable/outline_person_24"
-                    app:startIconTint="?attr/colorOnSurfaceVariant">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etBusca"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:hint="Buscar visitante ou setor..."
-                        android:textColor="?attr/colorOnSurface"
-                        android:textColorHint="?attr/colorOnSurfaceVariant"
-                        android:inputType="text"
-                        android:paddingVertical="0dp"
-                        android:textSize="15sp"
-                        android:imeOptions="actionSearch" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <TextView
+                    android:id="@+id/tvDataHistorico"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="HOJE — 31 MAR 2025"
+                    android:layout_marginBottom="16dp"
+                    android:text="REGISTROS RECENTES"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="16dp" />
+                    android:textStyle="bold" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -288,15 +135,15 @@
                         android:id="@+id/layoutVazio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:gravity="center"
+                        android:orientation="vertical"
                         android:paddingVertical="48dp"
                         android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/historico_vazio"
+                            android:text="Nenhum registro encontrado"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:textSize="16sp" />
 
@@ -308,21 +155,29 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:visibility="gone">
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
+
                             <include layout="@layout/shimmer_item_historico" />
+
                             <include layout="@layout/shimmer_item_historico" />
+
                             <include layout="@layout/shimmer_item_historico" />
+
                             <include layout="@layout/shimmer_item_historico" />
                         </LinearLayout>
                     </com.facebook.shimmer.ShimmerFrameLayout>
                 </FrameLayout>
+
+                <!-- Spacer para não esconder conteúdo atrás do BottomNav flutuante -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" />
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>

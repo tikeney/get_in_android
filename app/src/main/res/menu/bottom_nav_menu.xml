@@ -4,18 +4,17 @@
         android:id="@+id/nav_checkIn"
         android:icon="@drawable/outline_add_24"
         android:title="@string/menu_portaria"/>
+
     <item
-        android:id="@+id/nav_autorizacao"
-        android:icon="@drawable/outline_checklist_rtl_24"
-        android:title="@string/menu_pendencias"/>
+        android:id="@+id/nav_monitoramento"
+        android:icon="@drawable/outline_list_alt_24"
+        android:title="Atividade"/>
+
     <item
         android:id="@+id/nav_perfil"
         android:icon="@drawable/outline_person_24"
         android:title="@string/menu_perfil"/>
-    <item
-        android:id="@+id/nav_historico"
-        android:icon="@drawable/outline_list_alt_24"
-        android:title="@string/menu_historico"/>
+
     <item
         android:id="@+id/nav_notificacoes"
         android:icon="@drawable/outline_notifications_24"

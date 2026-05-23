@@ -20,22 +20,26 @@ import com.senai.get_in.databinding.FragmentAutorizacaoBinding;
 import com.senai.get_in.model.Requisicao;
 import com.senai.get_in.model.RequisicaoResponse;
 import com.senai.get_in.utils.NetworkUtils;
+import com.senai.get_in.utils.SearchableFragment;
 import com.senai.get_in.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.OnItemClickListener {
+public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.OnItemClickListener, SearchableFragment {
 
     private static final String TAG = "AutorizacaoFragment";
     private FragmentAutorizacaoBinding binding;
     private RequisicaoAdapter adapter;
     private RequisicaoRepository repository;
-    private List<Requisicao> listaRequisicoes = new ArrayList<>();
+    private List<Requisicao> listaCompleta = new ArrayList<>();
+    private List<Requisicao> listaFiltrada = new ArrayList<>();
+    private String currentQuery = "";
 
     @Nullable
     @Override
@@ -60,7 +64,7 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
     }
 
     private void setupRecyclerView() {
-        adapter = new RequisicaoAdapter(listaRequisicoes, this);
+        adapter = new RequisicaoAdapter(listaFiltrada, this);
         binding.recyclerRequisicao.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerRequisicao.setAdapter(adapter);
         
@@ -85,21 +89,15 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
                 
                 if (response.isSuccessful() && response.body() != null) {
                     List<Requisicao> todas = response.body().getData();
-                    List<Requisicao> pendentes = new ArrayList<>();
+                    listaCompleta.clear();
                     if (todas != null) {
                         for (Requisicao r : todas) {
                             if (r.getStatus() != null && "pendente".equalsIgnoreCase(r.getStatus())) {
-                                pendentes.add(r);
+                                listaCompleta.add(r);
                             }
                         }
                     }
-                    
-                    listaRequisicoes.clear();
-                    listaRequisicoes.addAll(pendentes);
-                    adapter.notifyDataSetChanged();
-                    binding.recyclerRequisicao.scheduleLayoutAnimation();
-
-                    binding.layoutVazioAutorizacao.setVisibility(pendentes.isEmpty() ? View.VISIBLE : View.GONE);
+                    filterList();
                 } else {
                     ToastUtils.showError(getContext(), "Erro ao carregar dados (" + response.code() + ")");
                 }
@@ -113,6 +111,26 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
                 ToastUtils.showError(getContext(), "Sem conexão com o servidor");
             }
         });
+    }
+
+    @Override
+    public void onSearch(String query) {
+        this.currentQuery = query.toLowerCase().trim();
+        filterList();
+    }
+
+    private void filterList() {
+        if (listaCompleta == null || binding == null) return;
+
+        listaFiltrada.clear();
+        listaFiltrada.addAll(listaCompleta.stream()
+                .filter(r -> (r.getUsuarioNome() != null && r.getUsuarioNome().toLowerCase().contains(currentQuery)) ||
+                             (r.getEmpresa() != null && r.getEmpresa().toLowerCase().contains(currentQuery)))
+                .collect(Collectors.toList()));
+
+        adapter.notifyDataSetChanged();
+        binding.recyclerRequisicao.scheduleLayoutAnimation();
+        binding.layoutVazioAutorizacao.setVisibility(listaFiltrada.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void setLoading(boolean loading) {

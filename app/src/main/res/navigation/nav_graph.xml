@@ -18,25 +18,12 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_historico"
-        android:name="com.senai.get_in.HistoricoFragment"
-        android:label="Histórico">
+        android:id="@+id/nav_monitoramento"
+        android:name="com.senai.get_in.MonitoramentoFragment"
+        android:label="Atividade">
         <action
-            android:id="@+id/action_global_nav_historico"
-            app:destination="@id/nav_historico"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_autorizacao"
-        android:name="com.senai.get_in.AutorizacaoFragment"
-        android:label="Autorização">
-        <action
-            android:id="@+id/action_global_nav_autorizacao"
-            app:destination="@id/nav_autorizacao"
+            android:id="@+id/action_global_nav_monitoramento"
+            app:destination="@id/nav_monitoramento"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -76,6 +63,22 @@
         <action
             android:id="@+id/action_global_nav_notificacoes"
             app:destination="@id/nav_notificacoes"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_usuario_detalhado"
+        android:name="com.senai.get_in.UsuarioDetalhadoFragment"
+        android:label="Detalhes do Usuário">
+        <argument
+            android:name="usuario_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_global_nav_usuario_detalhado"
+            app:destination="@id/nav_usuario_detalhado"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"

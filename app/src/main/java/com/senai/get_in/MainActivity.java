@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -88,7 +89,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setupUI();
         setupNavigation();
+        applyBottomNavConfig();
         sincronizarDadosUsuario();
+    }
+
+    public void applyBottomNavConfig() {
+        if (tokenManager == null) return;
+        boolean showLabels = tokenManager.shouldShowLabels();
+        
+        // Ajusta visibilidade dos textos
+        binding.bottomNavigation.setLabelVisibilityMode(
+            showLabels ? com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_LABELED 
+                       : com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_UNLABELED
+        );
+
+        // Ajusta altura para ficar mais fino no modo compacto
+        ViewGroup.LayoutParams params = binding.bottomNavigation.getLayoutParams();
+        params.height = showLabels ? (int) (80 * getResources().getDisplayMetrics().density) 
+                                   : (int) (64 * getResources().getDisplayMetrics().density);
+        binding.bottomNavigation.setLayoutParams(params);
     }
 
     private void setupUI() {
@@ -99,10 +118,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportActionBar().setTitle("");
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.drawerLayout, (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            
+            // Aplica padding no topo da AppBar da Activity (quando visível)
             binding.appBar.setPadding(0, systemBars.top, 0, 0);
-            binding.bottomNavigation.setPadding(0, 0, 0, systemBars.bottom);
+            
+            // Ajusta a margem inferior do card do menu para flutuar acima da barra de navegação do sistema
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) binding.cardBottomNav.getLayoutParams();
+            lp.bottomMargin = systemBars.bottom + (int)(24 * getResources().getDisplayMetrics().density);
+            binding.cardBottomNav.setLayoutParams(lp);
+            
             return insets;
         });
 
@@ -144,6 +170,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             int id = destination.getId();
             configurarToolbar(id);
+
+            // Controle de visibilidade da AppBar e BottomNav
+            if (id == R.id.nav_usuario_detalhado) {
+                binding.appBar.setVisibility(View.GONE);
+                // Removemos o padding para que o fragmento ocupe o topo real
+                binding.appBar.setPadding(0, 0, 0, 0);
+            } else {
+                binding.appBar.setVisibility(View.VISIBLE);
+                // O listener de insets cuidará do padding novamente
+            }
 
             Menu navMenu = binding.navView.getMenu();
             for (int i = 0; i < navMenu.size(); i++) {
@@ -191,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         
         restrictMenu(binding.navView.getMenu());
         restrictMenu(binding.bottomNavigation.getMenu());
+        
         binding.bottomNavigation.setVisibility(View.VISIBLE);
     }
 
@@ -225,16 +262,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (destinationId == R.id.menu_configuracoes) {
             binding.tvToolbarTitle.setText("Configurações");
-        } else if (destinationId == R.id.nav_autorizacao) {
-            binding.tvToolbarTitle.setText("Autorizações");
+        } else if (destinationId == R.id.nav_monitoramento) {
+            binding.tvToolbarTitle.setText("Atividade");
         } else if (destinationId == R.id.nav_checkIn) {
             binding.tvToolbarTitle.setText("Portaria");
         } else if (destinationId == R.id.nav_perfil) {
             binding.tvToolbarTitle.setText("Meu Perfil");
-        } else if (destinationId == R.id.nav_historico) {
-            binding.tvToolbarTitle.setText("Histórico de Acessos");
         } else if (destinationId == R.id.nav_notificacoes) {
             binding.tvToolbarTitle.setText("Notificações");
+        } else if (destinationId == R.id.nav_usuario_detalhado) {
+            binding.tvToolbarTitle.setText("Detalhes");
         }
     }
 

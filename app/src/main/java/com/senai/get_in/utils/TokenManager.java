@@ -19,6 +19,7 @@ public class TokenManager {
     private static final String KEY_TOKEN = "auth_token";
     private static final String KEY_USER_DATA = "user_data";
     private static final String KEY_DARK_MODE = "dark_mode";
+    private static final String KEY_SHOW_LABELS = "show_nav_labels";
     
     private SharedPreferences prefs;
     private Gson gson;
@@ -71,6 +72,14 @@ public class TokenManager {
 
     public boolean isDarkMode() {
         return prefs.getBoolean(KEY_DARK_MODE, false);
+    }
+
+    public void setShowLabels(boolean show) {
+        prefs.edit().putBoolean(KEY_SHOW_LABELS, show).apply();
+    }
+
+    public boolean shouldShowLabels() {
+        return prefs.getBoolean(KEY_SHOW_LABELS, false);
     }
 
     public void clear() {
