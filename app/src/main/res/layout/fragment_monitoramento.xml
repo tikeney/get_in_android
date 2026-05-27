@@ -1,196 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/windowBackground">
+    android:background="#F8F9FA">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarMonitoramento"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/primary"
         app:elevation="0dp"
         app:liftOnScroll="false">
 
-        <!-- Estatísticas: Somente no topo -->
+        <!-- Header Compacto: Altura mínima para maximizar visualização da lista -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="12dp"
-            android:paddingBottom="8dp"
-            app:layout_scrollFlags="scroll">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:weightSum="3">
 
+            <!-- VISITANTES (ESQUERDA) -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
-
-                <!-- Card: Hoje -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardHoje"
-                    android:layout_width="0dp"
+                android:layout_weight="0.8"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/tvContadorVisitantes"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="?attr/colorPrimaryContainer"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingVertical="8dp">
-                        <TextView
-                            android:id="@+id/tvContadorHoje"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:alpha="0.8"
-                            android:text="Hoje"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:textSize="10sp"
-                            android:layout_marginStart="4dp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Card: Na fábrica -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardNaFabrica"
-                    android:layout_width="0dp"
+                    android:text="0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="3dp"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="?attr/colorPrimaryContainer"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingVertical="8dp">
-                        <TextView
-                            android:id="@+id/tvContadorNaFabrica"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:alpha="0.8"
-                            android:text="Fábrica"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:textSize="10sp"
-                            android:layout_marginStart="4dp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    android:text="VISITANTES"
+                    android:textColor="#B0C4DE"
+                    android:textSize="7sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-                <!-- Card: Negados -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardNegados"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="?attr/colorPrimaryContainer"
-                    app:strokeWidth="0dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
+            <!-- SOMA TOTAL (CENTRO - DESTAQUE) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1.4"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#1A3B5C"
+                app:strokeWidth="1dp"
+                app:strokeColor="#33FFFFFF">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/tvContadorTotal"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingVertical="8dp">
-                        <TextView
-                            android:id="@+id/tvContadorNegados"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:alpha="0.8"
-                            android:text="Recusados"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:textSize="10sp"
-                            android:layout_marginStart="4dp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                        android:text="0"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TOTAL NO LOCAL"
+                        android:textColor="#B0C4DE"
+                        android:textSize="7sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- FUNCIONÁRIOS (DIREITA) -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/tvContadorFuncionarios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FUNCIONÁRIOS"
+                    android:textColor="#B0C4DE"
+                    android:textSize="7sp"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Busca Compartilhada: Reaparece ao rolar para cima -->
+        <!-- Busca Discreta -->
         <LinearLayout
-            android:id="@+id/layoutSharedSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingBottom="12dp"
-            app:layout_scrollFlags="scroll|enterAlways">
+            android:paddingHorizontal="12dp"
+            android:paddingBottom="4dp">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputSharedBusca"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                app:boxCornerRadiusBottomEnd="25dp"
-                app:boxCornerRadiusBottomStart="25dp"
-                app:boxCornerRadiusTopEnd="25dp"
-                app:boxCornerRadiusTopStart="25dp"
+                app:boxBackgroundColor="#152F4A"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="0dp"
                 app:hintEnabled="false"
-                app:startIconDrawable="@drawable/outline_person_24"
-                app:startIconTint="?attr/colorOnSurfaceVariant">
+                app:startIconDrawable="@android:drawable/ic_menu_search"
+                app:startIconTint="#B0C4DE"
+                app:startIconSize="12dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSharedBusca"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:hint="O que você está procurando?"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:paddingVertical="0dp"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textColorHint="?attr/colorOnSurfaceVariant"
-                    android:textSize="14sp" />
+                    android:layout_height="28dp"
+                    android:hint="Pesquisar..."
+                    android:textColor="@color/white"
+                    android:textColorHint="#B0C4DE"
+                    android:textSize="11sp"
+                    android:paddingVertical="0dp" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayoutMonitoramento"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            app:tabGravity="fill"
+            android:layout_height="26dp"
+            android:background="@color/primary"
+            app:tabIndicatorColor="@color/white"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="#B0C4DE"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="?attr/colorOnPrimary"
-            app:tabTextColor="?attr/colorOnPrimary"
-            app:tabIndicatorColor="?attr/colorOnPrimary"
-            app:tabIndicatorHeight="3dp"
-            app:tabTextAppearance="@style/TextAppearance.Material3.TitleSmall"
-            app:tabRippleColor="#33FFFFFF" />
+            app:tabGravity="fill"
+            app:tabIndicatorHeight="1.5dp"
+            app:tabTextAppearance="@style/TextAppearance.Material3.LabelSmall" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -198,7 +160,6 @@
         android:id="@+id/viewPagerMonitoramento"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:attr/windowBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

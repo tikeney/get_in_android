@@ -44,6 +44,7 @@
     <color name="status_negado_text">#C62828</color>
     <color name="pending_border">#FFC107</color> <!-- Yellow for Pending -->
 
+
     <!-- UI Elements -->
     <color name="InputLoginBackground">#F1F3F4</color>
 

@@ -1,6 +1,8 @@
 package com.senai.get_in;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,12 +36,23 @@ import retrofit2.Response;
 public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.OnItemClickListener, SearchableFragment {
 
     private static final String TAG = "AutorizacaoFragment";
+    private static final long REFRESH_INTERVAL = 30000; // 30 segundos
+
     private FragmentAutorizacaoBinding binding;
     private RequisicaoAdapter adapter;
     private RequisicaoRepository repository;
     private List<Requisicao> listaCompleta = new ArrayList<>();
     private List<Requisicao> listaFiltrada = new ArrayList<>();
     private String currentQuery = "";
+
+    private final Handler refreshHandler = new Handler(Looper.getMainLooper());
+    private final Runnable refreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            carregarRequisicoes(true);
+            refreshHandler.postDelayed(this, REFRESH_INTERVAL);
+        }
+    };
 
     @Nullable
     @Override
@@ -60,7 +73,18 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
         binding.containerAutorizacao.startAnimation(slideUp);
 
         setupRecyclerView();
-        carregarRequisicoes();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshHandler.post(refreshRunnable);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        refreshHandler.removeCallbacks(refreshRunnable);
     }
 
     private void setupRecyclerView() {
@@ -72,13 +96,13 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
         binding.recyclerRequisicao.setLayoutAnimation(animation);
     }
 
-    private void carregarRequisicoes() {
+    private void carregarRequisicoes(boolean isBackgroundRefresh) {
         if (!NetworkUtils.isOnline(getContext())) {
-            ToastUtils.showError(getContext(), "Sem conexão com a internet.");
+            if (!isBackgroundRefresh) ToastUtils.showError(getContext(), "Sem conexão com a internet.");
             return;
         }
 
-        setLoading(true);
+        if (!isBackgroundRefresh) setLoading(true);
         binding.layoutVazioAutorizacao.setVisibility(View.GONE);
 
         repository.getRequisicoes(new Callback<RequisicaoResponse>() {
@@ -99,7 +123,7 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
                     }
                     filterList();
                 } else {
-                    ToastUtils.showError(getContext(), "Erro ao carregar dados (" + response.code() + ")");
+                    if (!isBackgroundRefresh) ToastUtils.showError(getContext(), "Erro ao carregar dados (" + response.code() + ")");
                 }
             }
 
@@ -108,7 +132,7 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
                 if (!isAdded() || binding == null) return;
                 setLoading(false);
                 Log.e(TAG, "Falha na conexão: " + t.getMessage());
-                ToastUtils.showError(getContext(), "Sem conexão com o servidor");
+                if (!isBackgroundRefresh) ToastUtils.showError(getContext(), "Sem conexão com o servidor");
             }
         });
     }
@@ -129,12 +153,12 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
                 .collect(Collectors.toList()));
 
         adapter.notifyDataSetChanged();
-        binding.recyclerRequisicao.scheduleLayoutAnimation();
+        // scheduleLayoutAnimation removed to avoid jitter during background refresh
         binding.layoutVazioAutorizacao.setVisibility(listaFiltrada.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void setLoading(boolean loading) {
-        if (loading) {
+        if (loading && listaFiltrada.isEmpty()) {
             binding.shimmerAutorizacao.setVisibility(View.VISIBLE);
             binding.shimmerAutorizacao.startShimmer();
             binding.recyclerRequisicao.setVisibility(View.GONE);
@@ -173,10 +197,10 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
                 if (!isAdded() || binding == null) return;
                 if (response.isSuccessful()) {
                     ToastUtils.showSuccess(getContext(), "Sucesso!");
-                    carregarRequisicoes();
+                    carregarRequisicoes(false);
                 } else {
                     setLoading(false);
-                    ToastUtils.showError(getContext(), "Erro ao atualizar");
+                    ToastUtils.showError(getContext(), "Erro ao atualizar status");
                 }
             }
 
