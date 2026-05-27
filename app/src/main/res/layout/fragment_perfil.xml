@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     android:background="?android:attr/windowBackground">
 
+    <com.senai.get_in.utils.ParticlesView
+        android:id="@+id/particlesView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
