@@ -29,6 +29,8 @@
 
         <!-- Force white hamburger icon -->
         <item name="drawerArrowStyle">@style/WhiteDrawerArrowToggle</item>
+
+        <item name="colorIconBackground">@color/md_theme_light_icon_bg</item>
     </style>
 
     <style name="Theme.Get_In" parent="Base.Theme.Get_In" />

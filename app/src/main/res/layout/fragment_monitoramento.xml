@@ -126,8 +126,7 @@
                 app:boxStrokeWidthFocused="0dp"
                 app:hintEnabled="false"
                 app:startIconDrawable="@android:drawable/ic_menu_search"
-                app:startIconTint="#B0C4DE"
-                app:startIconSize="12dp">
+                app:startIconTint="#B0C4DE">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSharedBusca"

@@ -35,6 +35,8 @@
 
         <!-- Force white hamburger icon -->
         <item name="drawerArrowStyle">@style/WhiteDrawerArrowToggle</item>
+
+        <item name="colorIconBackground">@color/md_theme_dark_icon_bg</item>
     </style>
 
     <style name="Widget.App.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
