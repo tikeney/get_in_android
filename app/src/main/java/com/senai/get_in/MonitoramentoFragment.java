@@ -21,11 +21,15 @@ import com.senai.get_in.api.RetrofitClient;
 import com.senai.get_in.databinding.FragmentMonitoramentoBinding;
 import com.senai.get_in.model.LogAcesso;
 import com.senai.get_in.model.LogResponse;
+import com.senai.get_in.model.UsuarioDetalhado;
 import com.senai.get_in.model.VisitanteLocal;
 import com.senai.get_in.model.VisitanteLocalResponse;
+import com.senai.get_in.utils.AccessManager;
 import com.senai.get_in.utils.SearchableFragment;
+import com.senai.get_in.utils.TokenManager;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,11 +94,7 @@ public class MonitoramentoFragment extends Fragment {
         binding.viewPagerMonitoramento.setAdapter(adapter);
 
         new TabLayoutMediator(binding.tabLayoutMonitoramento, binding.viewPagerMonitoramento, (tab, position) -> {
-            switch (position) {
-                case 0: tab.setText("Pendentes"); break;
-                case 1: tab.setText("Histórico"); break;
-                case 2: tab.setText("Equipe"); break;
-            }
+            tab.setText(adapter.getTitle(position));
         }).attach();
 
         binding.viewPagerMonitoramento.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -128,6 +128,11 @@ public class MonitoramentoFragment extends Fragment {
     }
 
     private void atualizarDashboard() {
+        TokenManager tokenManager = new TokenManager(requireContext());
+        UsuarioDetalhado user = tokenManager.getUserData();
+        final String meuSetor = user != null ? user.getDepartamentoNome() : null;
+        final boolean isAdmin = AccessManager.isAdmin(user);
+
         // 1. Busca Visitantes Ativos
         RetrofitClient.getApiService(requireContext()).getVisitantesLocal().enqueue(new Callback<VisitanteLocalResponse>() {
             @Override
@@ -135,7 +140,10 @@ public class MonitoramentoFragment extends Fragment {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
                     List<VisitanteLocal> lista = response.body().getDados();
                     if (lista != null) {
-                        countVisitantes = lista.stream().filter(v -> "Dentro".equalsIgnoreCase(v.getStatus())).count();
+                        countVisitantes = lista.stream()
+                                .filter(v -> v.getStatus() != null && "Dentro".equalsIgnoreCase(v.getStatus()))
+                                .filter(v -> isAdmin || meuSetor == null || (v.getSetor() != null && v.getSetor().contains(meuSetor)))
+                                .count();
                         updateHeaderUI();
                     }
                 }
@@ -146,14 +154,22 @@ public class MonitoramentoFragment extends Fragment {
             }
         });
 
-        // 2. Busca Logs para calcular Funcionários
+        // 2. Busca Logs para calcular Equipe
         RetrofitClient.getApiService(requireContext()).getLogs().enqueue(new Callback<LogResponse>() {
             @Override
             public void onResponse(@NonNull Call<LogResponse> call, @NonNull Response<LogResponse> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
                     List<LogAcesso> logs = response.body().getData();
                     if (logs != null) {
-                        long totalNoLocal = logs.stream().filter(l -> l.getDataSaida() == null || l.getDataSaida().isEmpty()).count();
+                        // Total de pessoas no local (Logs sem saída)
+                        long totalNoLocal = logs.stream()
+                                .filter(l -> l.getDataSaida() == null || l.getDataSaida().isEmpty())
+                                .filter(l -> isAdmin || meuSetor == null || (l.getDepartamentoUsuario() != null && l.getDepartamentoUsuario().equalsIgnoreCase(meuSetor)))
+                                .count();
+                        
+                        // Funcionários = Total no local - Visitantes (que também geram logs)
+                        // IMPORTANTE: vlocal já retorna quem está dentro. 
+                        // Se a view_logs incluir visitantes, precisamos subtrair.
                         countFuncionarios = Math.max(0, totalNoLocal - countVisitantes);
                         updateHeaderUI();
                     }

@@ -28,8 +28,8 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
+                android:layout_height="48dp"
+                android:minHeight="48dp"
                 app:navigationIconTint="?attr/colorOnPrimary"
                 app:title="">
 
@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingVertical="8dp">
+                    android:paddingVertical="0dp">
 
                     <TextView
                         android:id="@+id/tv_toolbar_title"

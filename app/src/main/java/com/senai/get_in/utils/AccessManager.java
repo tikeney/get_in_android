@@ -37,7 +37,7 @@ public class AccessManager {
 
     public static int getStartDestinationId(UsuarioDetalhado user) {
         if (isPortaria(user)) return R.id.nav_checkIn;
-        if (isAdmin(user) || isGerente(user)) return R.id.nav_monitoramento;
+        if (isAdmin(user) || isGerente(user) || isSupervisor(user)) return R.id.nav_monitoramento;
         return R.id.nav_perfil;
     }
 

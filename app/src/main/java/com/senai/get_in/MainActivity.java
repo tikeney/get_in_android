@@ -121,8 +121,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             
-            // Aplica padding no topo da AppBar da Activity (quando visível)
-            binding.appBar.setPadding(0, systemBars.top, 0, 0);
+            // Reduz o padding do topo para o texto ficar mais próximo da status bar
+            binding.appBar.setPadding(0, (int)(systemBars.top * 0.5), 0, 0);
             
             // Ajusta a margem inferior do card do menu para flutuar acima da barra de navegação do sistema
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) binding.cardBottomNav.getLayoutParams();
@@ -134,11 +134,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         binding.navView.setNavigationItemSelectedListener(this);
         
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        
-        binding.drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        if (AccessManager.isSupervisor(currentUser)) {
+            binding.drawerLayout.setDrawerLockMode(androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        } else {
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            
+            binding.drawerLayout.addDrawerListener(toggle);
+            toggle.syncState();
+        }
 
         // Botão Fechar no Header
         View headerView = binding.navHeader.getRoot();

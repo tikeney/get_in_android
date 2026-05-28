@@ -17,6 +17,7 @@ import com.senai.get_in.model.LogAcesso;
 import com.senai.get_in.model.LogResponse;
 import com.senai.get_in.model.UsuarioDetalhado;
 import com.senai.get_in.model.UsuarioResponse;
+import com.senai.get_in.utils.AccessManager;
 import com.senai.get_in.utils.SearchableFragment;
 import com.senai.get_in.utils.TokenManager;
 import com.senai.get_in.utils.ToastUtils;
@@ -122,10 +123,11 @@ public class EquipeFragment extends Fragment implements EquipeAdapter.OnItemClic
     private void filterList() {
         if (listaCompleta == null) return;
 
-        String meuSetor = currentUser != null ? currentUser.getDepartamentoNome() : null;
+        final String meuSetor = currentUser != null ? currentUser.getDepartamentoNome() : null;
+        final boolean isAdmin = AccessManager.isAdmin(currentUser);
 
         List<UsuarioDetalhado> filtrada = listaCompleta.stream()
-                .filter(u -> meuSetor == null || (u.getDepartamentoNome() != null && u.getDepartamentoNome().equalsIgnoreCase(meuSetor)))
+                .filter(u -> isAdmin || meuSetor == null || (u.getDepartamentoNome() != null && u.getDepartamentoNome().equalsIgnoreCase(meuSetor)))
                 .filter(u -> u.getNome().toLowerCase().contains(currentQuery) || (u.getCargo() != null && u.getCargo().toLowerCase().contains(currentQuery)))
                 .collect(Collectors.toList());
 

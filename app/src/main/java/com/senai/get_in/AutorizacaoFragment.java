@@ -21,9 +21,12 @@ import com.senai.get_in.api.RequisicaoRepository;
 import com.senai.get_in.databinding.FragmentAutorizacaoBinding;
 import com.senai.get_in.model.Requisicao;
 import com.senai.get_in.model.RequisicaoResponse;
+import com.senai.get_in.model.UsuarioDetalhado;
+import com.senai.get_in.utils.AccessManager;
 import com.senai.get_in.utils.NetworkUtils;
 import com.senai.get_in.utils.SearchableFragment;
 import com.senai.get_in.utils.ToastUtils;
+import com.senai.get_in.utils.TokenManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +108,9 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
         if (!isBackgroundRefresh) setLoading(true);
         binding.layoutVazioAutorizacao.setVisibility(View.GONE);
 
+        TokenManager tokenManager = new TokenManager(requireContext());
+        UsuarioDetalhado user = tokenManager.getUserData();
+        
         repository.getRequisicoes(new Callback<RequisicaoResponse>() {
             @Override
             public void onResponse(@NonNull Call<RequisicaoResponse> call, @NonNull Response<RequisicaoResponse> response) {
@@ -115,9 +121,16 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
                     List<Requisicao> todas = response.body().getData();
                     listaCompleta.clear();
                     if (todas != null) {
+                        final boolean isAdmin = AccessManager.isAdmin(user);
+                        final int meuSetor = user.getIdSetor();
+
                         for (Requisicao r : todas) {
+                            // Filtro de Pendentes
                             if (r.getStatus() != null && "pendente".equalsIgnoreCase(r.getStatus())) {
-                                listaCompleta.add(r);
+                                // Filtro de Setor para Supervisor
+                                if (isAdmin || meuSetor <= 0 || (r.getIdSetor() != null && r.getIdSetor() == meuSetor)) {
+                                    listaCompleta.add(r);
+                                }
                             }
                         }
                     }

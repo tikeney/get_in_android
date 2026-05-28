@@ -21,9 +21,12 @@ import com.senai.get_in.api.RequisicaoRepository;
 import com.senai.get_in.databinding.FragmentHistoricoBinding;
 import com.senai.get_in.model.Requisicao;
 import com.senai.get_in.model.RequisicaoResponse;
+import com.senai.get_in.model.UsuarioDetalhado;
+import com.senai.get_in.utils.AccessManager;
 import com.senai.get_in.utils.NetworkUtils;
 import com.senai.get_in.utils.SearchableFragment;
 import com.senai.get_in.utils.ToastUtils;
+import com.senai.get_in.utils.TokenManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +103,10 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
         if (!isBackgroundRefresh && listaFiltrada.isEmpty()) setLoading(true);
         binding.layoutVazio.setVisibility(View.GONE);
 
-        repository.getRequisicoes(new Callback<RequisicaoResponse>() {
+        TokenManager tokenManager = new TokenManager(requireContext());
+        UsuarioDetalhado user = tokenManager.getUserData();
+
+        Callback<RequisicaoResponse> callback = new Callback<RequisicaoResponse>() {
             @Override
             public void onResponse(@NonNull Call<RequisicaoResponse> call, @NonNull Response<RequisicaoResponse> response) {
                 if (!isAdded() || binding == null) return;
@@ -130,7 +136,13 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
                 Log.e(TAG, "Erro: " + t.getMessage());
                 if (!isBackgroundRefresh) ToastUtils.showError(getContext(), "Falha na conexão");
             }
-        });
+        };
+
+        if (AccessManager.isSupervisor(user) && user.getIdSetor() > 0) {
+            repository.getRequisicoesPorSetor(user.getIdSetor(), callback);
+        } else {
+            repository.getRequisicoes(callback);
+        }
     }
 
     private void setLoading(boolean loading) {

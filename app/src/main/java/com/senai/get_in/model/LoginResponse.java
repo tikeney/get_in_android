@@ -54,5 +54,8 @@ public class LoginResponse {
         
         @SerializedName("id")
         public int id;
+
+        @SerializedName(value = "idSetor", alternate = {"setor_id", "id_setor"})
+        public Integer idSetor;
     }
 }

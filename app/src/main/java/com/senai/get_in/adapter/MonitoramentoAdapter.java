@@ -9,26 +9,41 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.senai.get_in.AutorizacaoFragment;
 import com.senai.get_in.EquipeFragment;
 import com.senai.get_in.HistoricoFragment;
+import com.senai.get_in.model.UsuarioDetalhado;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MonitoramentoAdapter extends FragmentStateAdapter {
 
+    private final List<Fragment> fragments = new ArrayList<>();
+    private final List<String> titles = new ArrayList<>();
+
     public MonitoramentoAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
+        
+        fragments.add(new AutorizacaoFragment());
+        titles.add("Pendentes");
+        
+        fragments.add(new HistoricoFragment());
+        titles.add("Histórico");
+        
+        fragments.add(new EquipeFragment());
+        titles.add("Equipe");
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position) {
-            case 0: return new AutorizacaoFragment();
-            case 1: return new HistoricoFragment();
-            case 2: return new EquipeFragment();
-            default: return new AutorizacaoFragment();
-        }
+        return fragments.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return 3;
+        return fragments.size();
+    }
+    
+    public String getTitle(int position) {
+        return titles.get(position);
     }
 }
