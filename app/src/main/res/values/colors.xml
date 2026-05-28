@@ -33,7 +33,7 @@
 
     <!-- Mapeamentos Semânticos -->
     <color name="brand_blue">@color/primary</color>
-    <color name="secundary">@color/primary</color>
+    <color name="secundary">@color/blue_shade_400</color>
     <color name="accent">@color/blue_shade_400</color>
     <color name="header_subtitle">@color/blue_shade_300</color>
 
@@ -43,6 +43,7 @@
     <color name="status_negado_bg">#FFEBEE</color>
     <color name="status_negado_text">#C62828</color>
     <color name="pending_border">#FFC107</color> <!-- Yellow for Pending -->
+
 
     <!-- UI Elements -->
     <color name="InputLoginBackground">#F1F3F4</color>
@@ -62,15 +63,19 @@
     <color name="md_theme_light_outline">@color/gray_light</color>
 
     <!-- Material Theme Dark (Required by themes.xml) -->
-    <color name="md_theme_dark_primary">#A0C9FF</color>
-    <color name="md_theme_dark_onPrimary">#003258</color>
-    <color name="md_theme_dark_primaryContainer">#00497D</color>
-    <color name="md_theme_dark_onPrimaryContainer">#D1E4FF</color>
-    <color name="md_theme_dark_background">#1A1C1E</color>
-    <color name="md_theme_dark_onBackground">#E2E2E6</color>
-    <color name="md_theme_dark_surface">#1A1C1E</color>
-    <color name="md_theme_dark_onSurface">#E2E2E6</color>
-    <color name="md_theme_dark_surfaceVariant">#42474E</color>
-    <color name="md_theme_dark_onSurfaceVariant">#C2C7CF</color>
-    <color name="md_theme_dark_outline">#8C9199</color>
+    <color name="md_theme_dark_primary">#0D243F</color>
+    <color name="md_theme_dark_onPrimary">#FFFFFF</color>
+    <color name="md_theme_dark_primaryContainer">#1A3B5C</color>
+    <color name="md_theme_dark_onPrimaryContainer">#FFFFFF</color>
+    <color name="md_theme_dark_background">#050A0F</color>
+    <color name="md_theme_dark_onBackground">#FFFFFF</color>
+    <color name="md_theme_dark_surface">#0F1921</color>
+    <color name="md_theme_dark_onSurface">#FFFFFF</color>
+    <color name="md_theme_dark_surfaceVariant">#1C2D38</color>
+    <color name="md_theme_dark_onSurfaceVariant">#FFFFFF</color>
+    <color name="md_theme_dark_outline">#D1DFED</color>
+    <color name="md_theme_dark_error">#FFB4AB</color>
+    <color name="md_theme_dark_onError">#690005</color>
+    <color name="md_theme_dark_errorContainer">#93000A</color>
+    <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
 </resources>

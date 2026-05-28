@@ -13,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.senai.get_in.MainActivity;
 import com.senai.get_in.R;
 import com.senai.get_in.adapter.NotificacoesAdapter;
 
@@ -53,14 +54,14 @@ public class NotificacoesFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                if (getActivity() != null && ((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+                if (getActivity() instanceof MainActivity) {
                     String title = "Notificações";
                     switch (position) {
                         case 0: title = "Todas as Notificações"; break;
                         case 1: title = "Alertas de Segurança"; break;
                         case 2: title = "Notificações de Sistema"; break;
                     }
-                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
+                    ((MainActivity) getActivity()).setToolbarTitle(title);
                 }
             }
         });

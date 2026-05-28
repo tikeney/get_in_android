@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Brilho externo sutil (reduzido opacidade) -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="40dp" />
+            <solid android:color="#0A3498DB" />
+            <padding android:bottom="-6dp" android:left="-6dp" android:right="-6dp" android:top="-6dp" />
+        </shape>
+    </item>
+    <!-- Aura interna (reduzido opacidade) -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="36dp" />
+            <gradient
+                android:angle="0"
+                android:endColor="#003498DB"
+                android:centerColor="#103498DB"
+                android:startColor="#003498DB"
+                android:type="linear" />
+        </shape>
+    </item>
+</layer-list>

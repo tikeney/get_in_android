@@ -7,24 +7,21 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
@@ -33,13 +30,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.senai.get_in.api.RetrofitClient;
+import com.senai.get_in.databinding.ActivityMainBinding;
 import com.senai.get_in.model.UsuarioDetalhado;
 import com.senai.get_in.model.UsuarioDetalhadoResponse;
+import com.senai.get_in.utils.AccessManager;
 import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
 
@@ -49,14 +45,10 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "MainActivity";
+    private ActivityMainBinding binding;
     private TokenManager tokenManager;
     private NavController navController;
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
-    private BottomNavigationView bottomNav;
-    private MaterialToolbar toolbar;
-    private String cargo;
+    private UsuarioDetalhado currentUser;
     
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
@@ -77,16 +69,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        UsuarioDetalhado user = tokenManager.getUserData();
+        currentUser = tokenManager.getUserData();
 
-        if (user == null) {
+        if (currentUser == null) {
             logout();
             return;
         }
-
-        cargo = (user.getCargo() != null) ? user.getCargo().trim().toLowerCase() : "";
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter != null) {
@@ -97,34 +89,75 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setupUI();
         setupNavigation();
+        applyBottomNavConfig();
         sincronizarDadosUsuario();
     }
 
+    public void applyBottomNavConfig() {
+        if (tokenManager == null) return;
+        boolean showLabels = tokenManager.shouldShowLabels();
+        
+        // Ajusta visibilidade dos textos
+        binding.bottomNavigation.setLabelVisibilityMode(
+            showLabels ? com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_LABELED 
+                       : com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_UNLABELED
+        );
+
+        // Ajusta altura para ficar mais fino no modo compacto
+        ViewGroup.LayoutParams params = binding.bottomNavigation.getLayoutParams();
+        params.height = showLabels ? (int) (80 * getResources().getDisplayMetrics().density) 
+                                   : (int) (64 * getResources().getDisplayMetrics().density);
+        binding.bottomNavigation.setLayoutParams(params);
+    }
+
     private void setupUI() {
-        AppBarLayout appBarLayout = findViewById(R.id.app_bar);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        binding.toolbar.setTitle("");
+        setSupportActionBar(binding.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setTitle("");
+        }
 
-        bottomNav = findViewById(R.id.bottom_navigation);
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            appBarLayout.setPadding(0, systemBars.top, 0, 0);
-            bottomNav.setPadding(0, 0, 0, systemBars.bottom);
+            
+            // Aplica padding no topo da AppBar da Activity (quando visível)
+            binding.appBar.setPadding(0, systemBars.top, 0, 0);
+            
+            // Ajusta a margem inferior do card do menu para flutuar acima da barra de navegação do sistema
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) binding.cardBottomNav.getLayoutParams();
+            lp.bottomMargin = systemBars.bottom + (int)(24 * getResources().getDisplayMetrics().density);
+            binding.cardBottomNav.setLayoutParams(lp);
+            
             return insets;
         });
 
-        navigationView.setNavigationItemSelectedListener(this);
+        binding.navView.setNavigationItemSelectedListener(this);
         
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         
-        drawerLayout.addDrawerListener(toggle);
+        binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        updateNavHeader(tokenManager.getUserData());
+        // Botão Fechar no Header
+        View headerView = binding.navHeader.getRoot();
+        headerView.findViewById(R.id.btn_close_drawer).setOnClickListener(v -> 
+            binding.drawerLayout.closeDrawer(GravityCompat.START));
+
+        // Botão Configurações no Footer
+        binding.navFooter.btnFooterConfig.setOnClickListener(v -> {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            navController.navigate(R.id.menu_configuracoes);
+        });
+
+        // Clique no Perfil (Footer)
+        binding.navFooter.getRoot().setOnClickListener(v -> {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            navController.navigate(R.id.nav_perfil);
+        });
+
+        updateNavHeader(currentUser);
     }
 
     private void setupNavigation() {
@@ -132,21 +165,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .findFragmentById(R.id.nav_host_fragment);
         navController = navHostFragment.getNavController();
 
-        final int startId = getStartDestinationId();
+        final int startId = AccessManager.getStartDestinationId(currentUser);
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             int id = destination.getId();
             configurarToolbar(id);
 
-            Menu navMenu = navigationView.getMenu();
-            MenuItem navItem = navMenu.findItem(id);
-            if (navItem != null) navItem.setChecked(true);
+            // Controle de visibilidade da AppBar e BottomNav
+            if (id == R.id.nav_usuario_detalhado) {
+                binding.appBar.setVisibility(View.GONE);
+                // Removemos o padding para que o fragmento ocupe o topo real
+                binding.appBar.setPadding(0, 0, 0, 0);
+            } else {
+                binding.appBar.setVisibility(View.VISIBLE);
+                // O listener de insets cuidará do padding novamente
+            }
 
-            Menu bottomMenu = bottomNav.getMenu();
-            MenuItem bottomItem = bottomMenu.findItem(id);
-            if (bottomItem != null) bottomItem.setChecked(true);
+            Menu navMenu = binding.navView.getMenu();
+            for (int i = 0; i < navMenu.size(); i++) {
+                MenuItem item = navMenu.getItem(i);
+                updateMenuItemStyle(item, id);
+            }
 
-            if (!isAllowedDestination(id)) {
+            Menu bottomMenu = binding.bottomNavigation.getMenu();
+            for (int i = 0; i < bottomMenu.size(); i++) {
+                MenuItem item = bottomMenu.getItem(i);
+                if (item.getItemId() == id) item.setChecked(true);
+            }
+
+            if (!AccessManager.isAllowedDestination(currentUser, id)) {
                 controller.navigate(id != startId ? startId : R.id.nav_perfil);
             }
         });
@@ -155,10 +202,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navGraph.setStartDestination(startId);
         navController.setGraph(navGraph);
 
-        bottomNav.setOnItemSelectedListener(item -> {
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() == id) {
                 return true;
+            }
+
+            // Animação de escala ao clicar
+            View itemView = findViewById(id);
+            if (itemView != null) {
+                itemView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(150).withEndAction(() -> 
+                    itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(150).start()
+                ).start();
             }
             
             NavOptions options = new NavOptions.Builder()
@@ -170,45 +225,66 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         });
         
-        restrictMenu(navigationView.getMenu());
-        restrictMenu(bottomNav.getMenu());
-        bottomNav.setVisibility(isFuncionario() ? View.GONE : View.VISIBLE);
+        restrictMenu(binding.navView.getMenu());
+        restrictMenu(binding.bottomNavigation.getMenu());
+        
+        binding.bottomNavigation.setVisibility(View.VISIBLE);
+    }
+
+    private void updateMenuItemStyle(MenuItem item, int currentId) {
+        if (item.hasSubMenu()) {
+            Menu subMenu = item.getSubMenu();
+            if (subMenu != null) {
+                for (int i = 0; i < subMenu.size(); i++) {
+                    updateMenuItemStyle(subMenu.getItem(i), currentId);
+                }
+            }
+        } else {
+            boolean isSelected = item.getItemId() == currentId;
+            item.setChecked(isSelected);
+            
+            View actionView = item.getActionView();
+            if (actionView instanceof ImageView) {
+                actionView.setAlpha(isSelected ? 1.0f : 0.4f);
+            }
+        }
+    }
+
+    public void setToolbarTitle(String title) {
+        if (binding != null && binding.tvToolbarTitle != null) {
+            binding.tvToolbarTitle.setText(title);
+        }
     }
 
     private void configurarToolbar(int destinationId) {
-        if (toolbar == null) return;
-
-        toolbar.setTitle(null);
-        toolbar.setSubtitle(null);
+        binding.tvToolbarTitle.setText("");
+        binding.tvToolbarSubtitle.setText("VisitaTrack · Segurança Patrimonial");
 
         if (destinationId == R.id.menu_configuracoes) {
-            toolbar.setTitle("Configurações");
-        } else if (destinationId == R.id.nav_autorizacao) {
-            toolbar.setTitle("Autorizações");
-        } else if (destinationId == R.id.nav_notificacoes) {
-            toolbar.setTitle("Notificações");
+            binding.tvToolbarTitle.setText("Configurações");
+        } else if (destinationId == R.id.nav_monitoramento) {
+            binding.tvToolbarTitle.setText("Atividade");
         } else if (destinationId == R.id.nav_checkIn) {
-            toolbar.setTitle("Portaria");
+            binding.tvToolbarTitle.setText("Portaria");
         } else if (destinationId == R.id.nav_perfil) {
-            toolbar.setTitle("Meu Perfil");
-        } else if (destinationId == R.id.nav_historico) {
-            toolbar.setTitle("Histórico");
-        } else if (destinationId == R.id.nav_visitantes) {
-            toolbar.setTitle("Visitantes");
+            binding.tvToolbarTitle.setText("Meu Perfil");
+        } else if (destinationId == R.id.nav_notificacoes) {
+            binding.tvToolbarTitle.setText("Notificações");
+        } else if (destinationId == R.id.nav_usuario_detalhado) {
+            binding.tvToolbarTitle.setText("Detalhes");
         }
     }
 
     private void sincronizarDadosUsuario() {
-        UsuarioDetalhado user = tokenManager.getUserData();
-        if (user == null) return;
+        if (currentUser == null) return;
 
-        RetrofitClient.getApiService(this).getUsuarioDetalhadoPorId(user.getId()).enqueue(new Callback<UsuarioDetalhadoResponse>() {
+        RetrofitClient.getApiService(this).getUsuarioDetalhadoPorId(currentUser.getId()).enqueue(new Callback<UsuarioDetalhadoResponse>() {
             @Override
             public void onResponse(Call<UsuarioDetalhadoResponse> call, Response<UsuarioDetalhadoResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                    UsuarioDetalhado userAtualizado = response.body().getData();
-                    tokenManager.saveUserData(userAtualizado);
-                    updateNavHeader(userAtualizado);
+                    currentUser = response.body().getData();
+                    tokenManager.saveUserData(currentUser);
+                    updateNavHeader(currentUser);
                 }
             }
             @Override
@@ -257,27 +333,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return sb.toString();
     }
 
-    private boolean isAdmin() { return cargo.equals("adm") || cargo.equals("administrador"); }
-    private boolean isGerente() { return cargo.equals("ger") || cargo.equals("gerente"); }
-    private boolean isSupervisor() { return cargo.equals("sup") || cargo.equals("supervisor"); }
-    private boolean isPortaria() { return cargo.equals("port") || cargo.equals("portaria") || cargo.equals("porteiro"); }
-    private boolean isFuncionario() { return cargo.equals("func") || cargo.equals("funcionario") || cargo.isEmpty(); }
-
-    private int getStartDestinationId() {
-        if (isPortaria()) return R.id.nav_checkIn;
-        if (isAdmin() || isGerente()) return R.id.nav_notificacoes;
-        return R.id.nav_perfil;
-    }
-
-    private boolean isAllowedDestination(int id) {
-        if (id == R.id.nav_perfil || id == R.id.menu_configuracoes || id == R.id.menu_sair) return true;
-        if (isAdmin()) return true;
-        if (isGerente()) return id != R.id.nav_checkIn;
-        if (isSupervisor()) return id == R.id.nav_notificacoes || id == R.id.nav_autorizacao || id == R.id.nav_historico || id == R.id.nav_visitantes;
-        if (isPortaria()) return id == R.id.nav_checkIn || id == R.id.nav_visitantes || id == R.id.nav_notificacoes;
-        return false;
-    }
-
     private void restrictMenu(Menu menu) {
         if (menu == null) return;
         for (int i = 0; i < menu.size(); i++) {
@@ -286,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 restrictMenu(item.getSubMenu());
                 item.setVisible(hasVisibleChildren(item.getSubMenu()));
             } else {
-                item.setVisible(isAllowedDestination(item.getItemId()));
+                item.setVisible(AccessManager.isAllowedDestination(currentUser, item.getItemId()));
             }
         }
     }
@@ -307,25 +362,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_sair) {
-            logout();
-            return true;
-        }
         return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
     }
 
     private void updateNavHeader(UsuarioDetalhado user) {
-        View headerView = navigationView.getHeaderView(0);
-        if (headerView != null && user != null) {
-            TextView tvNome = headerView.findViewById(R.id.tvHeaderNome);
-            TextView tvEmail = headerView.findViewById(R.id.tvHeaderEmail);
-            ImageView ivFoto = headerView.findViewById(R.id.ivHeaderFoto);
-            tvNome.setText(user.getNome());
-            tvEmail.setText(user.getEmail());
+        if (user != null) {
+            binding.navFooter.tvFooterNome.setText(user.getNome());
+            binding.navFooter.tvFooterEmail.setText(user.getEmail());
+            
+            String inicial = (user.getNome() != null && !user.getNome().isEmpty()) 
+                    ? user.getNome().substring(0, 1).toUpperCase() : "?";
+            binding.navFooter.tvFooterInicial.setText(inicial);
+
             if (user.getFotoPerfil() != null && !user.getFotoPerfil().isEmpty()) {
-                Glide.with(this).load(user.getFotoPerfil()).placeholder(R.drawable.outline_person_24).circleCrop().into(ivFoto);
+                binding.navFooter.ivFooterFoto.setVisibility(View.VISIBLE);
+                binding.navFooter.tvFooterInicial.setVisibility(View.GONE);
+                
+                Glide.with(this)
+                    .load(user.getFotoPerfil())
+                    .circleCrop()
+                    .into(binding.navFooter.ivFooterFoto);
             } else {
-                ivFoto.setImageResource(R.drawable.outline_person_24);
+                binding.navFooter.ivFooterFoto.setVisibility(View.GONE);
+                binding.navFooter.tvFooterInicial.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -333,12 +392,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        drawerLayout.closeDrawer(GravityCompat.START);
-        if (id == R.id.menu_sair) {
-            new Handler(Looper.getMainLooper()).postDelayed(this::logout, 250);
-            return true;
-        }
-        if (!isAllowedDestination(id)) {
+        binding.drawerLayout.closeDrawer(GravityCompat.START);
+
+        if (!AccessManager.isAllowedDestination(currentUser, id)) {
             ToastUtils.showInfo(this, "Seu acesso é restrito.");
             return true;
         }
@@ -356,7 +412,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.closeDrawer(GravityCompat.START);
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) binding.drawerLayout.closeDrawer(GravityCompat.START);
         else super.onBackPressed();
     }
 

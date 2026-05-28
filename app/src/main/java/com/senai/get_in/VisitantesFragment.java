@@ -7,20 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.senai.get_in.adapter.VisitanteAdapter;
-import com.senai.get_in.api.RetrofitClient;
+import com.senai.get_in.api.VisitanteRepository;
+import com.senai.get_in.databinding.FragmentVisitantesBinding;
 import com.senai.get_in.model.VisitanteLocal;
 import com.senai.get_in.model.VisitanteLocalResponse;
+import com.senai.get_in.utils.NetworkUtils;
 import com.senai.get_in.utils.ToastUtils;
-import com.senai.get_in.utils.TokenManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,58 +31,71 @@ import retrofit2.Response;
 public class VisitantesFragment extends Fragment {
 
     private static final String TAG = "VisitantesFragment";
-    private RecyclerView recycler;
+    private FragmentVisitantesBinding binding;
     private VisitanteAdapter adapter;
-    private ProgressBar progressBar;
-    private TokenManager tokenManager;
+    private VisitanteRepository repository;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_visitantes, container, false);
-
-        recycler = view.findViewById(R.id.recyclerVisitantes);
-        progressBar = view.findViewById(R.id.progressBarVisitantes);
-        
-        return view;
+        binding = FragmentVisitantesBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         
-        if (recycler != null) {
-            recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-            adapter = new VisitanteAdapter(new ArrayList<>());
-            recycler.setAdapter(adapter);
-            
-            // Adiciona animação de entrada na lista
-            LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
-            recycler.setLayoutAnimation(animation);
-        }
-
-        tokenManager = new TokenManager(requireContext());
-        carregarVisitantes();
+        repository = new VisitanteRepository(requireContext());
+        setupRecycler();
+        setupSwipeRefresh();
+        carregarVisitantes(false);
     }
 
-    private void carregarVisitantes() {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-            if (recycler != null) recycler.setVisibility(View.INVISIBLE);
+    private void setupSwipeRefresh() {
+        binding.swipeVisitantes.setOnRefreshListener(() -> carregarVisitantes(true));
+        binding.swipeVisitantes.setColorSchemeResources(R.color.primary);
+    }
+
+    private void setupRecycler() {
+        binding.recyclerVisitantes.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new VisitanteAdapter(new ArrayList<>());
+        binding.recyclerVisitantes.setAdapter(adapter);
+        
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
+        binding.recyclerVisitantes.setLayoutAnimation(animation);
+    }
+
+    private void carregarVisitantes(boolean isRefreshing) {
+        if (!NetworkUtils.isOnline(getContext())) {
+            binding.swipeVisitantes.setRefreshing(false);
+            ToastUtils.showError(getContext(), "Sem conexão com a internet.");
+            if (adapter.getItemCount() == 0) {
+                binding.layoutVazioVisitantes.setVisibility(View.VISIBLE);
+            }
+            return;
         }
 
-        RetrofitClient.getApiService(requireContext()).getVisitantesLocal().enqueue(new Callback<VisitanteLocalResponse>() {
+        if (!isRefreshing) setLoading(true);
+        binding.layoutVazioVisitantes.setVisibility(View.GONE);
+
+        repository.getVisitantesNoLocal(new Callback<VisitanteLocalResponse>() {
             @Override
             public void onResponse(Call<VisitanteLocalResponse> call, Response<VisitanteLocalResponse> response) {
-                if (!isAdded()) return;
-                if (progressBar != null) progressBar.setVisibility(View.GONE);
-                if (recycler != null) recycler.setVisibility(View.VISIBLE);
+                if (!isAdded() || binding == null) return;
+                setLoading(false);
+                binding.swipeVisitantes.setRefreshing(false);
 
                 if (response.isSuccessful() && response.body() != null) {
                     List<VisitanteLocal> lista = response.body().getDados();
-                    if (lista != null && adapter != null) {
+                    if (lista != null && !lista.isEmpty()) {
                         adapter.updateList(lista);
-                        recycler.scheduleLayoutAnimation();
+                        binding.recyclerVisitantes.setVisibility(View.VISIBLE);
+                        binding.recyclerVisitantes.scheduleLayoutAnimation();
+                        binding.layoutVazioVisitantes.setVisibility(View.GONE);
+                    } else {
+                        binding.recyclerVisitantes.setVisibility(View.GONE);
+                        binding.layoutVazioVisitantes.setVisibility(View.VISIBLE);
                     }
                 } else {
                     ToastUtils.showError(getContext(), "Erro ao carregar visitantes");
@@ -92,12 +104,29 @@ public class VisitantesFragment extends Fragment {
 
             @Override
             public void onFailure(Call<VisitanteLocalResponse> call, Throwable t) {
-                if (!isAdded()) return;
-                if (progressBar != null) progressBar.setVisibility(View.GONE);
-                if (recycler != null) recycler.setVisibility(View.VISIBLE);
+                if (!isAdded() || binding == null) return;
+                setLoading(false);
+                binding.swipeVisitantes.setRefreshing(false);
                 Log.e(TAG, "Erro: " + t.getMessage());
                 ToastUtils.showError(getContext(), "Falha na conexão");
             }
         });
+    }
+
+    private void setLoading(boolean loading) {
+        if (loading) {
+            binding.shimmerVisitantes.setVisibility(View.VISIBLE);
+            binding.shimmerVisitantes.startShimmer();
+            binding.recyclerVisitantes.setVisibility(View.GONE);
+        } else {
+            binding.shimmerVisitantes.stopShimmer();
+            binding.shimmerVisitantes.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

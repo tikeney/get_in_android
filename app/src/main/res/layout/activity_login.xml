@@ -57,128 +57,139 @@
         android:id="@+id/ConstForm"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/bg_stat_card"
-        android:backgroundTint="?attr/colorSurface"
         android:layout_marginTop="-24dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ConstHeader">
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="32dp"
-            android:paddingTop="48dp"
-            android:paddingBottom="32dp">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputUsuario"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:hint="E-mail"
-                app:boxStrokeColor="?attr/colorPrimary"
-                app:hintTextColor="?attr/colorPrimary"
-                app:startIconDrawable="@drawable/outline_person_24"
-                app:startIconTint="?attr/colorOnSurfaceVariant">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etUsuario"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/colorOnSurface"
-                    android:inputType="textEmailAddress" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputSenha"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                android:hint="Senha"
-                app:boxStrokeColor="?attr/colorPrimary"
-                app:hintTextColor="?attr/colorPrimary"
-                app:endIconMode="password_toggle"
-                app:endIconTint="?attr/colorOnSurfaceVariant"
-                app:startIconDrawable="@drawable/outline_lock_24"
-                app:startIconTint="?attr/colorOnSurfaceVariant">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etSenha"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/colorOnSurface"
-                    android:inputType="textPassword" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="24dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnLogin"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Entrar"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    android:backgroundTint="?attr/colorPrimary"
-                    android:textColor="?attr/colorOnPrimary" />
-
-                <ProgressBar
-                    android:id="@+id/progressBarLogin"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:indeterminateTint="?attr/colorOnPrimary" />
-            </FrameLayout>
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="8dp"
+            app:strokeWidth="0dp"
+            android:layout_marginBottom="-24dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginBottom="24dp"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingHorizontal="32dp"
+                android:paddingTop="48dp"
+                android:paddingBottom="64dp">
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="?attr/colorOutlineVariant" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputUsuario"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
-                    android:text="ou entre com"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:textSize="14sp" />
+                    android:layout_marginBottom="16dp"
+                    android:hint="E-mail"
+                    app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:startIconDrawable="@drawable/outline_person_24"
+                    app:startIconTint="?attr/colorOnSurfaceVariant">
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="?attr/colorOutlineVariant" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etUsuario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurface"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputSenha"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:hint="Senha"
+                    app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:endIconMode="password_toggle"
+                    app:endIconTint="?attr/colorOnSurfaceVariant"
+                    app:startIconDrawable="@drawable/outline_lock_24"
+                    app:startIconTint="?attr/colorOnSurfaceVariant">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etSenha"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurface"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="24dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Entrar"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="12dp"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:textColor="?attr/colorOnPrimary" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBarLogin"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        android:indeterminateTint="?attr/colorOnPrimary" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginBottom="24dp"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="16dp"
+                        android:text="ou entre com"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="14sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="?attr/colorOutlineVariant" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLoginRFID"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Acesso por Crachá"
+                    android:textColor="?attr/colorPrimary"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/outline_badge_24"
+                    app:iconGravity="textStart"
+                    app:iconTint="?attr/colorPrimary" />
+
             </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLoginRFID"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Acesso por Crachá"
-                android:textColor="?attr/colorPrimary"
-                app:cornerRadius="12dp"
-                app:icon="@drawable/outline_badge_24"
-                app:iconGravity="textStart"
-                app:iconTint="?attr/colorPrimary" />
-
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

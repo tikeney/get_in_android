@@ -33,6 +33,10 @@
 
     <style name="Theme.Get_In" parent="Base.Theme.Get_In" />
 
+    <style name="Widget.App.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">#203498DB</item>
+    </style>
+
     <style name="WhiteDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/white</item>
     </style>

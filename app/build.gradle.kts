@@ -25,6 +25,12 @@ android {
             )
         }
     }
+
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -49,6 +55,8 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.glide)
+    implementation(libs.security.crypto)
+    implementation(libs.shimmer)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

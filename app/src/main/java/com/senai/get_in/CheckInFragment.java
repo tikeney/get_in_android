@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,6 +35,7 @@ import com.senai.get_in.api.RetrofitClient;
 import com.senai.get_in.model.Requisicao;
 import com.senai.get_in.model.Setor;
 import com.senai.get_in.model.SetorResponse;
+import com.senai.get_in.utils.MascaraUtils;
 import com.senai.get_in.utils.ToastUtils;
 import com.senai.get_in.utils.TokenManager;
 
@@ -67,7 +65,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     private ConstraintLayout btnAdicionarCracha;
     private TextView tvTituloCracha, tvSubtituloCracha;
 
-    private GridLayout chipGroupSetores; // Mude de ChipGroup para GridLayout
+    private ChipGroup chipGroupSetores;
     private Button btnFinalizar;
     private ProgressBar progressBar;
     private View containerCheckIn;
@@ -181,8 +179,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
             @Override
             public void onResponse(@NonNull Call<SetorResponse> call, @NonNull Response<SetorResponse> response) {
                 if (!isAdded()) return;
-                if (response.isSuccessful() && response.body() != null && response.body().isSucesso()) {
-                    // Extrai a lista do campo 'data' do objeto de resposta
+                if (response.isSuccessful() && response.body() != null) {
                     preencherChipsSetores(response.body().getData());
                 } else {
                     Log.e(TAG, "Erro ao carregar setores: " + response.code());
@@ -197,42 +194,18 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         });
     }
 
-
     private void preencherChipsSetores(List<Setor> setores) {
-        if (chipGroupSetores == null || setores == null) return;
+        if (chipGroupSetores == null) return;
 
-        // Limpa os chips existentes para evitar duplicatas
+        // Remove tudo antes de adicionar para evitar duplicatas em recarregamentos
         chipGroupSetores.removeAllViews();
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
-
         for (Setor setor : setores) {
-            // Infla o chip usando o layout customizado
             Chip chip = (Chip) inflater.inflate(R.layout.layout_chip_filtro, chipGroupSetores, false);
-
-            // Configura os dados básicos
             chip.setText(setor.getNome());
-            chip.setTag(setor.getId());
+            chip.setTag(setor.getId());       // tag = Integer do ID do setor
             chip.setCheckable(true);
-
-            // Listener para mudar a aparência quando selecionado (igual à imagem)
-            chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    // Estado Selecionado: Azul e ícone preenchido (ou apenas muda a cor)
-                    chip.setChipIconResource(R.drawable.outline_check_24); // Muda para check se quiser
-                    chip.setChipIconTintResource(R.color.primary);
-                    chip.setChipStrokeColorResource(R.color.primary);
-                    chip.setTextColor(getResources().getColor(R.color.primary));
-                } else {
-                    // Estado Normal: Cinza e círculo vazio
-                    chip.setChipIconResource(R.drawable.outline_circle_24);
-                    chip.setChipIconTintResource(R.color.divider_color);
-                    chip.setChipStrokeColorResource(R.color.divider_color);
-                    chip.setTextColor(getResources().getColor(R.color.gray_text));
-                }
-            });
-
-            // Adiciona o chip ao grupo
             chipGroupSetores.addView(chip);
         }
     }
@@ -262,14 +235,11 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
 
         // Lê o chip selecionado e obtém o ID do setor a partir da tag
         Integer idSetor = null;
-        for (int i = 0; i < chipGroupSetores.getChildCount(); i++) {
-            View child = chipGroupSetores.getChildAt(i);
-            if (child instanceof Chip) {
-                Chip chip = (Chip) child;
-                if (chip.isChecked()) {
-                    idSetor = (Integer) chip.getTag();
-                    break;
-                }
+        int selectedChipId = chipGroupSetores.getCheckedChipId();
+        if (selectedChipId != View.NO_ID) {
+            Chip selectedChip = chipGroupSetores.findViewById(selectedChipId);
+            if (selectedChip != null && selectedChip.getTag() instanceof Integer) {
+                idSetor = (Integer) selectedChip.getTag();
             }
         }
 
@@ -332,16 +302,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
             inputEmpresa.setError(null);
         }
 
-        boolean setorSelecionado = false;
-        for (int i = 0; i < chipGroupSetores.getChildCount(); i++) {
-            View child = chipGroupSetores.getChildAt(i);
-            if (child instanceof Chip && ((Chip) child).isChecked()) {
-                setorSelecionado = true;
-                break;
-            }
-        }
-
-        if (!setorSelecionado) {
+        if (chipGroupSetores.getCheckedChipId() == View.NO_ID) {
             ToastUtils.showInfo(getContext(), "Selecione um setor.");
             valido = false;
         }
@@ -355,8 +316,8 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     }
 
     private void configurarMascaras() {
-        etCPF.addTextChangedListener(new MascaraTextWatcher(etCPF, "###.###.###-##"));
-        etTelefone.addTextChangedListener(new MascaraTextWatcher(etTelefone, "(##) #####-####"));
+        etCPF.addTextChangedListener(MascaraUtils.aplicar(etCPF, "###.###.###-##"));
+        etTelefone.addTextChangedListener(MascaraUtils.aplicar(etTelefone, "(##) #####-####"));
     }
 
     private void configurarFoto() {
@@ -442,12 +403,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         etTelefone.setText("");
         etEmpresa.setText("");
         etMotivo.setText("");
-        for (int i = 0; i < chipGroupSetores.getChildCount(); i++) {
-            View child = chipGroupSetores.getChildAt(i);
-            if (child instanceof Chip) {
-                ((Chip) child).setChecked(false);
-            }
-        }
+        chipGroupSetores.clearCheck();
         fotoUri = null;
         ivIconePerfil.setImageResource(R.drawable.outline_person_24);
         ivIconePerfil.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -460,39 +416,5 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         codigoTagVinculada = null;
         tvTituloCracha.setText("Vincular Crachá");
         tvSubtituloCracha.setText("Aproxime o crachá do leitor RFID");
-    }
-
-    // -------------------------------------------------------------------------
-    // Máscara de texto reutilizável
-    // -------------------------------------------------------------------------
-    private static class MascaraTextWatcher implements TextWatcher {
-        private final TextInputEditText campo;
-        private final String mascara;
-        private boolean editando = false;
-
-        MascaraTextWatcher(TextInputEditText campo, String mascara) {
-            this.campo = campo;
-            this.mascara = mascara;
-        }
-
-        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-        @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (editando) return;
-            editando = true;
-            String digits = s.toString().replaceAll("[^\\d]", "");
-            StringBuilder sb = new StringBuilder();
-            int di = 0;
-            for (int i = 0; i < mascara.length() && di < digits.length(); i++) {
-                char mc = mascara.charAt(i);
-                if (mc == '#') sb.append(digits.charAt(di++));
-                else sb.append(mc);
-            }
-            campo.setText(sb.toString());
-            if (sb.length() > 0) campo.setSelection(sb.length());
-            editando = false;
-        }
     }
 }
