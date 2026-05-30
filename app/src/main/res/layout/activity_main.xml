@@ -30,9 +30,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
-                app:navigationIconTint="?attr/colorOnPrimary"
+                app:navigationIconTint="?attr/colorOnSurface"
                 app:title=""
-                android:background="?android:attr/windowBackground">
+                android:background="@drawable/bg_toolbar_blur">
 
                 <LinearLayout
                     android:id="@+id/layout_toolbar_title"
