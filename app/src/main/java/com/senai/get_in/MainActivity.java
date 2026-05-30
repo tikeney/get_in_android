@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void applyToolbarBlur() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            binding.toolbar.setRenderEffect(
+            binding.toolbarBlurBackground.setRenderEffect(
                 RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.CLAMP)
             );
         }

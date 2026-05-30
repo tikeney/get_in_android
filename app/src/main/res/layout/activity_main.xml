@@ -24,47 +24,60 @@
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
+            android:background="@android:color/transparent"
             android:fitsSystemWindows="true"
             app:elevation="0dp"
             app:liftOnScroll="false"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                app:navigationIconTint="?attr/colorOnSurface"
-                app:title=""
-                android:background="@drawable/bg_toolbar_blur">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:id="@+id/layout_toolbar_title"
-                    android:layout_width="wrap_content"
+                <!-- View dedicada apenas para o fundo com Blur -->
+                <View
+                    android:id="@+id/toolbar_blur_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/windowBackground"
+                    android:alpha="0.7" />
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center">
+                    android:minHeight="?attr/actionBarSize"
+                    app:navigationIconTint="?attr/colorOnSurface"
+                    app:title=""
+                    android:background="@android:color/transparent">
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/layout_toolbar_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/brand_get"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal"
+                        android:layout_gravity="center">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/brand_in"
-                        android:textColor="#3498DB"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/brand_get"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
 
-                </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/brand_in"
+                            android:textColor="#3498DB"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
 
-            </com.google.android.material.appbar.MaterialToolbar>
+                    </LinearLayout>
+
+                </com.google.android.material.appbar.MaterialToolbar>
+            </FrameLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.fragment.app.FragmentContainerView
