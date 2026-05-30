@@ -91,12 +91,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         setupUI();
-        setupNavigation();
         applyBottomNavConfig();
+        setupNavigation();
         sincronizarDadosUsuario();
     }
-
-
 
     private void setupUI() {
         binding.toolbar.setTitle("");
@@ -158,6 +156,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void applyBottomNavConfig() {
+        if (tokenManager == null) return;
+        boolean showLabels = tokenManager.shouldShowLabels();
+        
+        // Ajusta visibilidade dos textos
+        binding.bottomNavigation.setLabelVisibilityMode(
+            showLabels ? com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_LABELED 
+                       : com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_UNLABELED
+        );
+
+        // Ajusta altura para ficar mais fino no modo compacto
+        ViewGroup.LayoutParams params = binding.bottomNavigation.getLayoutParams();
+        params.height = showLabels ? (int) (80 * getResources().getDisplayMetrics().density) 
+                                   : (int) (64 * getResources().getDisplayMetrics().density);
+        binding.bottomNavigation.setLayoutParams(params);
+    }
+
+    private void setupNavigation() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
         navController = navHostFragment.getNavController();
