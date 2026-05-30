@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Usamos um layer-list para aplicar opacidade sobre a cor do sistema ou uma cor fixa semi-transparente -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <!-- Branco com 70% de opacidade (#B3) para o efeito de vidro claro -->
+            <solid android:color="#B3FFFFFF" />
+        </shape>
+    </item>
+</selector>
