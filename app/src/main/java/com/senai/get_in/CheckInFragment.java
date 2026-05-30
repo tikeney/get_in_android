@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -59,7 +60,8 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
     private ImageView ivIconePerfil;
     private TextView tvTituloFoto, tvSubtituloFoto;
 
-    private TextInputEditText etNome, etCPF, etTelefone, etEmpresa, etMotivo;
+    private TextInputEditText etNome, etCPF, etTelefone;
+    private AutoCompleteTextView etEmpresa, etMotivo;
     private TextInputLayout inputNome, inputCPF, inputTelefone, inputEmpresa, inputMotivo;
 
     private ConstraintLayout btnAdicionarCracha;
@@ -162,8 +164,8 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         etNome = view.findViewById(R.id.etNome);
         etCPF = view.findViewById(R.id.etCPF);
         etTelefone = view.findViewById(R.id.etTelefone);
-        etEmpresa = (TextInputEditText) view.findViewById(R.id.autoCompleteEmpresa);
-        etMotivo = (TextInputEditText) view.findViewById(R.id.autoCompleteMotivoDeVisita);
+        etEmpresa = view.findViewById(R.id.autoCompleteEmpresa);
+        etMotivo = view.findViewById(R.id.autoCompleteMotivoDeVisita);
 
         btnAdicionarCracha = view.findViewById(R.id.btnAdicionarCracha);
         tvTituloCracha = view.findViewById(R.id.tv_titulo_cracha);
