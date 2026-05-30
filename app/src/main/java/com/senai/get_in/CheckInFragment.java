@@ -156,14 +156,14 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
         inputNome = view.findViewById(R.id.inputNome);
         inputCPF = view.findViewById(R.id.inputCPF);
         inputTelefone = view.findViewById(R.id.inputTelefone);
-        inputEmpresa = view.findViewById(R.id.inputEmpresa);
-        inputMotivo = view.findViewById(R.id.inputMotivo);
+//        inputEmpresa = view.findViewById(R.id.inputEmpresa);
+//        inputMotivo = view.findViewById(R.id.inputMotivo);
 
         etNome = view.findViewById(R.id.etNome);
         etCPF = view.findViewById(R.id.etCPF);
         etTelefone = view.findViewById(R.id.etTelefone);
-        etEmpresa = view.findViewById(R.id.etEmpresa);
-        etMotivo = view.findViewById(R.id.etMotivo);
+//        etEmpresa = view.findViewById(R.id.etEmpresa);
+//        etMotivo = view.findViewById(R.id.etMotivo);
 
         btnAdicionarCracha = view.findViewById(R.id.btnAdicionarCracha);
         tvTituloCracha = view.findViewById(R.id.tv_titulo_cracha);

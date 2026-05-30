@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Cargo do Usuário"
-                android:textColor="@color/accent"
+                android:textColor="?attr/colorAccent"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -104,7 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Informações Pessoais"
-                        android:textColor="@color/accent"
+                        android:textColor="?attr/colorAccent"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="20dp"/>
@@ -120,7 +120,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/outline_person_24"
-                            app:tint="@color/accent"/>
+                            app:tint="?attr/colorAccent"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -154,7 +154,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/outline_badge_24"
-                        app:tint="@color/accent"/>
+                        app:tint="?attr/colorAccent"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -188,7 +188,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/outline_list_alt_24"
-                    app:tint="@color/accent"/>
+                    app:tint="?attr/colorAccent"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -222,7 +222,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/outline_calendar_today_24"
-                    app:tint="@color/accent"/>
+                    app:tint="?attr/colorAccent"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -256,7 +256,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/outline_check_24"
-                    app:tint="@color/accent"/>
+                    app:tint="?attr/colorAccent"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -306,7 +306,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Departamento"
-            android:textColor="@color/accent"
+            android:textColor="?attr/colorAccent"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginBottom="20dp"/>
@@ -320,7 +320,7 @@
             android:id="@+id/viewDot"
             android:layout_width="8dp"
             android:layout_height="8dp"
-            app:cardBackgroundColor="@color/accent"
+            app:cardBackgroundColor="?attr/colorAccent"
             app:cardCornerRadius="4dp"
             app:cardElevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

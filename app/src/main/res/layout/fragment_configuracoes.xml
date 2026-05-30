@@ -26,7 +26,7 @@
                 android:layout_marginStart="4dp"
                 android:letterSpacing="0.1"
                 android:text="APARÊNCIA"
-                android:textColor="@color/blue_shade_400"
+                android:textColor="?attr/colorAccent"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -82,7 +82,7 @@
                 android:layout_marginStart="4dp"
                 android:letterSpacing="0.1"
                 android:text="PREFERÊNCIAS"
-                android:textColor="@color/blue_shade_400"
+                android:textColor="?attr/colorAccent"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -136,7 +136,7 @@
                 android:layout_marginStart="4dp"
                 android:letterSpacing="0.1"
                 android:text="CONTA E SEGURANÇA"
-                android:textColor="@color/blue_shade_400"
+                android:textColor="?attr/colorAccent"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 

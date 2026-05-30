@@ -34,7 +34,8 @@
     <!-- Mapeamentos Semânticos -->
     <color name="brand_blue">@color/primary</color>
     <color name="secundary">@color/blue_shade_400</color>
-    <color name="accent">@color/blue_shade_400</color>
+    <color name="accent_light">#003061</color>
+    <color name="accent_dark">@color/blue_shade_400</color>
     <color name="header_subtitle">@color/blue_shade_300</color>
 
     <!-- Status Tags -->
@@ -61,23 +62,21 @@
     <color name="md_theme_light_surfaceVariant">@color/blue_shade_100</color>
     <color name="md_theme_light_onSurfaceVariant">@color/gray_text</color>
     <color name="md_theme_light_outline">@color/gray_light</color>
-    <color name="md_theme_light_icon_bg">#F1F3F4</color>
 
     <!-- Material Theme Dark (Required by themes.xml) -->
     <color name="md_theme_dark_primary">#0D243F</color>
     <color name="md_theme_dark_onPrimary">#FFFFFF</color>
     <color name="md_theme_dark_primaryContainer">#1A3B5C</color>
     <color name="md_theme_dark_onPrimaryContainer">#FFFFFF</color>
-    <color name="md_theme_dark_background">#020C17</color>
+    <color name="md_theme_dark_background">#050A0F</color>
     <color name="md_theme_dark_onBackground">#FFFFFF</color>
-    <color name="md_theme_dark_surface">#061320</color>
+    <color name="md_theme_dark_surface">#0F1921</color>
     <color name="md_theme_dark_onSurface">#FFFFFF</color>
-    <color name="md_theme_dark_surfaceVariant">#0E1B29</color>
+    <color name="md_theme_dark_surfaceVariant">#1C2D38</color>
     <color name="md_theme_dark_onSurfaceVariant">#FFFFFF</color>
     <color name="md_theme_dark_outline">#D1DFED</color>
     <color name="md_theme_dark_error">#FFB4AB</color>
     <color name="md_theme_dark_onError">#690005</color>
     <color name="md_theme_dark_errorContainer">#93000A</color>
     <color name="md_theme_dark_onErrorContainer">#FFDAD6</color>
-    <color name="md_theme_dark_icon_bg">#192532</color>
 </resources>
