@@ -86,7 +86,7 @@
                             android:textSize="25sp"
                             android:gravity="center_vertical"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/iconDados"
+                            app:layout_constraintStart_toEndOf="@+id/iconDadosPessoaisForms"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -302,7 +302,7 @@
                             android:textSize="25sp"
                             android:gravity="center_vertical"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/iconDados"
+                            app:layout_constraintStart_toEndOf="@+id/iconDadosInformacionaisForms"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"/>
 
