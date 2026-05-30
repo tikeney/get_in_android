@@ -4,12 +4,9 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.graphics.RenderEffect;
-import android.graphics.Shader;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -161,18 +158,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         updateNavHeader(currentUser);
-        applyToolbarBlur();
     }
 
-    private void applyToolbarBlur() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            binding.toolbar.setRenderEffect(
-                RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.CLAMP)
-            );
-        }
-    }
-
-    public void applyBottomNavConfig() {
+    private void setupNavigation() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
         navController = navHostFragment.getNavController();
