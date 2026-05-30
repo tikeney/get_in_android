@@ -19,7 +19,7 @@
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
+            android:background="?android:attr/windowBackground"
             android:fitsSystemWindows="true"
             app:elevation="0dp"
             app:liftOnScroll="false"
@@ -31,7 +31,8 @@
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
                 app:navigationIconTint="?attr/colorOnPrimary"
-                app:title="">
+                app:title=""
+                android:layout_gravity="center">
 
                 <LinearLayout
                     android:id="@+id/layout_toolbar_title"
@@ -40,23 +41,32 @@
                     android:orientation="vertical"
                     android:paddingVertical="8dp">
 
-                    <TextView
-                        android:id="@+id/tv_toolbar_title"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Título"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/tv_toolbar_subtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="VisitaTrack · Segurança Patrimonial"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:alpha="0.7"
-                        android:textSize="12sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/brand_get"
+                            android:textColor="@color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/brand_in"
+                            android:textColor="#3498DB"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </com.google.android.material.appbar.MaterialToolbar>

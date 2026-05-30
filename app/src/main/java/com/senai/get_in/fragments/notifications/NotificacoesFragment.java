@@ -49,21 +49,21 @@ public class NotificacoesFragment extends Fragment {
             }
         }).attach();
 
-        // Sincroniza o título da Toolbar com a aba selecionada
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                if (getActivity() instanceof MainActivity) {
-                    String title = "Notificações";
-                    switch (position) {
-                        case 0: title = "Todas as Notificações"; break;
-                        case 1: title = "Alertas de Segurança"; break;
-                        case 2: title = "Notificações de Sistema"; break;
-                    }
-                    ((MainActivity) getActivity()).setToolbarTitle(title);
-                }
-            }
-        });
+//        // Sincroniza o título da Toolbar com a aba selecionada
+//        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+//            @Override
+//            public void onPageSelected(int position) {
+//                super.onPageSelected(position);
+//                if (getActivity() instanceof MainActivity) {
+//                    String title = "Notificações";
+//                    switch (position) {
+//                        case 0: title = "Todas as Notificações"; break;
+//                        case 1: title = "Alertas de Segurança"; break;
+//                        case 2: title = "Notificações de Sistema"; break;
+//                    }
+//                    ((MainActivity) getActivity()).setToolbarTitle(title);
+//                }
+//            }
+//        });
     }
 }

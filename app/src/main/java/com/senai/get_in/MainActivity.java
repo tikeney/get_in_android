@@ -167,36 +167,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         final int startId = AccessManager.getStartDestinationId(currentUser);
 
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            int id = destination.getId();
-            configurarToolbar(id);
-
-            // Controle de visibilidade da AppBar e BottomNav
-            if (id == R.id.nav_usuario_detalhado) {
-                binding.appBar.setVisibility(View.GONE);
-                // Removemos o padding para que o fragmento ocupe o topo real
-                binding.appBar.setPadding(0, 0, 0, 0);
-            } else {
-                binding.appBar.setVisibility(View.VISIBLE);
-                // O listener de insets cuidará do padding novamente
-            }
-
-            Menu navMenu = binding.navView.getMenu();
-            for (int i = 0; i < navMenu.size(); i++) {
-                MenuItem item = navMenu.getItem(i);
-                updateMenuItemStyle(item, id);
-            }
-
-            Menu bottomMenu = binding.bottomNavigation.getMenu();
-            for (int i = 0; i < bottomMenu.size(); i++) {
-                MenuItem item = bottomMenu.getItem(i);
-                if (item.getItemId() == id) item.setChecked(true);
-            }
-
-            if (!AccessManager.isAllowedDestination(currentUser, id)) {
-                controller.navigate(id != startId ? startId : R.id.nav_perfil);
-            }
-        });
+//        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+//            int id = destination.getId();
+//            configurarToolbar(id);
+//
+//            // Controle de visibilidade da AppBar e BottomNav
+//            if (id == R.id.nav_usuario_detalhado) {
+//                binding.appBar.setVisibility(View.GONE);
+//                // Removemos o padding para que o fragmento ocupe o topo real
+//                binding.appBar.setPadding(0, 0, 0, 0);
+//            } else {
+//                binding.appBar.setVisibility(View.VISIBLE);
+//                // O listener de insets cuidará do padding novamente
+//            }
+//
+//            Menu navMenu = binding.navView.getMenu();
+//            for (int i = 0; i < navMenu.size(); i++) {
+//                MenuItem item = navMenu.getItem(i);
+//                updateMenuItemStyle(item, id);
+//            }
+//
+//            Menu bottomMenu = binding.bottomNavigation.getMenu();
+//            for (int i = 0; i < bottomMenu.size(); i++) {
+//                MenuItem item = bottomMenu.getItem(i);
+//                if (item.getItemId() == id) item.setChecked(true);
+//            }
+//
+//            if (!AccessManager.isAllowedDestination(currentUser, id)) {
+//                controller.navigate(id != startId ? startId : R.id.nav_perfil);
+//            }
+//        });
 
         NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.nav_graph);
         navGraph.setStartDestination(startId);
@@ -250,30 +250,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void setToolbarTitle(String title) {
-        if (binding != null && binding.tvToolbarTitle != null) {
-            binding.tvToolbarTitle.setText(title);
-        }
-    }
-
-    private void configurarToolbar(int destinationId) {
-        binding.tvToolbarTitle.setText("");
-        binding.tvToolbarSubtitle.setText("VisitaTrack · Segurança Patrimonial");
-
-        if (destinationId == R.id.menu_configuracoes) {
-            binding.tvToolbarTitle.setText("Configurações");
-        } else if (destinationId == R.id.nav_monitoramento) {
-            binding.tvToolbarTitle.setText("Atividade");
-        } else if (destinationId == R.id.nav_checkIn) {
-            binding.tvToolbarTitle.setText("Portaria");
-        } else if (destinationId == R.id.nav_perfil) {
-            binding.tvToolbarTitle.setText("Meu Perfil");
-        } else if (destinationId == R.id.nav_notificacoes) {
-            binding.tvToolbarTitle.setText("Notificações");
-        } else if (destinationId == R.id.nav_usuario_detalhado) {
-            binding.tvToolbarTitle.setText("Detalhes");
-        }
-    }
+//    public void setToolbarTitle(String title) {
+//        if (binding != null && binding.tvToolbarTitle != null) {
+//            binding.tvToolbarTitle.setText(title);
+//        }
+//    }
+//
+//    private void configurarToolbar(int destinationId) {
+//        binding.tvToolbarTitle.setText("");
+//        binding.tvToolbarSubtitle.setText("VisitaTrack · Segurança Patrimonial");
+//
+//        if (destinationId == R.id.menu_configuracoes) {
+//            binding.tvToolbarTitle.setText("Configurações");
+//        } else if (destinationId == R.id.nav_monitoramento) {
+//            binding.tvToolbarTitle.setText("Atividade");
+//        } else if (destinationId == R.id.nav_checkIn) {
+//            binding.tvToolbarTitle.setText("Portaria");
+//        } else if (destinationId == R.id.nav_perfil) {
+//            binding.tvToolbarTitle.setText("Meu Perfil");
+//        } else if (destinationId == R.id.nav_notificacoes) {
+//            binding.tvToolbarTitle.setText("Notificações");
+//        } else if (destinationId == R.id.nav_usuario_detalhado) {
+//            binding.tvToolbarTitle.setText("Detalhes");
+//        }
+//    }
 
     private void sincronizarDadosUsuario() {
         if (currentUser == null) return;
