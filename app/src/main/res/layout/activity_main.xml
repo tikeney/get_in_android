@@ -24,8 +24,8 @@
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
             android:fitsSystemWindows="true"
+            android:background="?android:attr/windowBackground"
             app:elevation="0dp"
             app:liftOnScroll="false"
             app:layout_constraintTop_toTopOf="parent">
@@ -35,9 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
-                app:navigationIconTint="?attr/colorOnPrimary"
-                app:title=""
-                android:background="?android:attr/windowBackground">
+                app:navigationIconTint="?attr/colorOnSurface"
+                app:title="">
 
                 <LinearLayout
                     android:id="@+id/layout_toolbar_title"

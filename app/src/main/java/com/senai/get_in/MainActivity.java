@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TokenManager tokenManager;
     private NavController navController;
     private UsuarioDetalhado currentUser;
-    
+
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         tokenManager = new TokenManager(this);
-        
+
         if (tokenManager.isDarkMode()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -105,30 +105,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            
+
             // Aplica padding no topo da AppBar da Activity (quando visível)
             binding.appBar.setPadding(0, systemBars.top, 0, 0);
-            
+
             // Ajusta a margem inferior do card do menu para flutuar acima da barra de navegação do sistema
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) binding.cardBottomNav.getLayoutParams();
             lp.bottomMargin = systemBars.bottom + (int)(24 * getResources().getDisplayMetrics().density);
             binding.cardBottomNav.setLayoutParams(lp);
-            
+
             return insets;
         });
 
         binding.navView.setNavigationItemSelectedListener(this);
-        
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        
+
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        // MUDA A COR DO ÍCONE DO MENU (HAMBÚRGUER) DE FORMA GARANTIDA
+        // Você pode trocar R.color.primary por qualquer cor do seu colors.xml
+        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(com.google.android.material.R.attr.colorOnSurface, getTheme()));
+
         // Botão Fechar no Header
         View headerView = binding.navHeader.getRoot();
-        headerView.findViewById(R.id.btn_close_drawer).setOnClickListener(v -> 
-            binding.drawerLayout.closeDrawer(GravityCompat.START));
+        headerView.findViewById(R.id.btn_close_drawer).setOnClickListener(v ->
+                binding.drawerLayout.closeDrawer(GravityCompat.START));
 
         // Botão Configurações no Footer
         binding.navFooter.btnFooterConfig.setOnClickListener(v -> {
@@ -148,17 +152,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void applyBottomNavConfig() {
         if (tokenManager == null) return;
         boolean showLabels = tokenManager.shouldShowLabels();
-        
+
         // Ajusta visibilidade dos textos
         binding.bottomNavigation.setLabelVisibilityMode(
-            showLabels ? com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_LABELED 
-                       : com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_UNLABELED
+                showLabels ? com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_LABELED
+                        : com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_UNLABELED
         );
 
         // Ajusta altura para ficar mais fino no modo compacto
         ViewGroup.LayoutParams params = binding.bottomNavigation.getLayoutParams();
-        params.height = showLabels ? (int) (80 * getResources().getDisplayMetrics().density) 
-                                   : (int) (64 * getResources().getDisplayMetrics().density);
+        params.height = showLabels ? (int) (80 * getResources().getDisplayMetrics().density)
+                : (int) (64 * getResources().getDisplayMetrics().density);
         binding.bottomNavigation.setLayoutParams(params);
     }
 
@@ -168,37 +172,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navController = navHostFragment.getNavController();
 
         final int startId = AccessManager.getStartDestinationId(currentUser);
-
-//        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-//            int id = destination.getId();
-//            configurarToolbar(id);
-//
-//            // Controle de visibilidade da AppBar e BottomNav
-//            if (id == R.id.nav_usuario_detalhado) {
-//                binding.appBar.setVisibility(View.GONE);
-//                // Removemos o padding para que o fragmento ocupe o topo real
-//                binding.appBar.setPadding(0, 0, 0, 0);
-//            } else {
-//                binding.appBar.setVisibility(View.VISIBLE);
-//                // O listener de insets cuidará do padding novamente
-//            }
-//
-//            Menu navMenu = binding.navView.getMenu();
-//            for (int i = 0; i < navMenu.size(); i++) {
-//                MenuItem item = navMenu.getItem(i);
-//                updateMenuItemStyle(item, id);
-//            }
-//
-//            Menu bottomMenu = binding.bottomNavigation.getMenu();
-//            for (int i = 0; i < bottomMenu.size(); i++) {
-//                MenuItem item = bottomMenu.getItem(i);
-//                if (item.getItemId() == id) item.setChecked(true);
-//            }
-//
-//            if (!AccessManager.isAllowedDestination(currentUser, id)) {
-//                controller.navigate(id != startId ? startId : R.id.nav_perfil);
-//            }
-//        });
 
         NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.nav_graph);
         navGraph.setStartDestination(startId);
@@ -213,23 +186,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Animação de escala ao clicar
             View itemView = findViewById(id);
             if (itemView != null) {
-                itemView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(150).withEndAction(() -> 
-                    itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(150).start()
+                itemView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(150).withEndAction(() ->
+                        itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(150).start()
                 ).start();
             }
-            
+
             NavOptions options = new NavOptions.Builder()
                     .setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out)
                     .setPopEnterAnim(R.anim.fade_in).setPopExitAnim(R.anim.fade_out)
                     .build();
-            
+
             navController.navigate(id, null, options);
             return true;
         });
-        
+
         restrictMenu(binding.navView.getMenu());
         restrictMenu(binding.bottomNavigation.getMenu());
-        
+
         binding.bottomNavigation.setVisibility(View.VISIBLE);
     }
 
@@ -244,38 +217,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             boolean isSelected = item.getItemId() == currentId;
             item.setChecked(isSelected);
-            
+
             View actionView = item.getActionView();
             if (actionView instanceof ImageView) {
                 actionView.setAlpha(isSelected ? 1.0f : 0.4f);
             }
         }
     }
-
-//    public void setToolbarTitle(String title) {
-//        if (binding != null && binding.tvToolbarTitle != null) {
-//            binding.tvToolbarTitle.setText(title);
-//        }
-//    }
-//
-//    private void configurarToolbar(int destinationId) {
-//        binding.tvToolbarTitle.setText("");
-//        binding.tvToolbarSubtitle.setText("VisitaTrack · Segurança Patrimonial");
-//
-//        if (destinationId == R.id.menu_configuracoes) {
-//            binding.tvToolbarTitle.setText("Configurações");
-//        } else if (destinationId == R.id.nav_monitoramento) {
-//            binding.tvToolbarTitle.setText("Atividade");
-//        } else if (destinationId == R.id.nav_checkIn) {
-//            binding.tvToolbarTitle.setText("Portaria");
-//        } else if (destinationId == R.id.nav_perfil) {
-//            binding.tvToolbarTitle.setText("Meu Perfil");
-//        } else if (destinationId == R.id.nav_notificacoes) {
-//            binding.tvToolbarTitle.setText("Notificações");
-//        } else if (destinationId == R.id.nav_usuario_detalhado) {
-//            binding.tvToolbarTitle.setText("Detalhes");
-//        }
-//    }
 
     private void sincronizarDadosUsuario() {
         if (currentUser == null) return;
@@ -310,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction()) ||
-            NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
+                NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             if (tag != null) {
                 String tagId = bytesToHexString(tag.getId());
@@ -371,19 +319,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (user != null) {
             binding.navFooter.tvFooterNome.setText(user.getNome());
             binding.navFooter.tvFooterEmail.setText(user.getEmail());
-            
-            String inicial = (user.getNome() != null && !user.getNome().isEmpty()) 
+
+            String inicial = (user.getNome() != null && !user.getNome().isEmpty())
                     ? user.getNome().substring(0, 1).toUpperCase() : "?";
             binding.navFooter.tvFooterInicial.setText(inicial);
 
             if (user.getFotoPerfil() != null && !user.getFotoPerfil().isEmpty()) {
                 binding.navFooter.ivFooterFoto.setVisibility(View.VISIBLE);
                 binding.navFooter.tvFooterInicial.setVisibility(View.GONE);
-                
+
                 Glide.with(this)
-                    .load(user.getFotoPerfil())
-                    .circleCrop()
-                    .into(binding.navFooter.ivFooterFoto);
+                        .load(user.getFotoPerfil())
+                        .circleCrop()
+                        .into(binding.navFooter.ivFooterFoto);
             } else {
                 binding.navFooter.ivFooterFoto.setVisibility(View.GONE);
                 binding.navFooter.tvFooterInicial.setVisibility(View.VISIBLE);
