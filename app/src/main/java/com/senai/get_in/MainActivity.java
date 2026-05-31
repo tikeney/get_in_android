@@ -125,6 +125,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Força a cor do ícone do menu (hambúrguer)
+        if (binding.toolbar.getNavigationIcon() != null) {
+            binding.toolbar.getNavigationIcon().setTint(getResources().getColor(R.color.primary, getTheme()));
+        }
+
         // Botão Fechar no Header
         View headerView = binding.navHeader.getRoot();
         headerView.findViewById(R.id.btn_close_drawer).setOnClickListener(v -> 
