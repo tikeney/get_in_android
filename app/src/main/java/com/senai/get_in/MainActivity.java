@@ -4,16 +4,14 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -100,16 +98,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setTitle("");
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 
-            // Aplica padding no topo da AppBar da Activity (quando visível)
+            // Aplica padding no topo da AppBar
             binding.appBar.setPadding(0, systemBars.top, 0, 0);
 
-            // Ajusta a margem inferior do card do menu para flutuar acima da barra de navegação do sistema
+            // Ajusta a margem inferior do card do menu
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) binding.cardBottomNav.getLayoutParams();
             lp.bottomMargin = systemBars.bottom + (int)(24 * getResources().getDisplayMetrics().density);
             binding.cardBottomNav.setLayoutParams(lp);
@@ -125,13 +122,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // MUDA A COR DO ÍCONE DO MENU (HAMBÚRGUER) DE FORMA GARANTIDA
-        // Você pode trocar R.color.primary por qualquer cor do seu colors.xml
-        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(com.google.android.material.R.attr.colorOnSurface, getTheme()));
+        // Define a cor do ícone hambúrguer baseada no textColorPrimary do tema
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(android.R.attr.textColorPrimary, typedValue, true);
+        toggle.getDrawerArrowDrawable().setColor(typedValue.data);
 
         // Botão Fechar no Header
-        View headerView = binding.navHeader.getRoot();
-        headerView.findViewById(R.id.btn_close_drawer).setOnClickListener(v ->
+        binding.navHeader.btnCloseDrawer.setOnClickListener(v ->
                 binding.drawerLayout.closeDrawer(GravityCompat.START));
 
         // Botão Configurações no Footer
@@ -153,13 +150,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (tokenManager == null) return;
         boolean showLabels = tokenManager.shouldShowLabels();
 
-        // Ajusta visibilidade dos textos
         binding.bottomNavigation.setLabelVisibilityMode(
                 showLabels ? com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_LABELED
                         : com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_UNLABELED
         );
 
-        // Ajusta altura para ficar mais fino no modo compacto
         ViewGroup.LayoutParams params = binding.bottomNavigation.getLayoutParams();
         params.height = showLabels ? (int) (80 * getResources().getDisplayMetrics().density)
                 : (int) (64 * getResources().getDisplayMetrics().density);
@@ -173,6 +168,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         final int startId = AccessManager.getStartDestinationId(currentUser);
 
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            int id = destination.getId();
+
+            // Controle de visibilidade da AppBar
+            if (id == R.id.nav_usuario_detalhado) {
+                binding.appBar.setVisibility(View.GONE);
+                binding.appBar.setPadding(0, 0, 0, 0);
+            } else {
+                binding.appBar.setVisibility(View.VISIBLE);
+            }
+
+            // Sincroniza estado do Drawer
+            Menu navMenu = binding.navView.getMenu();
+            for (int i = 0; i < navMenu.size(); i++) {
+                MenuItem item = navMenu.getItem(i);
+                item.setChecked(item.getItemId() == id);
+            }
+
+            // Sincroniza estado da BottomNav
+            Menu bottomMenu = binding.bottomNavigation.getMenu();
+            for (int i = 0; i < bottomMenu.size(); i++) {
+                MenuItem item = bottomMenu.getItem(i);
+                if (item.getItemId() == id) item.setChecked(true);
+            }
+
+            if (!AccessManager.isAllowedDestination(currentUser, id)) {
+                controller.navigate(id != startId ? startId : R.id.nav_perfil);
+            }
+        });
+
         NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.nav_graph);
         navGraph.setStartDestination(startId);
         navController.setGraph(navGraph);
@@ -183,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
 
-            // Animação de escala ao clicar
             View itemView = findViewById(id);
             if (itemView != null) {
                 itemView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(150).withEndAction(() ->
@@ -202,27 +226,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         restrictMenu(binding.navView.getMenu());
         restrictMenu(binding.bottomNavigation.getMenu());
-
-        binding.bottomNavigation.setVisibility(View.VISIBLE);
-    }
-
-    private void updateMenuItemStyle(MenuItem item, int currentId) {
-        if (item.hasSubMenu()) {
-            Menu subMenu = item.getSubMenu();
-            if (subMenu != null) {
-                for (int i = 0; i < subMenu.size(); i++) {
-                    updateMenuItemStyle(subMenu.getItem(i), currentId);
-                }
-            }
-        } else {
-            boolean isSelected = item.getItemId() == currentId;
-            item.setChecked(isSelected);
-
-            View actionView = item.getActionView();
-            if (actionView instanceof ImageView) {
-                actionView.setAlpha(isSelected ? 1.0f : 0.4f);
-            }
-        }
     }
 
     private void sincronizarDadosUsuario() {

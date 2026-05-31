@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/windowBackground">
+    android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -51,8 +50,7 @@
                         android:text="Modo Escuro"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="16sp"
-                        app:thumbTint="?attr/colorPrimary"
-                        app:trackTint="?attr/colorPrimaryContainer" />
+                        app:thumbTint="?attr/colorAccent"/>
 
                     <View
                         android:layout_width="match_parent"
@@ -68,8 +66,7 @@
                         android:text="Legendas no Menu"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="16sp"
-                        app:thumbTint="?attr/colorPrimary"
-                        app:trackTint="?attr/colorPrimaryContainer" />
+                        app:thumbTint="?attr/colorAccent"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -107,7 +104,8 @@
                         android:padding="8dp"
                         android:text="Receber Notificações"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:thumbTint="?attr/colorAccent"/>
 
                     <View
                         android:layout_width="match_parent"
@@ -123,7 +121,8 @@
                         android:padding="8dp"
                         android:text="Som de Notificação"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:thumbTint="?attr/colorAccent"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -163,7 +162,7 @@
                         android:textAlignment="viewStart"
                         android:textColor="?attr/colorOnSurface"
                         app:icon="@drawable/outline_lock_24"
-                        app:iconTint="?attr/colorPrimary" />
+                        app:iconTint="?attr/colorAccent" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnAlterarEmail"
@@ -174,7 +173,7 @@
                         android:textAlignment="viewStart"
                         android:textColor="?attr/colorOnSurface"
                         app:icon="@drawable/outline_person_24"
-                        app:iconTint="?attr/colorPrimary" />
+                        app:iconTint="?attr/colorAccent" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
