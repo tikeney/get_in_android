@@ -19,18 +19,6 @@
             android:paddingBottom="100dp"
             android:clipToPadding="false">
 
-<!--            &lt;!&ndash; Seção Identificação &ndash;&gt;-->
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="IDENTIFICAÇÃO"-->
-<!--                android:textColor="@color/accent"-->
-<!--                android:textSize="12sp"-->
-<!--                android:textStyle="bold"-->
-<!--                android:letterSpacing="0.1"-->
-<!--                android:layout_marginBottom="12dp"-->
-<!--                android:layout_marginStart="4dp"/>-->
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -327,6 +315,7 @@
                             android:focusable="false"
                             android:inputType="none"
                             android:textColor="?attr/colorOnSurface"
+                            android:padding="16dp"
                             android:background="@drawable/bg_tag_status"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -346,6 +335,7 @@
                             android:focusable="false"
                             android:inputType="none"
                             android:textColor="?attr/colorOnSurface"
+                            android:padding="16dp"
                             android:background="@drawable/bg_tag_status"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -365,6 +355,7 @@
                             android:focusable="false"
                             android:inputType="none"
                             android:textColor="?attr/colorOnSurface"
+                            android:padding="16dp"
                             android:background="@drawable/bg_tag_status"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
