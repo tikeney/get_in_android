@@ -7,47 +7,20 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="?android:attr/windowBackground"
         app:elevation="0dp"
         app:liftOnScroll="false">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Notificações"
-                android:textColor="?attr/colorOnPrimary"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="16dp"
-                android:text="Fique por dentro das últimas atualizações"
-                android:textColor="?attr/colorOnPrimary"
-                android:alpha="0.7"
-                android:textSize="14sp" />
-
-        </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
+            android:background="?android:attr/windowBackground"
             app:tabGravity="fill"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="?attr/colorOnPrimary"
-            app:tabTextColor="?attr/colorOnPrimary"
-            app:tabIndicatorColor="?attr/colorOnPrimary"
+            app:tabSelectedTextColor="?attr/colorOnSurface"
+            app:tabTextColor="?attr/colorOnSurface"
+            app:tabIndicatorColor="?attr/colorOnSurface"
             app:tabIndicatorHeight="3dp"
             app:tabTextAppearance="@style/TextAppearance.Material3.TitleSmall"
             app:tabRippleColor="#33FFFFFF" />

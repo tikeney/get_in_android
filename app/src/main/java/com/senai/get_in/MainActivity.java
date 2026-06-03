@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             int id = destination.getId();
+            configurarToolbar(id);
 
             // Controle de visibilidade da AppBar
             if (id == R.id.nav_usuario_detalhado) {
@@ -226,6 +227,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         restrictMenu(binding.navView.getMenu());
         restrictMenu(binding.bottomNavigation.getMenu());
+    }
+
+    private void configurarToolbar(int destinationId) {
+        binding.tvToolbarTitle.setText("");
+        if (destinationId == R.id.menu_configuracoes) {
+            binding.tvToolbarTitle.setText("Configurações");
+        } else if (destinationId == R.id.nav_monitoramento) {
+            binding.tvToolbarTitle.setText("Atividade");
+        } else if (destinationId == R.id.nav_checkIn) {
+            binding.tvToolbarTitle.setText("Portaria");
+        } else if (destinationId == R.id.nav_perfil) {
+            binding.tvToolbarTitle.setText("Meu Perfil");
+        } else if (destinationId == R.id.nav_notificacoes) {
+            binding.tvToolbarTitle.setText("Notificações");
+        } else if (destinationId == R.id.nav_usuario_detalhado) {
+            binding.tvToolbarTitle.setText("Detalhes");
+        }
     }
 
     private void sincronizarDadosUsuario() {

@@ -10,7 +10,7 @@
         android:id="@+id/appBarMonitoramento"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
+        android:background="?android:attr/windowBackground"
         app:elevation="0dp"
         app:liftOnScroll="false">
 
@@ -37,14 +37,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="14sp"
                     android:textStyle="bold" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="VISITANTES"
-                    android:textColor="#B0C4DE"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="7sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -56,7 +56,7 @@
                 android:layout_weight="1.4"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#1A3B5C"
+                app:cardBackgroundColor="?attr/colorSurface"
                 app:strokeWidth="1dp"
                 app:strokeColor="#33FFFFFF">
                 <LinearLayout
@@ -69,14 +69,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textColor="#FFFFFF"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TOTAL NO LOCAL"
-                        android:textColor="#B0C4DE"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="7sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -94,14 +94,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="14sp"
                     android:textStyle="bold" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="FUNCIONÁRIOS"
-                    android:textColor="#B0C4DE"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="7sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -117,7 +117,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:boxBackgroundColor="#152F4A"
+                app:boxBackgroundColor="?attr/colorSurface"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
@@ -126,15 +126,15 @@
                 app:boxStrokeWidthFocused="0dp"
                 app:hintEnabled="false"
                 app:startIconDrawable="@android:drawable/ic_menu_search"
-                app:startIconTint="#B0C4DE">
+                app:startIconTint="?attr/colorOnSurface">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSharedBusca"
                     android:layout_width="match_parent"
-                    android:layout_height="28dp"
+                    android:layout_height="40dp"
                     android:hint="Pesquisar..."
-                    android:textColor="@color/white"
-                    android:textColorHint="#B0C4DE"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textColorHint="?attr/colorOnSurface"
                     android:textSize="11sp"
                     android:paddingVertical="0dp" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -143,11 +143,11 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayoutMonitoramento"
             android:layout_width="match_parent"
-            android:layout_height="26dp"
-            android:background="@color/primary"
-            app:tabIndicatorColor="@color/white"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="#B0C4DE"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground"
+            app:tabIndicatorColor="?attr/colorOnSurface"
+            app:tabSelectedTextColor="?attr/colorOnSurface"
+            app:tabTextColor="?attr/colorOnSurface"
             app:tabMode="fixed"
             app:tabGravity="fill"
             app:tabIndicatorHeight="1.5dp"
