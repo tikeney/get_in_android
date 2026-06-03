@@ -2,13 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/windowBackground">
-
-    <com.senai.get_in.utils.ParticlesView
-        android:id="@+id/particlesView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,7 +19,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="83dp"
-android:background="@color/primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -74,7 +67,7 @@ android:background="@color/primary"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Cargo do Usuário"
-                android:textColor="@color/accent"
+                android:textColor="?attr/colorAccent"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -104,7 +97,7 @@ android:background="@color/primary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Informações Pessoais"
-                        android:textColor="@color/accent"
+                        android:textColor="?attr/colorAccent"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="20dp"/>
@@ -120,7 +113,7 @@ android:background="@color/primary"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/outline_person_24"
-                            app:tint="@color/accent"/>
+                            app:tint="?attr/colorAccent"/>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -154,7 +147,7 @@ android:background="@color/primary"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/outline_badge_24"
-                        app:tint="@color/accent"/>
+                        app:tint="?attr/colorAccent"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -188,7 +181,7 @@ android:background="@color/primary"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/outline_list_alt_24"
-                    app:tint="@color/accent"/>
+                    app:tint="?attr/colorAccent"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -222,7 +215,7 @@ android:background="@color/primary"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/outline_calendar_today_24"
-                    app:tint="@color/accent"/>
+                    app:tint="?attr/colorAccent"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -256,7 +249,7 @@ android:background="@color/primary"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/outline_check_24"
-                    app:tint="@color/accent"/>
+                    app:tint="?attr/colorAccent"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -306,7 +299,7 @@ android:background="@color/primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Departamento"
-            android:textColor="@color/accent"
+            android:textColor="?attr/colorAccent"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginBottom="20dp"/>
@@ -320,7 +313,7 @@ android:background="@color/primary"
             android:id="@+id/viewDot"
             android:layout_width="8dp"
             android:layout_height="8dp"
-            app:cardBackgroundColor="@color/accent"
+            app:cardBackgroundColor="?attr/colorAccent"
             app:cardCornerRadius="4dp"
             app:cardElevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

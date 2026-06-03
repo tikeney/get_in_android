@@ -3,14 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarMonitoramento"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
+        android:background="?android:attr/windowBackground"
         app:elevation="0dp"
         app:liftOnScroll="false">
 
@@ -53,14 +52,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textColor="#FFFFFF"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="VISITANTES"
-                            android:textColor="#B0C4DE"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="8sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -68,7 +67,7 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="20dp"
-                        android:background="#33FFFFFF"
+                        android:background="?attr/colorOnSurface"
                         android:layout_marginHorizontal="8dp" />
 
                     <LinearLayout
@@ -82,14 +81,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textColor="#FFFFFF"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="EQUIPE"
-                            android:textColor="#B0C4DE"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="8sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -101,7 +100,7 @@
                     android:layout_height="48dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#1A3B5C"
+                    app:cardBackgroundColor="?attr/colorSurface"
                     app:strokeWidth="1dp"
                     app:strokeColor="#33FFFFFF"
                     app:layout_constraintTop_toTopOf="parent"
@@ -117,14 +116,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textColor="#FFFFFF"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="TOTAL"
-                            android:textColor="#B0C4DE"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="7sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -141,7 +140,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    app:boxBackgroundColor="#152F4A"
+                    app:boxBackgroundColor="?attr/colorSurface"
                     app:boxCornerRadiusBottomEnd="20dp"
                     app:boxCornerRadiusBottomStart="20dp"
                     app:boxCornerRadiusTopEnd="20dp"
@@ -150,7 +149,7 @@
                     app:boxStrokeWidthFocused="0dp"
                     app:hintEnabled="false"
                     app:startIconDrawable="@android:drawable/ic_menu_search"
-                    app:startIconTint="#B0C4DE">
+                    app:startIconTint="?attr/colorOnSurface">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etSharedBusca"
@@ -158,7 +157,7 @@
                         android:layout_height="match_parent"
                         android:hint="O que você está procurando?"
                         android:textColor="@color/white"
-                        android:textColorHint="#60B0C4DE"
+                        android:textColorHint="?attr/colorOnSurface"
                         android:textSize="13sp"
                         android:paddingVertical="0dp"
                         android:imeOptions="actionSearch"
@@ -171,11 +170,11 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayoutMonitoramento"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:background="@color/primary"
-            app:tabIndicatorColor="@color/white"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="#80B0C4DE"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground"
+            app:tabIndicatorColor="?attr/colorOnSurface"
+            app:tabSelectedTextColor="?attr/colorOnSurface"
+            app:tabTextColor="?attr/colorOnSurface"
             app:tabMode="fixed"
             app:tabGravity="fill"
             app:tabIndicatorHeight="2dp"

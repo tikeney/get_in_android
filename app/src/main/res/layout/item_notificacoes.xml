@@ -20,7 +20,7 @@
             android:id="@+id/viewIndicator"
             android:layout_width="4dp"
             android:layout_height="0dp"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -70,7 +70,7 @@
             android:minHeight="0dp"
             android:padding="0dp"
             android:text="VER DETALHES"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="?attr/colorAccent"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/tvTitulo"

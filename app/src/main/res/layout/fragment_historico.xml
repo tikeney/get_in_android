@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeHistorico"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/windowBackground">
+    android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -44,7 +43,7 @@
                         android:text="Todos"
                         android:textColor="?attr/colorOnSurface"
                         app:checkedIconVisible="false"
-                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
+                        app:chipBackgroundColor="?attr/colorSurface"
                         app:chipStrokeWidth="0dp"
                         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent" />
 
@@ -56,7 +55,7 @@
                         android:text="Permitido"
                         android:textColor="?attr/colorOnSurface"
                         app:checkedIconVisible="false"
-                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
+                        app:chipBackgroundColor="?attr/colorSurface"
                         app:chipStrokeWidth="0dp" />
 
                     <com.google.android.material.chip.Chip
@@ -67,7 +66,7 @@
                         android:text="Negado"
                         android:textColor="?attr/colorOnSurface"
                         app:checkedIconVisible="false"
-                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
+                        app:chipBackgroundColor="?attr/colorSurface"
                         app:chipStrokeWidth="0dp" />
 
                     <com.google.android.material.chip.Chip
@@ -78,7 +77,7 @@
                         android:text="Saiu"
                         android:textColor="?attr/colorOnSurface"
                         app:checkedIconVisible="false"
-                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
+                        app:chipBackgroundColor="?attr/colorSurface"
                         app:chipStrokeWidth="0dp" />
 
                     <com.google.android.material.chip.Chip
@@ -89,7 +88,7 @@
                         android:text="Na fábrica"
                         android:textColor="?attr/colorOnSurface"
                         app:checkedIconVisible="false"
-                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
+                        app:chipBackgroundColor="?attr/colorSurface"
                         app:chipStrokeWidth="0dp" />
 
                 </com.google.android.material.chip.ChipGroup>
@@ -99,7 +98,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="16dp"
-                android:background="?attr/colorOutlineVariant" />
+                android:layout_marginHorizontal="20dp"
+                android:background="?attr/colorOnSurface" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -113,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:text="REGISTROS RECENTES"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="?attr/colorAccent"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 

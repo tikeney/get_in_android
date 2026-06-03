@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:attr/windowBackground">
+    android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -19,18 +18,6 @@
             android:padding="20dp"
             android:paddingBottom="100dp"
             android:clipToPadding="false">
-
-            <!-- Seção Identificação -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="IDENTIFICAÇÃO"
-                android:textColor="@color/accent"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.1"
-                android:layout_marginBottom="12dp"
-                android:layout_marginStart="4dp"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -47,7 +34,150 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Botão de Foto -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/tituloDadosPessoaisForms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layout_marginBottom="15dp"
+                        >
+
+                        <ImageView
+                            android:id="@+id/iconDadosPessoaisForms"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:src="@drawable/outline_person_24"
+                            android:scaleType="centerCrop"
+                            android:clipToOutline="true"
+                            android:background="@drawable/bg_icon"
+                            android:backgroundTint="?attr/colorIconBackground"
+                            android:padding="8dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <TextView
+                            android:id="@+id/txtDadosPessoaisForms"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="16dp"
+                            android:text="Dados Pessoais"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="25sp"
+                            android:gravity="center_vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/iconDadosPessoaisForms"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorSurfaceVariant"
+                        android:layout_marginBottom="24dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/tituloDadosPessoaisForms" />
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/inputNome"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:hint="Nome Completo"
+                        app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
+                        app:startIconTint="?attr/colorOnSurfaceVariant">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNome"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnSurface"
+                            android:background="@drawable/bg_tag_status"
+                            android:inputType="textPersonName" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputCPF"
+                            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="15dp"
+                            android:hint="CPF"
+                            app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etCPF"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorOnSurface"
+                                android:background="@drawable/bg_tag_status"
+                                android:backgroundTint="?attr/colorSurfaceVariant"
+                                android:inputType="number" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputTelefone"
+                            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginBottom="15dp"
+                            android:hint="Telefone"
+                            app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etTelefone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorOnSurface"
+                                android:background="@drawable/bg_tag_status"
+                                android:inputType="phone" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/inputEmail"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:hint="Email"
+                        app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnSurface"
+                            android:background="@drawable/bg_tag_status"
+                            android:inputType="text" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/btnAdicionarFoto"
                         android:layout_width="match_parent"
@@ -55,8 +185,9 @@
                         android:padding="16dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:background="@drawable/fundo_tracejado_foto"
-                        android:layout_marginBottom="16dp">
+                        android:background="@drawable/bg_tag_status"
+                        android:backgroundTint="?attr/colorSurfaceVariant"
+                        android:layout_marginBottom="15dp">
 
                         <ImageView
                             android:id="@+id/iv_icone_perfil"
@@ -66,7 +197,7 @@
                             android:scaleType="centerCrop"
                             android:clipToOutline="true"
                             android:background="@drawable/bg_tag_status"
-                            android:backgroundTint="?attr/colorSurfaceVariant"
+                            android:backgroundTint="?attr/colorIconBackground"
                             android:padding="8dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -79,7 +210,7 @@
                             android:layout_marginStart="16dp"
                             android:text="Foto do Visitante"
                             android:textStyle="bold"
-                            android:textColor="@color/accent"
+                            android:textColor="?attr/colorAccent"
                             android:textSize="16sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/iv_icone_perfil"
@@ -101,127 +232,8 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputNome"
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:hint="Nome Completo"
-                        app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp"
-                        app:startIconDrawable="@drawable/outline_person_24"
-                        app:startIconTint="?attr/colorOnSurfaceVariant">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etNome"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurface"
-                            android:inputType="textPersonName" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:baselineAligned="false">
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/inputCPF"
-                            style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="12dp"
-                            android:hint="CPF"
-                            app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                            app:boxStrokeWidth="0dp"
-                            app:boxStrokeWidthFocused="0dp">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etCPF"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="?attr/colorOnSurface"
-                                android:inputType="number" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/inputTelefone"
-                            style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginBottom="12dp"
-                            android:hint="Telefone"
-                            app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                            app:boxStrokeWidth="0dp"
-                            app:boxStrokeWidthFocused="0dp">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etTelefone"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="?attr/colorOnSurface"
-                                android:inputType="phone" />
-                        </com.google.android.material.textfield.TextInputLayout>
-                    </LinearLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputEmpresa"
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:hint="Empresa"
-                        app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etEmpresa"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurface"
-                            android:inputType="text" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputMotivo"
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Motivo da Visita"
-                        app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etMotivo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurface"
-                            android:inputType="text" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- Seção Crachá -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ACESSO E SEGURANÇA"
-                android:textColor="@color/accent"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.1"
-                android:layout_marginBottom="12dp"
-                android:layout_marginStart="4dp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -239,21 +251,134 @@
                     android:padding="16dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/tituloDadosInformacionaisForms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layout_marginBottom="15dp"
+                        >
+
+                        <ImageView
+                            android:id="@+id/iconDadosInformacionaisForms"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:src="@drawable/outline_home_24"
+                            android:scaleType="centerCrop"
+                            android:clipToOutline="true"
+                            android:background="@drawable/bg_icon"
+                            android:backgroundTint="?attr/colorIconBackground"
+                            android:padding="8dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <TextView
+                            android:id="@+id/txtDadosInformacionaisForms"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="16dp"
+                            android:text="Dados Informacionais"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="25sp"
+                            android:gravity="center_vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/iconDadosInformacionaisForms"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorSurfaceVariant"
+                        android:layout_marginBottom="24dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/tituloDadosInformacionaisForms" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/dropdownEmpresa"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Empresa"
+                        android:layout_marginBottom="15dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteEmpresa"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:textColor="?attr/colorOnSurface"
+                            android:padding="16dp"
+                            android:background="@drawable/bg_tag_status"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/dropdownSetorResponsavel"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Setor responsavel"
+                        android:layout_marginBottom="15dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteSetorResponsavel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:textColor="?attr/colorOnSurface"
+                            android:padding="16dp"
+                            android:background="@drawable/bg_tag_status"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/dropdownMotivoDeVisita"
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Motivo de visita"
+                        android:layout_marginBottom="15dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteMotivoDeVisita"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:textColor="?attr/colorOnSurface"
+                            android:padding="16dp"
+                            android:background="@drawable/bg_tag_status"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/btnAdicionarCracha"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="16dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:background="@drawable/fundo_cracha"
-                        android:layout_marginBottom="20dp">
+                        android:background="@drawable/bg_tag_status"
+                        android:backgroundTint="?attr/colorSurfaceVariant">
 
                         <ImageView
                             android:id="@+id/iv_icone_cracha"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:src="@drawable/outline_badge_24"
-                            app:tint="?attr/colorOnPrimary"
+                            android:background="@drawable/bg_tag_status"
+                            android:backgroundTint="?attr/colorIconBackground"
+                            android:padding="8dp"
+                            app:tint="?attr/colorAccent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent" />
@@ -265,7 +390,7 @@
                             android:layout_marginStart="16dp"
                             android:text="Vincular Crachá"
                             android:textStyle="bold"
-                            android:textColor="?attr/colorOnPrimary"
+                            android:textColor="?attr/colorAccent"
                             android:textSize="16sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/iv_icone_cracha"
@@ -276,8 +401,9 @@
                             android:id="@+id/tv_subtitulo_cracha"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
                             android:text="Aproxime o crachá do leitor RFID"
-                            android:textColor="?attr/colorOnPrimary"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:alpha="0.7"
                             android:textSize="13sp"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -286,6 +412,27 @@
                             app:layout_constraintBottom_toBottomOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+
 
                     <TextView
                         android:layout_width="wrap_content"

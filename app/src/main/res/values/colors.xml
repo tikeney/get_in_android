@@ -34,7 +34,8 @@
     <!-- Mapeamentos Semânticos -->
     <color name="brand_blue">@color/primary</color>
     <color name="secundary">@color/blue_shade_400</color>
-    <color name="accent">@color/blue_shade_400</color>
+    <color name="accent_light">#003061</color>
+    <color name="accent_dark">@color/blue_shade_400</color>
     <color name="header_subtitle">@color/blue_shade_300</color>
 
     <!-- Status Tags -->

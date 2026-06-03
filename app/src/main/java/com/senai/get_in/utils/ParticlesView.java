@@ -26,12 +26,25 @@ public class ParticlesView extends View {
     }
 
     private void init() {
-        particlePaint.setColor(Color.parseColor("#4DA8EA")); // Azul do original
-        particlePaint.setStyle(Paint.Style.FILL);
+        // Esta linha deteta se o modo escuro está ativo
+        int nightModeFlags = getContext().getResources().getConfiguration().uiMode &
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 
-        linePaint.setColor(Color.parseColor("#4DA8EA"));
+        int color;
+        if (nightModeFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES) {
+            color = Color.WHITE; // Cor branca no modo escuro
+        } else {
+            color = Color.parseColor("#4DA8EA"); // Azul original no modo claro
+        }
+
+        particlePaint.setColor(color);
+        particlePaint.setStyle(Paint.Style.FILL);
+        particlePaint.setAlpha(100); // Mantendo a transparência que sugerimos antes
+
+        linePaint.setColor(color);
         linePaint.setStrokeWidth(1.5f);
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -79,7 +92,7 @@ public class ParticlesView extends View {
             y = random.nextFloat() * height;
             vx = (random.nextFloat() - 0.5f) * 2f;
             vy = (random.nextFloat() - 0.5f) * 2f;
-            radius = random.nextFloat() * 6f + 7f;
+            radius = random.nextFloat() * 5f + 6f;
         }
 
         void update(int width, int height) {

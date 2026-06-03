@@ -15,12 +15,17 @@
         android:background="?android:attr/windowBackground"
         android:fitsSystemWindows="false">
 
+        <com.senai.get_in.utils.ParticlesView
+            android:id="@+id/particlesView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
             android:fitsSystemWindows="true"
+            android:background="?android:attr/windowBackground"
             app:elevation="0dp"
             app:liftOnScroll="false"
             app:layout_constraintTop_toTopOf="parent">
@@ -37,26 +42,18 @@
                     android:id="@+id/layout_toolbar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingVertical="0dp">
+                    android:orientation="horizontal"
+                    android:layout_gravity="center">
 
                     <TextView
                         android:id="@+id/tv_toolbar_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Título"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textSize="18sp"
+                        android:text=""
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tv_toolbar_subtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="VisitaTrack · Segurança Patrimonial"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:alpha="0.7"
-                        android:textSize="12sp" />
                 </LinearLayout>
 
             </com.google.android.material.appbar.MaterialToolbar>
@@ -73,7 +70,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Efeito de Brilho (Glow) por trás do menu -->
+        <!-- Efeito de Brilho (Glow ) por trás do menu -->
         <View
             android:id="@+id/view_nav_glow"
             android:layout_width="0dp"
@@ -125,7 +122,7 @@
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/primary"
+        android:background="?android:attr/windowBackground"
         android:orientation="vertical"
         android:fitsSystemWindows="true">
 
@@ -138,9 +135,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/primary"
-            app:itemIconTint="@color/nav_item_text_selector"
-            app:itemTextColor="@color/nav_item_text_selector"
+            android:background="?android:attr/windowBackground"
+            app:itemIconTint="?attr/colorOnSurface"
+            app:itemTextColor="?attr/colorOnSurface"
             app:itemShapeFillColor="@color/nav_item_bg_color_selector"
             app:itemShapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
             app:itemVerticalPadding="12dp"
@@ -149,7 +146,7 @@
             app:itemShapeInsetStart="16dp"
             app:itemShapeInsetEnd="16dp"
             app:menu="@menu/drawer_menu"
-            app:subheaderColor="#B0C4DE" />
+            app:subheaderColor="?attr/colorOnSurface" />
 
         <include
             android:id="@+id/nav_footer"
