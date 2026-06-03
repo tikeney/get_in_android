@@ -33,9 +33,9 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                app:navigationIconTint="?attr/colorOnSurface"
+                android:layout_height="48dp"
+                android:minHeight="48dp"
+                app:navigationIconTint="?attr/colorOnPrimary"
                 app:title="">
 
                 <LinearLayout

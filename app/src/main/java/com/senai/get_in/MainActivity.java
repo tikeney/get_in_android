@@ -107,6 +107,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             binding.appBar.setPadding(0, systemBars.top, 0, 0);
 
             // Ajusta a margem inferior do card do menu
+            
+            // Reduz o padding do topo para o texto ficar mais próximo da status bar
+            binding.appBar.setPadding(0, (int)(systemBars.top * 0.5), 0, 0);
+            
+            // Ajusta a margem inferior do card do menu para flutuar acima da barra de navegação do sistema
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) binding.cardBottomNav.getLayoutParams();
             lp.bottomMargin = systemBars.bottom + (int)(24 * getResources().getDisplayMetrics().density);
             binding.cardBottomNav.setLayoutParams(lp);
@@ -121,6 +126,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        
+        if (AccessManager.isSupervisor(currentUser)) {
+            binding.drawerLayout.setDrawerLockMode(androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        } else {
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            
+            binding.drawerLayout.addDrawerListener(toggle);
+            toggle.syncState();
+        }
 
         // Define a cor do ícone hambúrguer baseada no textColorPrimary do tema
         TypedValue typedValue = new TypedValue();

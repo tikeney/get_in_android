@@ -16,6 +16,10 @@ public class RequisicaoRepository {
         apiService.getRequisicoes().enqueue(callback);
     }
 
+    public void getRequisicoesPorSetor(int idSetor, Callback<RequisicaoResponse> callback) {
+        apiService.getRequisicoesPorSetor(idSetor).enqueue(callback);
+    }
+
     public void atualizarStatus(int id, Requisicao requisicao, Callback<Requisicao> callback) {
         apiService.atualizarStatus(id, requisicao).enqueue(callback);
     }

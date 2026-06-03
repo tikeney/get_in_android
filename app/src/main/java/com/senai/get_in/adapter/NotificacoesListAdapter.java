@@ -35,7 +35,12 @@ public class NotificacoesListAdapter extends RecyclerView.Adapter<NotificacoesLi
 
     @Override
     public int getItemCount() {
-        return listaNotificacoes.size();
+        return listaNotificacoes != null ? listaNotificacoes.size() : 0;
+    }
+
+    public void updateList(List<Notificacao> newList) {
+        this.listaNotificacoes = newList;
+        notifyDataSetChanged();
     }
 
     public static class NotificacaoViewHolder extends RecyclerView.ViewHolder {

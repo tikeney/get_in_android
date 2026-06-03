@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.senai.get_in.R;
 import com.senai.get_in.model.Requisicao;
@@ -77,6 +78,29 @@ public class RequisicaoAdapter extends RecyclerView.Adapter<RequisicaoAdapter.Vi
             holder.txtDescricao.setVisibility(View.VISIBLE);
         }
 
+        // Status e Botões
+        if (req.getStatus() != null && !"pendente".equalsIgnoreCase(req.getStatus())) {
+            holder.txtStatus.setVisibility(View.VISIBLE);
+            holder.txtStatus.setText(req.getStatus().toUpperCase());
+            if ("aprovado".equalsIgnoreCase(req.getStatus())) {
+                holder.txtStatus.setTextColor(holder.itemView.getContext().getColor(R.color.status_permitido_text));
+                holder.btnAceitar.setVisibility(View.GONE);
+                holder.btnNegar.setVisibility(View.VISIBLE);
+                holder.btnNegar.setText("Recusar");
+            } else {
+                holder.txtStatus.setTextColor(holder.itemView.getContext().getColor(R.color.status_negado_text));
+                holder.btnNegar.setVisibility(View.GONE);
+                holder.btnAceitar.setVisibility(View.VISIBLE);
+                holder.btnAceitar.setText("Aprovar");
+            }
+        } else {
+            holder.txtStatus.setVisibility(View.GONE);
+            holder.btnAceitar.setVisibility(View.VISIBLE);
+            holder.btnNegar.setVisibility(View.VISIBLE);
+            holder.btnAceitar.setText("Aprovar");
+            holder.btnNegar.setText("Negar");
+        }
+
         holder.btnAceitar.setOnClickListener(v -> listener.onAprovarClick(req));
         holder.btnNegar.setOnClickListener(v -> listener.onNegarClick(req));
     }
@@ -137,9 +161,9 @@ public class RequisicaoAdapter extends RecyclerView.Adapter<RequisicaoAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtNome, txtDocumento, txtDia, txtHorario, txtDescricao;
+        TextView txtNome, txtDocumento, txtDia, txtHorario, txtDescricao, txtStatus;
         Chip chipEmpresa, chipMotivo, chipSetor;
-        View btnAceitar, btnNegar;
+        MaterialButton btnAceitar, btnNegar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -148,6 +172,7 @@ public class RequisicaoAdapter extends RecyclerView.Adapter<RequisicaoAdapter.Vi
             txtDia = itemView.findViewById(R.id.txtDia);
             txtHorario = itemView.findViewById(R.id.txtHorario);
             txtDescricao = itemView.findViewById(R.id.txtDescricao);
+            txtStatus = itemView.findViewById(R.id.txtStatus);
             
             chipEmpresa = itemView.findViewById(R.id.chipEmpresa);
             chipMotivo = itemView.findViewById(R.id.chipMotivo);

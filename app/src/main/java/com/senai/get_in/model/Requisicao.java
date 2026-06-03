@@ -9,7 +9,7 @@ public class Requisicao {
     @SerializedName(value = "idUsuario", alternate = {"usuario_id", "user_id"})
     private Integer idUsuario;
 
-    @SerializedName(value = "idSetor", alternate = {"setor_id", "id_setor"})
+    @SerializedName(value = "idSetor", alternate = {"setor_id", "id_setor", "idDepartamento"})
     private Integer idSetor;
 
     @SerializedName("status")
@@ -48,6 +48,9 @@ public class Requisicao {
     
     @SerializedName(value = "departamento_nome", alternate = {"setor", "dep_nome", "departamento"})
     private String departamentoNome;
+
+    public Integer getIdDepartamento() { return idSetor; }
+    public void setIdDepartamento(Integer idDepartamento) { this.idSetor = idDepartamento; }
 
     @SerializedName(value = "codigo_tag", alternate = {"tag_id", "rfid"})
     private String codigoTag;

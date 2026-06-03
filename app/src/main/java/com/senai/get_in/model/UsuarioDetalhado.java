@@ -20,6 +20,15 @@ public class UsuarioDetalhado {
     
     @SerializedName("cargo")
     private String cargo;
+
+    @SerializedName(value = "idSetor", alternate = {"setor_id", "id_setor", "idDepartamento"})
+    private int idSetor;
+
+    @SerializedName("idEmpresa")
+    private Integer idEmpresa;
+
+    @SerializedName("idDep")
+    private Integer idDep;
     
     @SerializedName(value = "dataDeNascimento", alternate = {"data_nascimento"})
     private String dataDeNascimento;
@@ -42,6 +51,9 @@ public class UsuarioDetalhado {
     public String getCpf() { return cpf; }
     public String getCelular() { return celular; }
     public String getCargo() { return cargo; }
+    public int getIdSetor() { return idSetor; }
+    public Integer getIdEmpresa() { return idEmpresa; }
+    public Integer getIdDep() { return idDep; }
     public String getDataDeNascimento() { return dataDeNascimento; }
     public String getFotoPerfil() { return fotoPerfil; }
     public String getDepartamentoNome() { return departamentoNome; }
@@ -54,6 +66,9 @@ public class UsuarioDetalhado {
     public void setCpf(String cpf) { this.cpf = cpf; }
     public void setCelular(String celular) { this.celular = celular; }
     public void setCargo(String cargo) { this.cargo = cargo; }
+    public void setIdSetor(int idSetor) { this.idSetor = idSetor; }
+    public void setIdEmpresa(Integer idEmpresa) { this.idEmpresa = idEmpresa; }
+    public void setIdDep(Integer idDep) { this.idDep = idDep; }
     public void setDataDeNascimento(String dataDeNascimento) { this.dataDeNascimento = dataDeNascimento; }
     public void setFotoPerfil(String fotoPerfil) { this.fotoPerfil = fotoPerfil; }
     public void setDepartamentoNome(String departamentoNome) { this.departamentoNome = departamentoNome; }

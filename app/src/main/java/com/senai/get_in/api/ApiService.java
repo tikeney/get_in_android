@@ -40,6 +40,9 @@ public interface ApiService {
     @GET("views/tags")
     Call<TagResponse> getTags();
 
+    @GET("views/gestores")
+    Call<List<Gestor>> getGestores();
+
     // --- Operações de Escrita (Usuários) ---
     @PUT("user/{id}")
     Call<UsuarioResponse> atualizarUsuario(@Path("id") int id, @Body UsuarioDetalhado usuario);
@@ -51,6 +54,9 @@ public interface ApiService {
     @PUT("requisicao/{id}")
     Call<Requisicao> atualizarStatus(@Path("id") int id, @Body Requisicao requisicao);
 
+    @GET("requisicao/setor/{id}")
+    Call<RequisicaoResponse> getRequisicoesPorSetor(@Path("id") int id);
+
     @POST("requisicao/")
     Call<Requisicao> criarRequisicao(@Body Requisicao requisicao);
 
@@ -60,6 +66,9 @@ public interface ApiService {
     // --- Portaria ---
     @GET("portaria/vlocal")
     Call<VisitanteLocalResponse> getVisitantesLocal();
+
+    @POST("portaria/checkout")
+    Call<LogResponse> checkout(@Body CheckoutRequest checkoutRequest);
 
     // --- Tabelas de Apoio ---
     @GET("dep/")

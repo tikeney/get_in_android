@@ -246,6 +246,9 @@ public class LoginActivity extends AppCompatActivity {
             
             if (data.funcionario != null) {
                 user.setCargo(data.funcionario.tipo);
+                if (data.funcionario.idSetor != null) {
+                    user.setIdSetor(data.funcionario.idSetor);
+                }
             }
         }
         return user;
