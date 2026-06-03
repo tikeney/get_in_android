@@ -9,8 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.senai.get_in.R;
+import com.senai.get_in.adapter.NotificacoesAdapter;
 import com.senai.get_in.adapter.NotificacoesListAdapter;
 import com.senai.get_in.databinding.FragmentNotificacoesBinding;
 import com.senai.get_in.model.Notificacao;

@@ -126,15 +126,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        
+
         if (AccessManager.isSupervisor(currentUser)) {
             binding.drawerLayout.setDrawerLockMode(androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         } else {
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            
-            binding.drawerLayout.addDrawerListener(toggle);
-            toggle.syncState();
+            // Removida a declaração duplicada 'ActionBarDrawerToggle toggle ='
+            // O toggle já foi configurado acima para casos que não são supervisores
         }
 
         // Define a cor do ícone hambúrguer baseada no textColorPrimary do tema
