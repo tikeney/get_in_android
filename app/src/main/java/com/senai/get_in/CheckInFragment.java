@@ -34,6 +34,8 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.senai.get_in.api.RetrofitClient;
+import com.senai.get_in.model.Empresa;
+import com.senai.get_in.model.EmpresaResponse;
 import com.senai.get_in.model.Requisicao;
 import com.senai.get_in.model.Setor;
 import com.senai.get_in.model.SetorResponse;
@@ -223,19 +225,18 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
                 android.R.layout.simple_dropdown_item_1line, motivos);
         etMotivo.setAdapter(adapterMotivo);
 
-        // Carregar Empresas do Banco de Dados (Usando Visitantes Atuais como fonte de nomes de empresas)
-        RetrofitClient.getApiService(requireContext()).getVisitantesLocal().enqueue(new Callback<VisitanteLocalResponse>() {
+        // Carregar Empresas do Banco de Dados via View de Empresas
+        RetrofitClient.getApiService(requireContext()).getEmpresas().enqueue(new Callback<EmpresaResponse>() {
             @Override
-            public void onResponse(@NonNull Call<VisitanteLocalResponse> call, @NonNull Response<VisitanteLocalResponse> response) {
+            public void onResponse(@NonNull Call<EmpresaResponse> call, @NonNull Response<EmpresaResponse> response) {
                 if (!isAdded()) return;
-                if (response.isSuccessful() && response.body() != null) {
-                    java.util.Set<String> empresasSet = new java.util.HashSet<>();
-                    for (VisitanteLocal v : response.body().getDados()) {
-                        if (v.getEmpresa() != null && !v.getEmpresa().isEmpty()) {
-                            empresasSet.add(v.getEmpresa());
-                        }
+                if (response.isSuccessful() && response.body() != null && response.body().getDados() != null) {
+                    List<Empresa> listaEmpresas = response.body().getDados();
+                    String[] empresas = new String[listaEmpresas.size()];
+                    for (int i = 0; i < listaEmpresas.size(); i++) {
+                        empresas[i] = listaEmpresas.get(i).getNome();
                     }
-                    String[] empresas = empresasSet.toArray(new String[0]);
+
                     ArrayAdapter<String> adapterEmpresa = new ArrayAdapter<>(requireContext(),
                             android.R.layout.simple_dropdown_item_1line, empresas);
                     etEmpresa.setAdapter(adapterEmpresa);
@@ -243,7 +244,7 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
             }
 
             @Override
-            public void onFailure(@NonNull Call<VisitanteLocalResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<EmpresaResponse> call, @NonNull Throwable t) {
                 Log.e(TAG, "Erro ao carregar empresas: " + t.getMessage());
             }
         });

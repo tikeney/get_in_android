@@ -77,6 +77,9 @@ public interface ApiService {
     @GET("setores/")
     Call<SetorResponse> getSetores(); // Agora espera um objeto SetorResponse
 
+    @GET("views/empresas")
+    Call<EmpresaResponse> getEmpresas();
+
     // --- Filtros Específicos ---
     @GET("requisicao/func/{id}")
     Call<RequisicaoResponse> getRequisicoesPorFuncionario(@Path("id") int id);
