@@ -48,16 +48,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/brand_get"
+                        android:text="nome da pagina"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/brand_in"
-                        android:textColor="#3498DB"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
@@ -143,8 +135,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="?android:attr/windowBackground"
-            app:itemIconTint="@color/nav_item_text_selector"
-            app:itemTextColor="@color/nav_item_text_selector"
+            app:itemIconTint="?attr/colorOnSurface"
+            app:itemTextColor="?attr/colorOnSurface"
             app:itemShapeFillColor="@color/nav_item_bg_color_selector"
             app:itemShapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
             app:itemVerticalPadding="12dp"
@@ -153,7 +145,7 @@
             app:itemShapeInsetStart="16dp"
             app:itemShapeInsetEnd="16dp"
             app:menu="@menu/drawer_menu"
-            app:subheaderColor="#B0C4DE" />
+            app:subheaderColor="?attr/colorOnSurface" />
 
         <include
             android:id="@+id/nav_footer"
