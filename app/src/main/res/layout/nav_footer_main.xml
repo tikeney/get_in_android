@@ -91,7 +91,7 @@
             app:iconSize="18dp"
             app:iconGravity="textStart"
             app:iconPadding="10dp"
-            app:iconTint="@color/white"
+            app:iconTint="?attr/colorOnSurface"
             app:cornerRadius="24dp"
             android:textSize="13sp"
             android:textAllCaps="false" />
