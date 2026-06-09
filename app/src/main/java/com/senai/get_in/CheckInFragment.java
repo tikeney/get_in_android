@@ -225,6 +225,18 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
                 android.R.layout.simple_dropdown_item_1line, motivos);
         etMotivo.setAdapter(adapterMotivo);
 
+        // Forçar exibição ao clicar
+        etMotivo.setOnClickListener(v -> etMotivo.showDropDown());
+        etMotivo.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) etMotivo.showDropDown();
+        });
+
+        // Configurar Setor Responsável
+        etSetorResponsavel.setOnClickListener(v -> etSetorResponsavel.showDropDown());
+        etSetorResponsavel.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) etSetorResponsavel.showDropDown();
+        });
+
         // Carregar Empresas do Banco de Dados via View de Empresas
         RetrofitClient.getApiService(requireContext()).getEmpresas().enqueue(new Callback<EmpresaResponse>() {
             @Override
@@ -240,6 +252,14 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
                     ArrayAdapter<String> adapterEmpresa = new ArrayAdapter<>(requireContext(),
                             android.R.layout.simple_dropdown_item_1line, empresas);
                     etEmpresa.setAdapter(adapterEmpresa);
+
+                    // Forçar exibição ao clicar para Empresa
+                    etEmpresa.setOnClickListener(v -> etEmpresa.showDropDown());
+                    etEmpresa.setOnFocusChangeListener((v, hasFocus) -> {
+                        if (hasFocus) etEmpresa.showDropDown();
+                    });
+                } else {
+                    Log.e(TAG, "Erro na resposta de empresas: " + response.code() + " ou corpo nulo");
                 }
             }
 

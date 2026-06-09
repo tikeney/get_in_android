@@ -3,16 +3,16 @@ package com.senai.get_in.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Requisicao {
-    @SerializedName(value = "id", alternate = {"requisicao_id"})
+    @SerializedName(value = "id", alternate = {"requisicao_id", "id_requisicao"})
     private int id;
 
-    @SerializedName(value = "idUsuario", alternate = {"usuario_id", "user_id"})
+    @SerializedName(value = "idUsuario", alternate = {"usuario_id", "user_id", "id_usuario"})
     private Integer idUsuario;
 
-    @SerializedName(value = "idSetor", alternate = {"setor_id", "id_setor", "idDepartamento"})
+    @SerializedName(value = "idSetor", alternate = {"setor_id", "id_setor", "idDepartamento", "id_departamento"})
     private Integer idSetor;
 
-    @SerializedName("status")
+    @SerializedName(value = "status", alternate = {"situacao", "requisicao_status", "status_nome"})
     private String status;
 
     @SerializedName("motivo")
@@ -21,38 +21,31 @@ public class Requisicao {
     @SerializedName("validade")
     private String validade;
     
-    @SerializedName(value = "dataDaRequisicao", alternate = {"data_requisicao", "created_at"})
+    @SerializedName(value = "dataDaRequisicao", alternate = {"data_requisicao", "created_at", "data"})
     private String dataRequisicao;
     
     @SerializedName("descricao")
     private String descricao;
 
-    @SerializedName("empresa")
+    @SerializedName(value = "empresa", alternate = {"empresa_visitante", "visitante_empresa", "empresaVisitante"})
     private String empresa;
 
     @SerializedName(value = "tipo_requisicao", alternate = {"tipoRequisicao", "tipo"})
     private String tipoRequisicao;
 
-    @SerializedName(value = "empresa_visitante", alternate = {"empresaVisitante"})
-    private String empresaVisitante;
-
     @SerializedName(value = "validade_visita", alternate = {"validadeVisita"})
     private String validadeVisita;
 
-    // Campos extras de visualização (da view consolidada)
-    @SerializedName(value = "usuario_nome", alternate = {"nome", "visitante", "user_nome"})
+    @SerializedName(value = "usuario_nome", alternate = {"nome", "visitante", "user_nome", "nome_usuario"})
     private String usuarioNome;
     
-    @SerializedName(value = "usuario_cpf", alternate = {"cpf", "user_cpf"})
+    @SerializedName(value = "usuario_cpf", alternate = {"cpf", "user_cpf", "cpf_usuario"})
     private String usuarioCpf;
     
-    @SerializedName(value = "departamento_nome", alternate = {"setor", "dep_nome", "departamento"})
+    @SerializedName(value = "departamento_nome", alternate = {"setor_nome", "dep_nome", "departamento"})
     private String departamentoNome;
 
-    public Integer getIdDepartamento() { return idSetor; }
-    public void setIdDepartamento(Integer idDepartamento) { this.idSetor = idDepartamento; }
-
-    @SerializedName(value = "codigo_tag", alternate = {"tag_id", "rfid"})
+    @SerializedName(value = "codigo_tag", alternate = {"tag_id", "rfid", "tag"})
     private String codigoTag;
 
     // Getters e Setters
@@ -65,14 +58,11 @@ public class Requisicao {
     public Integer getIdSetor() { return idSetor; }
     public void setIdSetor(Integer idSetor) { this.idSetor = idSetor; }
 
-    public String getStatus() { return status; }
+    public String getStatus() { return status != null ? status.trim() : null; }
     public void setStatus(String status) { this.status = status; }
 
     public String getMotivo() { return motivo; }
     public void setMotivo(String motivo) { this.motivo = motivo; }
-
-    public String getValidade() { return validade; }
-    public void setValidade(String validade) { this.validade = validade; }
 
     public String getDataRequisicao() { return dataRequisicao; }
     public void setDataRequisicao(String dataRequisicao) { this.dataRequisicao = dataRequisicao; }
@@ -85,9 +75,6 @@ public class Requisicao {
 
     public String getTipoRequisicao() { return tipoRequisicao; }
     public void setTipoRequisicao(String tipoRequisicao) { this.tipoRequisicao = tipoRequisicao; }
-
-    public String getEmpresaVisitante() { return empresaVisitante; }
-    public void setEmpresaVisitante(String empresaVisitante) { this.empresaVisitante = empresaVisitante; }
 
     public String getValidadeVisita() { return validadeVisita; }
     public void setValidadeVisita(String validadeVisita) { this.validadeVisita = validadeVisita; }
@@ -103,4 +90,8 @@ public class Requisicao {
 
     public String getCodigoTag() { return codigoTag; }
     public void setCodigoTag(String codigoTag) { this.codigoTag = codigoTag; }
+
+    // Compatibilidade com código antigo que usava getEmpresaVisitante
+    public String getEmpresaVisitante() { return empresa; }
+    public void setEmpresaVisitante(String empresaVisitante) { this.empresa = empresaVisitante; }
 }

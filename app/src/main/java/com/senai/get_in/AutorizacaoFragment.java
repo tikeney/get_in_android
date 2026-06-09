@@ -39,7 +39,7 @@ import retrofit2.Response;
 public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.OnItemClickListener, SearchableFragment {
 
     private static final String TAG = "AutorizacaoFragment";
-    private static final long REFRESH_INTERVAL = 30000; // 30 segundos
+    private static final long REFRESH_INTERVAL = 30000;
 
     private FragmentAutorizacaoBinding binding;
     private RequisicaoAdapter adapter;
@@ -59,9 +59,7 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAutorizacaoBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -69,12 +67,7 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
         repository = new RequisicaoRepository(requireContext());
-        
-        Animation slideUp = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
-        binding.containerAutorizacao.startAnimation(slideUp);
-
         setupRecyclerView();
     }
 
@@ -94,19 +87,12 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
         adapter = new RequisicaoAdapter(listaFiltrada, this);
         binding.recyclerRequisicao.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerRequisicao.setAdapter(adapter);
-        
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
-        binding.recyclerRequisicao.setLayoutAnimation(animation);
     }
 
     private void carregarRequisicoes(boolean isBackgroundRefresh) {
-        if (!NetworkUtils.isOnline(getContext())) {
-            if (!isBackgroundRefresh) ToastUtils.showError(getContext(), "Sem conexão com a internet.");
-            return;
-        }
+        if (!NetworkUtils.isOnline(getContext())) return;
 
-        if (!isBackgroundRefresh) setLoading(true);
-        binding.layoutVazioAutorizacao.setVisibility(View.GONE);
+        if (!isBackgroundRefresh && listaCompleta.isEmpty()) setLoading(true);
 
         TokenManager tokenManager = new TokenManager(requireContext());
         UsuarioDetalhado user = tokenManager.getUserData();
@@ -120,23 +106,24 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
                 if (response.isSuccessful() && response.body() != null) {
                     List<Requisicao> todas = response.body().getData();
                     listaCompleta.clear();
+                    
                     if (todas != null) {
                         final boolean isAdmin = AccessManager.isAdmin(user);
+                        final boolean isPortaria = AccessManager.isPortaria(user);
                         final int meuSetor = user.getIdSetor();
 
                         for (Requisicao r : todas) {
-                            // Filtro de Pendentes
-                            if (r.getStatus() != null && "pendente".equalsIgnoreCase(r.getStatus())) {
-                                // Filtro de Setor para Supervisor
-                                if (isAdmin || meuSetor <= 0 || (r.getIdSetor() != null && r.getIdSetor() == meuSetor)) {
+                            String status = r.getStatus();
+                            // Mostra se for PENDENTE
+                            if (status != null && status.equalsIgnoreCase("pendente")) {
+                                // Portaria e Admin veem tudo. Supervisor vê apenas seu setor.
+                                if (isAdmin || isPortaria || meuSetor <= 0 || (r.getIdSetor() != null && r.getIdSetor() == meuSetor)) {
                                     listaCompleta.add(r);
                                 }
                             }
                         }
                     }
                     filterList();
-                } else {
-                    if (!isBackgroundRefresh) ToastUtils.showError(getContext(), "Erro ao carregar dados (" + response.code() + ")");
                 }
             }
 
@@ -144,8 +131,6 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
             public void onFailure(@NonNull Call<RequisicaoResponse> call, @NonNull Throwable t) {
                 if (!isAdded() || binding == null) return;
                 setLoading(false);
-                Log.e(TAG, "Falha na conexão: " + t.getMessage());
-                if (!isBackgroundRefresh) ToastUtils.showError(getContext(), "Sem conexão com o servidor");
             }
         });
     }
@@ -160,18 +145,21 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
         if (listaCompleta == null || binding == null) return;
 
         listaFiltrada.clear();
-        listaFiltrada.addAll(listaCompleta.stream()
-                .filter(r -> (r.getUsuarioNome() != null && r.getUsuarioNome().toLowerCase().contains(currentQuery)) ||
-                             (r.getEmpresa() != null && r.getEmpresa().toLowerCase().contains(currentQuery)))
-                .collect(Collectors.toList()));
+        for (Requisicao r : listaCompleta) {
+            String nome = r.getUsuarioNome() != null ? r.getUsuarioNome().toLowerCase() : "";
+            String empresa = r.getEmpresa() != null ? r.getEmpresa().toLowerCase() : "";
+            
+            if (currentQuery.isEmpty() || nome.contains(currentQuery) || empresa.contains(currentQuery)) {
+                listaFiltrada.add(r);
+            }
+        }
 
         adapter.notifyDataSetChanged();
-        // scheduleLayoutAnimation removed to avoid jitter during background refresh
         binding.layoutVazioAutorizacao.setVisibility(listaFiltrada.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void setLoading(boolean loading) {
-        if (loading && listaFiltrada.isEmpty()) {
+        if (loading) {
             binding.shimmerAutorizacao.setVisibility(View.VISIBLE);
             binding.shimmerAutorizacao.startShimmer();
             binding.recyclerRequisicao.setVisibility(View.GONE);
@@ -193,14 +181,7 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
     }
 
     private void atualizarStatus(Requisicao requisicao, String novoStatus) {
-        if (!NetworkUtils.isOnline(getContext())) {
-            ToastUtils.showError(getContext(), "Sem conexão para realizar esta ação.");
-            return;
-        }
-
-        if (binding == null) return;
         setLoading(true);
-        
         Requisicao update = new Requisicao();
         update.setStatus(novoStatus);
 
@@ -209,11 +190,11 @@ public class AutorizacaoFragment extends Fragment implements RequisicaoAdapter.O
             public void onResponse(@NonNull Call<Requisicao> call, @NonNull Response<Requisicao> response) {
                 if (!isAdded() || binding == null) return;
                 if (response.isSuccessful()) {
-                    ToastUtils.showSuccess(getContext(), "Sucesso!");
+                    ToastUtils.showSuccess(getContext(), "Status atualizado!");
                     carregarRequisicoes(false);
                 } else {
                     setLoading(false);
-                    ToastUtils.showError(getContext(), "Erro ao atualizar status");
+                    ToastUtils.showError(getContext(), "Erro ao atualizar");
                 }
             }
 

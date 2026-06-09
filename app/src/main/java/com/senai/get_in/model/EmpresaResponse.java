@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class EmpresaResponse {
-    @SerializedName("sucesso")
+    @SerializedName(value = "sucesso", alternate = {"success", "ok"})
     private boolean sucesso;
 
-    @SerializedName("dados")
+    @SerializedName(value = "dados", alternate = {"data", "empresas"})
     private List<Empresa> dados;
 
     public boolean isSucesso() { return sucesso; }

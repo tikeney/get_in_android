@@ -39,7 +39,7 @@ import retrofit2.Response;
 public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnItemClickListener, SearchableFragment {
 
     private static final String TAG = "HistoricoFragment";
-    private static final long REFRESH_INTERVAL = 30000; // 30 segundos
+    private static final long REFRESH_INTERVAL = 30000;
 
     private FragmentHistoricoBinding binding;
     private RequisicaoAdapter adapter;
@@ -59,9 +59,7 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentHistoricoBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -69,7 +67,6 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
         repository = new RequisicaoRepository(requireContext());
         setupRecyclerView();
         setupFilters();
@@ -96,12 +93,10 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
     private void loadData(boolean isBackgroundRefresh) {
         if (!NetworkUtils.isOnline(getContext())) {
             binding.swipeHistorico.setRefreshing(false);
-            if (!isBackgroundRefresh) ToastUtils.showError(getContext(), "Sem conexão com a internet.");
             return;
         }
 
-        if (!isBackgroundRefresh && listaFiltrada.isEmpty()) setLoading(true);
-        binding.layoutVazio.setVisibility(View.GONE);
+        if (!isBackgroundRefresh && listaCompleta.isEmpty()) setLoading(true);
 
         TokenManager tokenManager = new TokenManager(requireContext());
         UsuarioDetalhado user = tokenManager.getUserData();
@@ -117,14 +112,15 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
                     List<Requisicao> todas = response.body().getData();
                     listaCompleta.clear();
                     if (todas != null) {
-                        // Filtra apenas o que JÁ FOI decidido (Aprovado ou Recusado)
-                        listaCompleta.addAll(todas.stream()
-                                .filter(r -> r.getStatus() != null && !"pendente".equalsIgnoreCase(r.getStatus()))
-                                .collect(Collectors.toList()));
+                        // O Histórico mostra tudo que NÃO é pendente
+                        for (Requisicao r : todas) {
+                            String status = r.getStatus();
+                            if (status != null && !status.equalsIgnoreCase("pendente")) {
+                                listaCompleta.add(r);
+                            }
+                        }
                     }
                     filterList();
-                } else {
-                    if (!isBackgroundRefresh) ToastUtils.showError(getContext(), "Erro ao carregar histórico");
                 }
             }
 
@@ -133,11 +129,10 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
                 if (!isAdded() || binding == null) return;
                 setLoading(false);
                 binding.swipeHistorico.setRefreshing(false);
-                Log.e(TAG, "Erro: " + t.getMessage());
-                if (!isBackgroundRefresh) ToastUtils.showError(getContext(), "Falha na conexão");
             }
         };
 
+        // Regra de negócio: Supervisors filtram por setor, Admins e Portaria veem tudo.
         if (AccessManager.isSupervisor(user) && user.getIdSetor() > 0) {
             repository.getRequisicoesPorSetor(user.getIdSetor(), callback);
         } else {
@@ -145,31 +140,14 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
         }
     }
 
-    private void setLoading(boolean loading) {
-        if (loading) {
-            binding.shimmerHistorico.setVisibility(View.VISIBLE);
-            binding.shimmerHistorico.startShimmer();
-            binding.recyclerHistorico.setVisibility(View.GONE);
-        } else {
-            binding.shimmerHistorico.stopShimmer();
-            binding.shimmerHistorico.setVisibility(View.GONE);
-            binding.recyclerHistorico.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void setupRecyclerView() {
         adapter = new RequisicaoAdapter(listaFiltrada, this);
         binding.recyclerHistorico.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerHistorico.setAdapter(adapter);
-        
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down);
-        binding.recyclerHistorico.setLayoutAnimation(animation);
     }
 
     private void setupFilters() {
-        binding.chipGroupFiltros.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            filterList();
-        });
+        binding.chipGroupFiltros.setOnCheckedStateChangeListener((group, checkedIds) -> filterList());
     }
 
     @Override
@@ -182,50 +160,55 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
         if (listaCompleta == null || binding == null) return;
         
         int checkedChipId = binding.chipGroupFiltros.getCheckedChipId();
-
         listaFiltrada.clear();
-        listaFiltrada.addAll(listaCompleta.stream()
-                .filter(r -> (r.getUsuarioNome() != null && r.getUsuarioNome().toLowerCase().contains(currentQuery)) || 
-                             (r.getEmpresa() != null && r.getEmpresa().toLowerCase().contains(currentQuery)))
-                .filter(r -> {
-                    if (checkedChipId == R.id.chipPermitidos) {
-                        return "aprovado".equalsIgnoreCase(r.getStatus());
-                    } else if (checkedChipId == R.id.chipNegado) {
-                        return "recusado".equalsIgnoreCase(r.getStatus());
-                    }
-                    return true;
-                })
-                .collect(Collectors.toList()));
+
+        for (Requisicao r : listaCompleta) {
+            String nome = r.getUsuarioNome() != null ? r.getUsuarioNome().toLowerCase() : "";
+            String empresa = r.getEmpresa() != null ? r.getEmpresa().toLowerCase() : "";
+            String status = r.getStatus() != null ? r.getStatus().toLowerCase() : "";
+
+            // Filtro de Busca
+            boolean matchesSearch = currentQuery.isEmpty() || nome.contains(currentQuery) || empresa.contains(currentQuery);
+            
+            // Filtro de Chip (Permitidos / Negados)
+            boolean matchesStatus = true;
+            if (checkedChipId == R.id.chipPermitidos) {
+                matchesStatus = status.contains("aprovado") || status.contains("liberado");
+            } else if (checkedChipId == R.id.chipNegado) {
+                matchesStatus = status.contains("recusado") || status.contains("negado");
+            }
+
+            if (matchesSearch && matchesStatus) {
+                listaFiltrada.add(r);
+            }
+        }
 
         adapter.notifyDataSetChanged();
+        binding.layoutVazio.setVisibility(listaFiltrada.isEmpty() ? View.VISIBLE : View.GONE);
+        binding.recyclerHistorico.setVisibility(listaFiltrada.isEmpty() ? View.GONE : View.VISIBLE);
+    }
 
-        if (listaFiltrada.isEmpty()) {
-            binding.layoutVazio.setVisibility(View.VISIBLE);
+    private void setLoading(boolean loading) {
+        if (binding == null) return;
+        if (loading) {
+            binding.shimmerHistorico.setVisibility(View.VISIBLE);
+            binding.shimmerHistorico.startShimmer();
             binding.recyclerHistorico.setVisibility(View.GONE);
         } else {
-            binding.layoutVazio.setVisibility(View.GONE);
+            binding.shimmerHistorico.stopShimmer();
+            binding.shimmerHistorico.setVisibility(View.GONE);
             binding.recyclerHistorico.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onAprovarClick(Requisicao requisicao) {
-        mostrarConfirmacao(requisicao, "aprovado");
+        atualizarStatus(requisicao, "aprovado");
     }
 
     @Override
     public void onNegarClick(Requisicao requisicao) {
-        mostrarConfirmacao(requisicao, "recusado");
-    }
-
-    private void mostrarConfirmacao(Requisicao requisicao, String novoStatus) {
-        String msg = "Deseja alterar o status desta requisição para " + novoStatus.toUpperCase() + "?";
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Alterar Decisão")
-                .setMessage(msg)
-                .setPositiveButton("Confirmar", (dialog, which) -> atualizarStatus(requisicao, novoStatus))
-                .setNegativeButton("Cancelar", null)
-                .show();
+        atualizarStatus(requisicao, "recusado");
     }
 
     private void atualizarStatus(Requisicao requisicao, String novoStatus) {
@@ -236,19 +219,19 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
         repository.atualizarStatus(requisicao.getId(), update, new Callback<Requisicao>() {
             @Override
             public void onResponse(@NonNull Call<Requisicao> call, @NonNull Response<Requisicao> response) {
-                if (!isAdded()) return;
+                if (!isAdded() || binding == null) return;
                 if (response.isSuccessful()) {
-                    ToastUtils.showSuccess(getContext(), "Status atualizado com sucesso!");
+                    ToastUtils.showSuccess(getContext(), "Decisão atualizada!");
                     loadData(false);
                 } else {
                     setLoading(false);
-                    ToastUtils.showError(getContext(), "Erro ao atualizar status");
+                    ToastUtils.showError(getContext(), "Erro ao atualizar");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Requisicao> call, @NonNull Throwable t) {
-                if (!isAdded()) return;
+                if (!isAdded() || binding == null) return;
                 setLoading(false);
                 ToastUtils.showError(getContext(), "Falha na conexão");
             }
