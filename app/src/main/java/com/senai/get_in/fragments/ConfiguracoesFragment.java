@@ -61,6 +61,12 @@ public class ConfiguracoesFragment extends Fragment {
         binding.btnAlterarSenha.setOnClickListener(v -> {
             ToastUtils.showInfo(getContext(), "Funcionalidade de alterar senha em breve");
         });
+
+        binding.btnSair.setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).logout();
+            }
+        });
     }
 
     @Override
