@@ -237,36 +237,16 @@ public class CheckInFragment extends Fragment implements MainActivity.NfcTagList
             if (hasFocus) etSetorResponsavel.showDropDown();
         });
 
-        // Carregar Empresas do Banco de Dados via View de Empresas
-        RetrofitClient.getApiService(requireContext()).getEmpresas().enqueue(new Callback<EmpresaResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<EmpresaResponse> call, @NonNull Response<EmpresaResponse> response) {
-                if (!isAdded()) return;
-                if (response.isSuccessful() && response.body() != null && response.body().getDados() != null) {
-                    List<Empresa> listaEmpresas = response.body().getDados();
-                    String[] empresas = new String[listaEmpresas.size()];
-                    for (int i = 0; i < listaEmpresas.size(); i++) {
-                        empresas[i] = listaEmpresas.get(i).getNome();
-                    }
+        // Configurar Empresas (Fixo: Nenhuma, Google)
+        String[] empresas = {"Nenhuma", "Google"};
+        ArrayAdapter<String> adapterEmpresa = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_dropdown_item_1line, empresas);
+        etEmpresa.setAdapter(adapterEmpresa);
 
-                    ArrayAdapter<String> adapterEmpresa = new ArrayAdapter<>(requireContext(),
-                            android.R.layout.simple_dropdown_item_1line, empresas);
-                    etEmpresa.setAdapter(adapterEmpresa);
-
-                    // Forçar exibição ao clicar para Empresa
-                    etEmpresa.setOnClickListener(v -> etEmpresa.showDropDown());
-                    etEmpresa.setOnFocusChangeListener((v, hasFocus) -> {
-                        if (hasFocus) etEmpresa.showDropDown();
-                    });
-                } else {
-                    Log.e(TAG, "Erro na resposta de empresas: " + response.code() + " ou corpo nulo");
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<EmpresaResponse> call, @NonNull Throwable t) {
-                Log.e(TAG, "Erro ao carregar empresas: " + t.getMessage());
-            }
+        // Forçar exibição ao clicar para Empresa
+        etEmpresa.setOnClickListener(v -> etEmpresa.showDropDown());
+        etEmpresa.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) etEmpresa.showDropDown();
         });
     }
 
