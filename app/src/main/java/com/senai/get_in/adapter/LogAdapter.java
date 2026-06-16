@@ -31,18 +31,20 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LogAcesso log = logs.get(position);
-        holder.tvNome.setText(log.getUsuarioNome());
-        holder.tvSetor.setText(log.getDepartamentoUsuario());
-        holder.tvEmpresa.setText(log.getLocalDispositivo());
+        
+        // Garantir que não exiba "null" na tela
+        holder.tvNome.setText(log.getUsuarioNome() != null ? log.getUsuarioNome() : "Visitante Desconhecido");
+        holder.tvSetor.setText(log.getDepartamentoUsuario() != null ? log.getDepartamentoUsuario() : "Setor não informado");
+        holder.tvEmpresa.setText(log.getLocalDispositivo() != null ? log.getLocalDispositivo() : "Local não identificado");
         
         String entrada = formatarData(log.getDataEntrada());
         holder.tvHora.setText(entrada != null ? entrada : "--:--");
         
-        if (log.getDataSaida() != null) {
-            holder.tvStatus.setText("Saída registrada");
+        if (log.getDataSaida() != null && !log.getDataSaida().isEmpty()) {
+            holder.tvStatus.setText("Saiu");
             holder.tvStatus.setTextColor(0xFF4CAF50); // Verde
         } else {
-            holder.tvStatus.setText("No local");
+            holder.tvStatus.setText("Na fábrica");
             holder.tvStatus.setTextColor(0xFF2196F3); // Azul
         }
     }

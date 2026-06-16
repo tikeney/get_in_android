@@ -5,17 +5,17 @@ import com.google.gson.annotations.SerializedName;
 public class LogAcesso {
     @SerializedName("log_id")
     private int id;
-    @SerializedName("usuario_nome")
+    @SerializedName(value = "usuario_nome", alternate = {"nome", "usuarioNome"})
     private String usuarioNome;
-    @SerializedName("usuario_cpf")
+    @SerializedName(value = "usuario_cpf", alternate = {"cpf", "usuarioCpf"})
     private String usuarioCpf;
-    @SerializedName("local_dispositivo")
+    @SerializedName(value = "local_dispositivo", alternate = {"local", "localDispositivo", "empresa"})
     private String localDispositivo;
-    @SerializedName("dataDeEntrada")
+    @SerializedName(value = "dataDeEntrada", alternate = {"data_entrada", "dataEntrada", "entrada"})
     private String dataEntrada;
-    @SerializedName("dataDeSaida")
+    @SerializedName(value = "dataDeSaida", alternate = {"data_saida", "dataSaida", "saida"})
     private String dataSaida;
-    @SerializedName("departamento_usuario")
+    @SerializedName(value = "departamento_usuario", alternate = {"departamento", "setor", "departamentoUsuario"})
     private String departamentoUsuario;
 
     // Getters e Setters
