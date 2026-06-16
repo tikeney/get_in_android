@@ -14,4 +14,8 @@ public class LogRepository {
     public void getLogs(Callback<LogResponse> callback) {
         apiService.getLogs().enqueue(callback);
     }
+
+    public void getHistoricoPortaria(Callback<LogResponse> callback) {
+        apiService.getHistoricoPortaria().enqueue(callback);
+    }
 }

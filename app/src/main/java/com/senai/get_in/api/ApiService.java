@@ -70,6 +70,9 @@ public interface ApiService {
     @POST("portaria/checkout")
     Call<LogResponse> checkout(@Body CheckoutRequest checkoutRequest);
 
+    @GET("portaria/historico")
+    Call<LogResponse> getHistoricoPortaria();
+
     // --- Tabelas de Apoio ---
     @GET("dep/")
     Call<List<Departamento>> getDepartamentos();
