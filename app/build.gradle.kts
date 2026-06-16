@@ -57,6 +57,10 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.security.crypto)
     implementation(libs.shimmer)
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
+    // Para suporte a Coroutines se necessário no futuro
+    implementation(libs.room.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

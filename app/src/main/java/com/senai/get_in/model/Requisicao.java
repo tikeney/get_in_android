@@ -1,8 +1,12 @@
 package com.senai.get_in.model;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "requisicoes")
 public class Requisicao {
+    @PrimaryKey
     @SerializedName(value = "id", alternate = {"requisicao_id", "id_requisicao"})
     private int id;
 
@@ -63,6 +67,9 @@ public class Requisicao {
 
     public String getMotivo() { return motivo; }
     public void setMotivo(String motivo) { this.motivo = motivo; }
+
+    public String getValidade() { return validade; }
+    public void setValidade(String validade) { this.validade = validade; }
 
     public String getDataRequisicao() { return dataRequisicao; }
     public void setDataRequisicao(String dataRequisicao) { this.dataRequisicao = dataRequisicao; }

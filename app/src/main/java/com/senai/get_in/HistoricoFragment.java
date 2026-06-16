@@ -7,12 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -30,7 +27,6 @@ import com.senai.get_in.utils.TokenManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,6 +67,9 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
         setupRecyclerView();
         setupFilters();
         setupSwipeRefresh();
+        
+        // Carregamento inicial do banco de dados local
+        loadLocalData();
     }
 
     @Override
@@ -86,8 +85,31 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
     }
 
     private void setupSwipeRefresh() {
-        binding.swipeHistorico.setOnRefreshListener(() -> loadData(true));
+        binding.swipeHistorico.setOnRefreshListener(() -> loadData(false));
         binding.swipeHistorico.setColorSchemeResources(R.color.primary);
+    }
+
+    private void loadLocalData() {
+        TokenManager tokenManager = new TokenManager(requireContext());
+        UsuarioDetalhado user = tokenManager.getUserData();
+
+        RequisicaoRepository.LocalCallback<List<Requisicao>> localCallback = data -> {
+            if (isAdded() && getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    if (data != null && !data.isEmpty()) {
+                        listaCompleta.clear();
+                        listaCompleta.addAll(data);
+                        filterList();
+                    }
+                });
+            }
+        };
+
+        if (AccessManager.isSupervisor(user) && user.getIdSetor() > 0) {
+            repository.getHistoricoLocalPorSetor(user.getIdSetor(), localCallback);
+        } else {
+            repository.getHistoricoLocal(localCallback);
+        }
     }
 
     private void loadData(boolean isBackgroundRefresh) {
@@ -110,8 +132,8 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
                 
                 if (response.isSuccessful() && response.body() != null) {
                     List<Requisicao> todas = response.body().getData();
-                    listaCompleta.clear();
                     if (todas != null) {
+                        listaCompleta.clear();
                         // O Histórico mostra tudo que NÃO é pendente
                         for (Requisicao r : todas) {
                             String status = r.getStatus();
@@ -119,8 +141,8 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
                                 listaCompleta.add(r);
                             }
                         }
+                        filterList();
                     }
-                    filterList();
                 }
             }
 
@@ -132,7 +154,6 @@ public class HistoricoFragment extends Fragment implements RequisicaoAdapter.OnI
             }
         };
 
-        // Regra de negócio: Supervisors filtram por setor, Admins e Portaria veem tudo.
         if (AccessManager.isSupervisor(user) && user.getIdSetor() > 0) {
             repository.getRequisicoesPorSetor(user.getIdSetor(), callback);
         } else {
